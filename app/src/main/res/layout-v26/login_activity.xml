@@ -30,9 +30,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="324dp"
                         android:src="@drawable/img_login"
-                        android:contentDescription="#" />
+                        android:contentDescription="#"
+
+                        />
 
                     <TextView
+                        android:id="@+id/txtCicerone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -60,15 +63,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:autofillHints="@string/correo"
                             android:fontFamily="@font/source_sans_pro"
+                            android:autofillHints="@string/correo"
                             android:hint="@string/correo"
                             android:inputType="textEmailAddress"
                             android:textColor="#696969"
                             android:textColorHint="#AFAFAF"
                             android:textSize="20sp"
                             android:textStyle="bold"
-
+                            android:text="1"
                             />
 
 
@@ -87,15 +90,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:autofillHints="@string/Contraseña"
                             android:fontFamily="@font/source_sans_pro"
+                            android:autofillHints="@string/Contraseña"
                             android:hint="@string/Contraseña"
                             android:inputType="textPassword"
                             android:textColor="#696969"
                             android:textColorHint="#AFAFAF"
                             android:textSize="20sp"
                             android:textStyle="bold"
-
+                            android:text="1"
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 

@@ -3,6 +3,7 @@ package com.nitoelchidoceti.ciceroneapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -26,6 +27,13 @@ public class LoginActivity extends AppCompatActivity {
         textInputPassword.setCounterEnabled(true);
         textInputPassword.setNextFocusDownId(R.id.btnLogin);
 
+
+
+    }
+
+    private void launchBottomNavActivity(){
+        Intent intent = new Intent(this,BottomNav.class);
+        startActivity(intent);
     }
 
     private boolean validateEmail(){
@@ -58,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void confirmInput(View view) {
+    public void confirmInput(View view) {//METODO ONCLICK DEL BOTON INICIAR SESIÓN
         if (!validateEmail()|!validatePassword()){
             return;
         }
@@ -68,5 +76,6 @@ public class LoginActivity extends AppCompatActivity {
         input += "Password: " + textInputPassword.getEditText().getText().toString();
 
         Toast.makeText(this,input,Toast.LENGTH_SHORT).show();
+        launchBottomNavActivity();
     }
 }
