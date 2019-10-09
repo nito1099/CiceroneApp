@@ -176,6 +176,34 @@
         android:textColor="@color/white"
         android:textStyle="bold" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="40dp"
+        >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="38dp"
+            android:fontFamily="@font/source_sans_pro"
+            android:text="@string/es_parte_de_cicerone"
+            android:textColor="@color/orange"
+            android:textStyle="italic"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="38dp"
+            android:fontFamily="@font/source_sans_pro"
+            android:text="@string/iniciar_sesion"
+            android:textColor="@color/orange"
+            android:textStyle="italic"/>
+    </LinearLayout>
 
 </LinearLayout>
