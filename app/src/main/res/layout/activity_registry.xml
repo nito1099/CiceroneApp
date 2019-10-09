@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistryActivity"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/rectimage"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:src="@drawable/rectangle_top"
+        android:contentDescription="#" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/registrate"
+        android:textColor="@color/orange"
+        android:fontFamily="@font/source_sans_pro_bold"
+        android:layout_gravity="center"
+        android:textSize="45sp"
+        android:textAlignment="center"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="Llena los campos con la información correcta y listo!"
+        android:textSize="20sp"
+        android:layout_marginTop="30dp"
+        android:layout_marginHorizontal="25dp"
+        android:textAlignment="viewStart"
+        android:textColor="@color/orange"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txt_nombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/source_sans_pro"
+            android:hint="@string/nombre"
+            android:inputType="textPersonName"
+            android:textColor="#696969"
+            android:textColorHint="#AFAFAF"
+            android:textSize="20sp"
+            android:text="1"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txt_Correo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/source_sans_pro"
+            android:hint="@string/correo"
+            android:inputType="textEmailAddress"
+            android:textColor="#696969"
+            android:textColorHint="#AFAFAF"
+            android:textSize="20sp"
+            android:text="1"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:passwordToggleEnabled="true"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/source_sans_pro"
+            android:autofillHints="@string/Contraseña"
+            android:hint="@string/Contraseña"
+            android:inputType="textPassword"
+            android:textColor="#696969"
+            android:textColorHint="#AFAFAF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="1"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txt_telefono"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/source_sans_pro"
+            android:hint="@string/tel_fono"
+            android:inputType="phone"
+            android:textColor="#696969"
+            android:textColorHint="#AFAFAF"
+            android:textSize="20sp"
+            android:text="1"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <EditText
+            android:id="@+id/txt_nacimiento"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/source_sans_pro"
+            android:hint="@string/fecha_de_nacimiento"
+            android:textColor="#696969"
+            android:textColorHint="#AFAFAF"
+            android:textSize="20sp"
+            android:maxLength="10"
+            />
+
+    <AutoCompleteTextView
+        android:id="@+id/aTxtViewCiudad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:fontFamily="@font/source_sans_pro"
+        android:textColor="#696969"
+        android:textColorHint="#AFAFAF"
+        android:hint="@string/ciudad"
+        android:textSize="20sp"
+        android:maxLength="29"
+        android:inputType="textCapSentences"
+        />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/orange"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/source_sans_pro"
+        android:onClick="launchBottomActivity"
+        android:src="@drawable/button_background"
+        android:text="@string/registrar"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+
+
+</LinearLayout>

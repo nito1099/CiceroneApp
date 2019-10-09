@@ -127,14 +127,13 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/source_sans_pro"
-                            android:textStyle="italic"
-                            android:text="@string/olvidaste_tu_contraseña"
+                            android:layout_height="27dp"
                             android:layout_gravity="center"
-                            android:textColor="@color/orange"
                             android:layout_marginHorizontal="38dp"
-                            />
+                            android:fontFamily="@font/source_sans_pro"
+                            android:text="@string/olvidaste_tu_contraseña"
+                            android:textColor="@color/orange"
+                            android:textStyle="italic" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -155,7 +154,7 @@
                             android:text="@string/registrate"
                             android:textColor="@color/orange"
                             android:layout_marginHorizontal="35dp"
-
+                            android:onClick="launchRegistryActivity"
                             />
 
                     </LinearLayout>

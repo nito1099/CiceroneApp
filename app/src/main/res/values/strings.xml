@@ -7,4 +7,9 @@
     <string name="olvidaste_tu_contraseña">¿Olvidaste tu\ncontraseña?</string>
     <string name="es_parte_de_cicerone">¿Es parte de \nCicerone?</string>
     <string name="registrate">Regístrate!</string>
+    <string name="nombre">Nombre</string>
+    <string name="fecha_de_nacimiento">Fecha de nacimiento</string>
+    <string name="tel_fono">Teléfono</string>
+    <string name="ciudad">Ciudad</string>
+    <string name="registrar">REgistrar</string>
 </resources>

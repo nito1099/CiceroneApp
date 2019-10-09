@@ -78,4 +78,9 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this,input,Toast.LENGTH_SHORT).show();
         launchBottomNavActivity();
     }
+
+    public void launchRegistryActivity(View view) { // ONCLICK DE REGISTRO
+        Intent registryAct = new Intent(this,RegistryActivity.class);
+        startActivity(registryAct);
+    }
 }
