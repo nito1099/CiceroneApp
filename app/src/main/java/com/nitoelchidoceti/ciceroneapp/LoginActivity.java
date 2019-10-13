@@ -83,4 +83,9 @@ public class LoginActivity extends AppCompatActivity {
         Intent registryAct = new Intent(this,RegistryActivity.class);
         startActivity(registryAct);
     }
+
+    public void launch_get_email(View view) {
+        Intent getEMailAct = new Intent(this, GetMailForgotPassword.class);
+        startActivity(getEMailAct);
+    }
 }

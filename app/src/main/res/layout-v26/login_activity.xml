@@ -127,13 +127,14 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="20dp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginHorizontal="38dp"
                             android:fontFamily="@font/source_sans_pro"
                             android:text="@string/olvidaste_tu_contraseña"
                             android:textColor="@color/orange"
-                            android:textStyle="italic" />
+                            android:textStyle="italic"
+                            android:onClick="launch_get_email"/>
 
                         <TextView
                             android:layout_width="wrap_content"
