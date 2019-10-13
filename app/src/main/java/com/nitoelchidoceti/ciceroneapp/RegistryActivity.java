@@ -62,4 +62,9 @@ public class RegistryActivity extends AppCompatActivity {
         Intent BottomNavActivity = new Intent(this,BottomNav.class);
         startActivity(BottomNavActivity);
     }
+
+    public void launchLogin(View view) {
+        Intent log = new Intent(this, LoginActivity.class);
+        startActivity(log);
+    }
 }

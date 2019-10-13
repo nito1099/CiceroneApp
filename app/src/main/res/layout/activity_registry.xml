@@ -203,7 +203,8 @@
             android:fontFamily="@font/source_sans_pro"
             android:text="@string/iniciar_sesion"
             android:textColor="@color/orange"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            android:onClick="launchLogin"/>
     </LinearLayout>
 
 </LinearLayout>

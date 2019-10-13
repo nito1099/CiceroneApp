@@ -12,4 +12,7 @@
     <string name="tel_fono">Teléfono</string>
     <string name="ciudad">Ciudad</string>
     <string name="registrar">REgistrar</string>
+    <string name="facebook_app_id">796236860805014</string>
+    <string name="fb_login_protocol_scheme">fb796236860805014</string>
+
 </resources>
