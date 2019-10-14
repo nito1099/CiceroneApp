@@ -16,6 +16,7 @@ public class RecoverPasswordActivity extends AppCompatActivity {
 
     public void launchLogin2(View view) {
         Intent iToLogin = new Intent(this, LoginActivity.class);
+        iToLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(iToLogin);
     }
 }

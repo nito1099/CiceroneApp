@@ -14,5 +14,6 @@
     <string name="registrar">REgistrar</string>
     <string name="facebook_app_id">796236860805014</string>
     <string name="fb_login_protocol_scheme">fb796236860805014</string>
+    <string name="cerrar_sesion">Cerrar Sesión</string>
 
 </resources>

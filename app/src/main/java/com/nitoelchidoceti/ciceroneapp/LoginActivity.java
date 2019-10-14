@@ -118,7 +118,10 @@ public class LoginActivity extends AppCompatActivity {
                     String last_name = object.getString("last_name");
 
 
-                    txtName.setText(first_name +" "+ last_name);
+                    Toast.makeText(LoginActivity.this,"Bienvenido: "+first_name, LENGTH_SHORT);
+
+                    //launchBottomNavActivity();
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -187,11 +190,13 @@ public class LoginActivity extends AppCompatActivity {
 
     public void launchRegistryActivity(View view) { // ONCLICK DE REGISTRO
         Intent registryAct = new Intent(this,RegistryActivity.class);
+        registryAct.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(registryAct);
     }
 
     public void launch_get_email(View view) {
         Intent getEMailAct = new Intent(this, GetMailForgotPassword.class);
+        getEMailAct.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(getEMailAct);
     }
 }

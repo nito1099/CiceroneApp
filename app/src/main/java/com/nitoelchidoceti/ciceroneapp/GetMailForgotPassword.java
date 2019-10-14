@@ -19,6 +19,7 @@ public class GetMailForgotPassword extends AppCompatActivity {
 
     public void launchLogin(View view) {
         Intent launchLog = new Intent(this,LoginActivity.class);
+        launchLog.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(launchLog);
     }
 
