@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Home View"
-        android:textSize="84sp"/>
+        android:tooltipText="Categorías"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="right|bottom"
+            android:src="@drawable/ic_favorites"
+            android:backgroundTint="#B3B3B3"
+            app:borderWidth="0dp"
+            app:fabCustomSize="60dp"
+            android:onClick="launcEditActivity"
+            android:layout_alignParentRight="true"
+
+            />
+
+    </RelativeLayout>
+
 
 </LinearLayout>
