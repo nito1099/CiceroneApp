@@ -106,4 +106,5 @@ public class BottomNav extends AppCompatActivity {
 
     public void launcEditActivity(View view) {
     }
+
 }
