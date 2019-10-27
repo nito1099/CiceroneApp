@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:orientation="vertical">
-
 
         <ImageView
             android:id="@+id/imageView"
@@ -56,9 +54,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="5dp"
+            android:text="Zuegirdor Nauj"
+            android:textSize="30sp"
             android:fontFamily="@font/source_sans_pro"
-            android:text="Zuegirdor Nuaj"
-            android:textSize="30sp" />
+            android:clickable="false"
+             />
 
         <ImageView
             android:layout_width="match_parent"
@@ -73,7 +73,8 @@
             android:layout_marginVertical="5dp"
             android:fontFamily="@font/source_sans_pro"
             android:text="juanpa1099@hotmail.com"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:clickable="false"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -88,7 +89,9 @@
             android:layout_marginVertical="7dp"
             android:fontFamily="@font/source_sans_pro"
             android:text="Guadalajara, Jalisco"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:clickable="false"
+            />
 
         <ImageView
             android:layout_width="match_parent"
@@ -103,7 +106,8 @@
             android:layout_marginVertical="5dp"
             android:fontFamily="@font/source_sans_pro"
             android:text="3318420499"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:clickable="false"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -112,13 +116,15 @@
 
         <TextView
             android:id="@+id/txt_birthday"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_marginVertical="5dp"
             android:fontFamily="@font/source_sans_pro"
             android:text="13/09/1999"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:clickable="false"
+            android:layout_gravity="center"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="5dp"
@@ -160,7 +166,6 @@
             android:onClick="launchInboxActivity"
             />
 
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -172,7 +177,7 @@
             android:layout_marginLeft="250dp"
             android:layout_marginRight="30dp"
             android:layout_marginVertical="20dp"
-            android:onClick="launcEditActivity"
+            android:onClick="launchEditActivity"
             />
 
     </LinearLayout>

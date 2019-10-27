@@ -29,7 +29,7 @@
             android:backgroundTint="#B3B3B3"
             app:borderWidth="0dp"
             app:fabCustomSize="60dp"
-            android:onClick="launcEditActivity"
+            android:onClick="launchEditActivity"
             android:layout_alignParentRight="true"
 
             />

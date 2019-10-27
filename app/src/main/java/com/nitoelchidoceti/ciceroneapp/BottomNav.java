@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
@@ -104,7 +105,10 @@ public class BottomNav extends AppCompatActivity {
     public void launchInboxActivity(View view) {
     }
 
-    public void launcEditActivity(View view) {
+    public void launchEditActivity(View view) {
+        //Fragment accountView = findViewById(R.layout.fragment_account);
+        EditText nombre = findViewById(R.id.txt_nombre);
+        nombre.setClickable(true);
     }
 
 }
