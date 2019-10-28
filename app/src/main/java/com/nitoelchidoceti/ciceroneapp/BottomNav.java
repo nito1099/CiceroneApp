@@ -105,10 +105,8 @@ public class BottomNav extends AppCompatActivity {
     public void launchInboxActivity(View view) {
     }
 
-    public void launchEditActivity(View view) {
-        //Fragment accountView = findViewById(R.layout.fragment_account);
-        EditText nombre = findViewById(R.id.txt_nombre);
-        nombre.setClickable(true);
+    public void launchEditActivity() {
+        Intent launchEditAccount = new Intent(this,EditAccountActivity.class);
+        startActivity(launchEditAccount);
     }
-
 }
