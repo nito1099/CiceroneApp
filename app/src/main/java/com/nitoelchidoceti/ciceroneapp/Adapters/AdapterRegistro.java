@@ -6,14 +6,16 @@ import android.widget.EditText;
 
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoRegistro;
 import com.nitoelchidoceti.ciceroneapp.R;
+import com.nitoelchidoceti.ciceroneapp.RegistryActivity;
 
-public class AdapterRegistro {
+public class AdapterRegistro extends RegistryActivity{
 
     EditText nombre, correo, contraseña, telefono, fecha,ciudad;
-    Context contexto;
+
 
     public AdapterRegistro(){//obtiene los ids de los editText y la vista
-        View view = View.inflate(contexto, R.layout.activity_registry,null);
+
+        View view = View.inflate(this, R.layout.activity_registry,null);
         nombre = view.findViewById(R.id.txt_nombre);
         correo = view.findViewById(R.id.txt_email);
         contraseña = view.findViewById(R.id.text_input_password);
