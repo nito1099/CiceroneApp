@@ -1,7 +1,5 @@
 package com.nitoelchidoceti.ciceroneapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,17 +9,24 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterRegistro;
+import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoRegistro;
-import java.util.Calendar;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.Calendar;
 
 
 public class RegistryActivity extends AppCompatActivity {
@@ -31,48 +36,26 @@ public class RegistryActivity extends AppCompatActivity {
     };
     EditText etxtDate;
     Button registrar;
+    EditText nombre, correo, contraseña, telefono, fecha, ciudad;
+    TextView consulta;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registry);
         registrar = findViewById(R.id.btnRegister);
-        registrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {//ONCLICK DE BOTON REGISTRAR
-                AdapterRegistro inf = new AdapterRegistro();
-                PojoRegistro pojo = new PojoRegistro();
-                pojo=inf.llenarDatosAlPojo();
-
-                if(v.getId()== R.id.btnRegister);{
-
-                    String url = "http://ec2-35-166-69-188.us-west-2.compute.amazonaws.com/Cicerone/PHP/registroTurista.php?nombre="+pojo.getNombre()+
-                            "&correo="+pojo.getCorreo()+"&contraseña="+pojo.getContraseña()+"&telefono="+pojo.getTelefono()+
-                            "&fecha="+pojo.getNacimiento()+"&ciudad="+pojo.getCiudad();
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET,url,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    Toast.makeText(RegistryActivity.this,"Datos agregados correctamente"+response.length(),Toast.LENGTH_SHORT).show();
-                                    launchBottom();
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(RegistryActivity.this,error.getMessage(),Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    RequestQueue queue = Volley.newRequestQueue(RegistryActivity.this);
-                    queue.add(stringRequest);
-                }
-            }
-        });
-
-        AutoCompleteTextView aTxtViewCiudad = findViewById(R.id.aTxtViewCiudad);
-        ArrayAdapter<String> adapterCiudad = new ArrayAdapter<String>(this,
+        nombre = findViewById(R.id.etxt_nombre_registry_activity);
+        correo = findViewById(R.id.etxt_correo_registry_activity);
+        contraseña = findViewById(R.id.etxt_input_password_registry_activity);
+        telefono = findViewById(R.id.etxt_telefono_registry_activity);
+        fecha = findViewById(R.id.etxt_nacimiento_registry_activity);
+        ciudad = findViewById(R.id.atxt_view_ciudad_registry_activity);
+        consulta = findViewById(R.id.txt_ingresa_registry_activity);
+        AutoCompleteTextView aTxtViewCiudad = findViewById(R.id.atxt_view_ciudad_registry_activity);
+        ArrayAdapter<String> adapterCiudad = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, CITIES);
         aTxtViewCiudad.setAdapter(adapterCiudad);
 
-        etxtDate = findViewById(R.id.txt_nacimiento);
+        etxtDate = findViewById(R.id.etxt_nacimiento_registry_activity);
         Calendar calendar = Calendar.getInstance();
 
         final int year = calendar.get(Calendar.YEAR);
@@ -87,12 +70,12 @@ public class RegistryActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         month=month+1;
-                        String date = day+"/"+ month+"/"+ year;
+                        String date = year + "/" + month + "/" + day;
 
                         etxtDate.setText(date);
                     }
                 },year,month,day);
-                datePickerDialog.show();;
+                datePickerDialog.show();
             }
         });
     }
@@ -107,4 +90,53 @@ public class RegistryActivity extends AppCompatActivity {
         startActivity(BottomNavActivity);
     }
 
+
+    public void insertarNuevoTurista(View view) {
+
+        PojoRegistro pojo = new PojoRegistro();
+        pojo.setNombre(nombre.getText().toString());
+        pojo.setCorreo(correo.getText().toString());
+        pojo.setContraseña(contraseña.getText().toString());
+        pojo.setTelefono((telefono.getText().toString()));
+        pojo.setNacimiento(fecha.getText().toString());
+        pojo.setCiudad(ciudad.getText().toString());
+
+
+        final String url = "http://192.168.1.72/Cicerone/PHP/registroTurista.php?nombre=" + pojo.getNombre() +
+                "&correo=" + pojo.getCorreo() + "&contraseña=" + pojo.getContraseña() + "&telefono=" + pojo.getTelefono() +
+                "&fecha=" + pojo.getNacimiento() + "&lugar=2";
+        JsonArrayRequest jsonRequest = new JsonArrayRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try{
+                    JSONObject success = response.getJSONObject(0);
+                    if (success.getString("success").equals("false")){
+                        Toast.makeText(RegistryActivity.this,"Ya se ha registrado " +
+                                "ese correo.",Toast.LENGTH_SHORT).show();
+                    }else{
+                        String ID;
+                        Intent intent = new Intent(RegistryActivity.this,BottomNav.class);
+                        ID=success.getString("id");
+                        Global.getObject().setId(ID);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }catch (Exception e){
+                    Toast.makeText(RegistryActivity.this,"Error al obtene" +
+                            "r los datos del Json",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(RegistryActivity.this,"Error:"+error.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(RegistryActivity.this);
+        queue.add(jsonRequest);
+    }
 }

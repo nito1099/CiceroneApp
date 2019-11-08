@@ -17,6 +17,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -32,7 +38,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.nitoelchidoceti.ciceroneapp.Fragments.HomeFragment;
+import com.nitoelchidoceti.ciceroneapp.Global.Global;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,8 +56,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout textInputEmail,textInputPassword;
     private LoginButton loginButtonFb;
     private CallbackManager callbackManager;
-    private EditText txtEmail, txtName;
-
+    private EditText txtEmail, txtName, txtPass;
+    public String ID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +69,9 @@ public class LoginActivity extends AppCompatActivity {
         textInputPassword.setNextFocusDownId(R.id.btnLogin);
 
         loginButtonFb = findViewById(R.id.login_button_fb);
-        txtName = findViewById(R.id.contraseña);
-        txtEmail = findViewById(R.id.correo);
+        txtName = findViewById(R.id.etxt_contraseña_login);
+        txtEmail = findViewById(R.id.etxt_correo_login);
+        txtPass = findViewById(R.id.etxt_contraseña_login);
 
         callbackManager =  CallbackManager.Factory.create();
 
@@ -99,8 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
             if (currentAccessToken==null){                  //SI NO FUNCA*******
-                txtName.setText("se deslogueo");
-                txtEmail.setText("se deslogueo");
+
                 Toast.makeText(LoginActivity.this,"User Loged Out", Toast.LENGTH_SHORT).show();
             }else {
                 loadUserProfile(currentAccessToken);
@@ -140,9 +148,42 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void launchBottomNavActivity(){
-        Intent intent = new Intent(this,BottomNav.class);
-        startActivity(intent);
+    private void launchBottomNavActivity(final View vista){
+
+        final String url = "http://192.168.1.72/Cicerone/PHP/login.php?correo="+txtEmail.getText().toString()+
+                "&contraseña="+txtPass.getText().toString();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject loginTurista = response.getJSONObject(0);
+                            if (loginTurista.getString("success").equals("false")){
+                                Toast.makeText(vista.getContext(),"Verifique sus credenciales.",LENGTH_SHORT).show();
+                            }else{
+                                Intent intent = new Intent(vista.getContext(),BottomNav.class);
+                                ID=loginTurista.getString("id");
+                                Global.getObject().setId(ID);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+
+                        } catch (JSONException e) {
+
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(vista.getContext(),"Error: "+error.getMessage(),LENGTH_SHORT).show();
+                    }
+                });
+        RequestQueue ejecuta = Volley.newRequestQueue(vista.getContext());
+        ejecuta.add(jsonArrayRequest);
     }
 
     private boolean validateEmail(){
@@ -184,8 +225,8 @@ public class LoginActivity extends AppCompatActivity {
         input += "\n";
         input += "Password: " + textInputPassword.getEditText().getText().toString();
 
-        Toast.makeText(this,input, LENGTH_SHORT).show();
-        launchBottomNavActivity();
+        //Toast.makeText(this,input, LENGTH_SHORT).show();
+        launchBottomNavActivity(view);
     }
 
     public void launchRegistryActivity(View view) { // ONCLICK DE REGISTRO

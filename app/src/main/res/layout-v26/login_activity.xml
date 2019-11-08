@@ -60,19 +60,19 @@
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/correo"
+                            android:id="@+id/etxt_correo_login"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="38dp"
                             android:layout_gravity="center"
-                            android:fontFamily="@font/source_sans_pro"
                             android:autofillHints="@string/correo"
+                            android:fontFamily="@font/source_sans_pro"
                             android:hint="@string/correo"
                             android:inputType="textEmailAddress"
+                            android:text="1"
                             android:textColor="#696969"
                             android:textColorHint="#AFAFAF"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            android:text="1"
 
                             />
 
@@ -89,7 +89,7 @@
                         app:passwordToggleEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/contraseña"
+                            android:id="@+id/etxt_contraseña_login"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"

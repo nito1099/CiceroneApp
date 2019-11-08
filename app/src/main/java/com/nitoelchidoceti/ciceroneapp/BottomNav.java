@@ -20,6 +20,7 @@ import com.nitoelchidoceti.ciceroneapp.Fragments.GuidesFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.HomeFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.MapFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.SearchFragment;
+import com.nitoelchidoceti.ciceroneapp.Global.Global;
 
 public class BottomNav extends AppCompatActivity {
 
@@ -35,7 +36,7 @@ public class BottomNav extends AppCompatActivity {
                 new HomeFragment()).commit();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        Toast.makeText(this,""+ Global.getObject().getId(),Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class BottomNav extends AppCompatActivity {
     }
 
     public void launchEditActivity() {
-        Intent launchEditAccount = new Intent(this,EditAccountActivity.class);
-        startActivity(launchEditAccount);
+        //Intent launchEditAccount = new Intent(this,EditAccountActivity.class);
+        //startActivity(launchEditAccount);
     }
 }

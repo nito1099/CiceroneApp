@@ -26,6 +26,7 @@
         android:layout_marginTop="40dp"/>
 
     <TextView
+        android:id="@+id/txt_ingresa_registry_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/source_sans_pro"
@@ -37,14 +38,14 @@
         android:textColor="@color/orange"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/txt_nombre"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp">
 
         <com.google.android.material.textfield.TextInputEditText
-
+            android:id="@+id/etxt_nombre_registry_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -59,14 +60,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/txt_Correo"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp">
 
         <com.google.android.material.textfield.TextInputEditText
-
+            android:id="@+id/etxt_correo_registry_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -81,7 +82,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_password"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -90,6 +91,7 @@
         android:layout_marginTop="20dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etxt_input_password_registry_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -105,48 +107,8 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/txt_telefono"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="20dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/source_sans_pro"
-            android:hint="@string/tel_fono"
-            android:inputType="phone"
-            android:textColor="#696969"
-            android:textColorHint="#AFAFAF"
-            android:textSize="20sp"
-            android:text="1"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-
-        <EditText
-            android:id="@+id/txt_nacimiento"
-            android:layout_marginTop="20dp"
-            android:layout_marginHorizontal="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/source_sans_pro"
-            android:hint="@string/fecha_de_nacimiento"
-            android:textColor="#696969"
-            android:textColorHint="#AFAFAF"
-            android:textSize="20sp"
-            android:maxLength="10"
-            />
-
     <AutoCompleteTextView
-        android:id="@+id/aTxtViewCiudad"
+        android:id="@+id/atxt_view_ciudad_registry_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -160,8 +122,51 @@
         android:inputType="textCapSentences"
         />
 
+    <com.google.android.material.textfield.TextInputLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etxt_telefono_registry_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/source_sans_pro"
+            android:hint="@string/tel_fono"
+            android:inputType="phone"
+            android:textColor="#696969"
+            android:textColorHint="#AFAFAF"
+            android:textSize="20sp"
+            android:text="1"
+            android:maxLength="10"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <EditText
+            android:id="@+id/etxt_nacimiento_registry_activity"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/source_sans_pro"
+            android:hint="@string/fecha_de_nacimiento"
+            android:textColor="#696969"
+            android:textColorHint="#AFAFAF"
+            android:textSize="20sp"
+            android:maxLength="10"
+            android:inputType="date"
+            />
+
+
+
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btn_register_registry_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="50dp"
@@ -170,11 +175,11 @@
         android:backgroundTint="@color/orange"
         android:background="@drawable/button_background"
         android:fontFamily="@font/source_sans_pro"
-        android:onClick="launchBottomActivity"
         android:src="@drawable/button_background"
         android:text="@string/registrar"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:onClick="insertarNuevoTurista"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
