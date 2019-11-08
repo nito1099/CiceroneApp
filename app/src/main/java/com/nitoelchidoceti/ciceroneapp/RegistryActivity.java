@@ -36,7 +36,7 @@ public class RegistryActivity extends AppCompatActivity {
     };
     EditText etxtDate;
     Button registrar;
-    EditText nombre, correo, contraseña, telefono, fecha, ciudad;
+    EditText nombre, correo, contraseña, telefono, ciudad;
     TextView consulta;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +47,8 @@ public class RegistryActivity extends AppCompatActivity {
         correo = findViewById(R.id.etxt_correo_registry_activity);
         contraseña = findViewById(R.id.etxt_input_password_registry_activity);
         telefono = findViewById(R.id.etxt_telefono_registry_activity);
-        fecha = findViewById(R.id.etxt_nacimiento_registry_activity);
         ciudad = findViewById(R.id.atxt_view_ciudad_registry_activity);
+        ciudad.setNextFocusDownId(telefono.getId());
         consulta = findViewById(R.id.txt_ingresa_registry_activity);
         AutoCompleteTextView aTxtViewCiudad = findViewById(R.id.atxt_view_ciudad_registry_activity);
         ArrayAdapter<String> adapterCiudad = new ArrayAdapter<>(this,
@@ -56,6 +56,7 @@ public class RegistryActivity extends AppCompatActivity {
         aTxtViewCiudad.setAdapter(adapterCiudad);
 
         etxtDate = findViewById(R.id.etxt_nacimiento_registry_activity);
+
         Calendar calendar = Calendar.getInstance();
 
         final int year = calendar.get(Calendar.YEAR);
@@ -98,7 +99,7 @@ public class RegistryActivity extends AppCompatActivity {
         pojo.setCorreo(correo.getText().toString());
         pojo.setContraseña(contraseña.getText().toString());
         pojo.setTelefono((telefono.getText().toString()));
-        pojo.setNacimiento(fecha.getText().toString());
+        pojo.setNacimiento(etxtDate.getText().toString());
         pojo.setCiudad(ciudad.getText().toString());
 
 

@@ -57,7 +57,7 @@ public class AccountFragment extends Fragment {
 
     public void infDeTurista(View view, final Context contexto2){
 
-        final String url = "http://192.168.1.72/Cicerone/PHP/infCuentaTurista.php?id="+ Global.getObject().getId();//CAMBIAR EL ID****
+        final String url = "http://192.168.1.72/Cicerone/PHP/infCuentaTurista.php?id="+ Global.getObject().getId();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
                 url,
                 null,

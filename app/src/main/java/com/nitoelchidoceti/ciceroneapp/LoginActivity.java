@@ -179,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(vista.getContext(),"Error: "+error.getMessage(),LENGTH_SHORT).show();
+                        Toast.makeText(vista.getContext(),"Si estas concectado a la red? Error: "+error.getMessage(),LENGTH_SHORT).show();
                     }
                 });
         RequestQueue ejecuta = Volley.newRequestQueue(vista.getContext());

@@ -36,7 +36,7 @@ public class BottomNav extends AppCompatActivity {
                 new HomeFragment()).commit();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Toast.makeText(this,""+ Global.getObject().getId(),Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,""+ Global.getObject().getId(),Toast.LENGTH_LONG).show();
     }
 
     @Override
