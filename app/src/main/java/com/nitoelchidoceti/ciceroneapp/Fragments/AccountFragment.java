@@ -23,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.CallbackManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.LoginActivity;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoCuenta;
@@ -38,6 +39,7 @@ public class AccountFragment extends Fragment {
 
     private TextView txtNombre,txtEmail,txtPlace,txtCell,txtBirthday;
     Context contexto;
+    public FloatingActionButton btnEditarInfCuenta;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -49,6 +51,8 @@ public class AccountFragment extends Fragment {
         txtPlace=myView.findViewById(R.id.txt_lugar);
         txtCell=myView.findViewById(R.id.txt_telefono);
         txtBirthday=myView.findViewById(R.id.txt_birthday);
+        btnEditarInfCuenta = myView.findViewById(R.id.btn_edit_account);
+
         contexto=myView.getContext();
         infDeTurista(myView,contexto);
 
@@ -57,7 +61,7 @@ public class AccountFragment extends Fragment {
 
     public void infDeTurista(View view, final Context contexto2){
 
-        final String url = "http://192.168.1.72/Cicerone/PHP/infCuentaTurista.php?id="+ Global.getObject().getId();
+        final String url = "http://ec2-52-25-238-53.us-west-2.compute.amazonaws.com/Cicerone/PHP/infCuentaTurista.php?id="+ Global.getObject().getId();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
                 url,
                 null,

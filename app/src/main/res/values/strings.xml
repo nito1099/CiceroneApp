@@ -18,10 +18,11 @@
     <string name="Listo">Listo</string>
 
     <string-array name="categorias">
+        <item>Iglesias y catedrales</item>
+        <item>Edificios con valor arquitectonico</item>
         <item>Museos</item>
-        <item>Edificios Históricos</item>
         <item>Lugares de interés</item>
-        <item>Iglesias y Catedrales</item>
+        <item>Categorías</item>
     </string-array>
 
 

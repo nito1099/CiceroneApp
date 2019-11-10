@@ -68,7 +68,7 @@
                             android:fontFamily="@font/source_sans_pro"
                             android:hint="@string/correo"
                             android:inputType="textEmailAddress"
-                            android:text="1"
+                            android:text="juanpa1099@hotmail.com"
                             android:textColor="#696969"
                             android:textColorHint="#AFAFAF"
                             android:textSize="20sp"
@@ -101,7 +101,7 @@
                             android:textColorHint="#AFAFAF"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            android:text="1"
+                            android:text="clave"
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 

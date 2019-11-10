@@ -103,7 +103,7 @@ public class RegistryActivity extends AppCompatActivity {
         pojo.setCiudad(ciudad.getText().toString());
 
 
-        final String url = "http://192.168.1.72/Cicerone/PHP/registroTurista.php?nombre=" + pojo.getNombre() +
+        final String url = "http://ec2-52-25-238-53.us-west-2.compute.amazonaws.com/Cicerone/PHP/registroTurista.php?nombre=" + pojo.getNombre() +
                 "&correo=" + pojo.getCorreo() + "&contraseña=" + pojo.getContraseña() + "&telefono=" + pojo.getTelefono() +
                 "&fecha=" + pojo.getNacimiento() + "&lugar=2";
         JsonArrayRequest jsonRequest = new JsonArrayRequest(Request.Method.GET,

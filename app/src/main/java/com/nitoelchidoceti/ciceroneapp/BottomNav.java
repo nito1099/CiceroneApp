@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nitoelchidoceti.ciceroneapp.Fragments.AccountFragment;
+import com.nitoelchidoceti.ciceroneapp.Fragments.EditAccountFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.GuidesFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.HomeFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.MapFragment;
@@ -106,8 +109,17 @@ public class BottomNav extends AppCompatActivity {
     public void launchInboxActivity(View view) {
     }
 
-    public void launchEditActivity() {
-        //Intent launchEditAccount = new Intent(this,EditAccountActivity.class);
-        //startActivity(launchEditAccount);
-    }
+    /*public void launchEditFragment() {//AIIUUUDAAA D':
+        BottomNavigationView bottomNav = findViewById(R.id.menu_bottom_navigation);
+        bottomNav.getMenu().findItem(R.id.nav_account).setChecked(false);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new EditAccountFragment()).commit();
+       //*************************************
+       Fragment fragment = new EditAccountFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container,fragment);
+        transaction.commit();
+       Toast.makeText(getApplicationContext(),"Presionaste el obton de edita cuenta!",Toast.LENGTH_SHORT).show();
+    }*/
 }
