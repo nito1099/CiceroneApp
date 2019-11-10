@@ -1,10 +1,12 @@
 package com.nitoelchidoceti.ciceroneapp.Fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 public class AccountFragment extends Fragment {
 
 
@@ -56,12 +60,33 @@ public class AccountFragment extends Fragment {
         contexto=myView.getContext();
         infDeTurista(myView,contexto);
 
+        Calendar calendario = Calendar.getInstance();
+
+        final int year = calendario.get(Calendar.YEAR);
+        final int month = calendario.get(Calendar.MONTH);
+        final int day = calendario.get(Calendar.DAY_OF_MONTH);
+
+        txtBirthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(contexto, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month=month+1;
+                        String date = year + "/"+month+"/"+ dayOfMonth ;
+                        txtBirthday.setText(date);
+                    }
+                }, year,month,day);
+                datePickerDialog.show();
+            }
+        });
+
         return myView;
     }
 
     public void infDeTurista(View view, final Context contexto2){
 
-        final String url = "http://ec2-52-25-238-53.us-west-2.compute.amazonaws.com/Cicerone/PHP/infCuentaTurista.php?id="+ Global.getObject().getId();
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/infCuentaTurista.php?id="+ Global.getObject().getId();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
                 url,
                 null,

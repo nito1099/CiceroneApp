@@ -34,15 +34,6 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment  {
     Context contexto;
-    /*public HomeFragment(){
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        contexto=context;
-    }*/
 
     RecyclerView myRcView;
     AdapterDeLugar adapter;
@@ -71,27 +62,23 @@ public class HomeFragment extends Fragment  {
         spinner.setSelection(4);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, final View view, int position, long id) {
                 if (position != 4) {
-                    final String url = "http://ec2-52-25-238-53.us-west-2.compute.amazonaws.com/Cicerone/PHP/lugarRecycle.php?Categoria=" + (position + 1);
+
+                    final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/lugarRecycle.php?Categoria=" + (position + 1);
                     JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
                             url,
                             null,
                             new Response.Listener<JSONArray>() {
                                 @Override
                                 public void onResponse(JSONArray response) {
-                                    try {
-
 
                                         try {
-                                            mostrar(response);
+                                            mostrar(response,view);
                                         } catch (Exception e) {
                                             Toast.makeText(contexto, "" + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
 
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
                                 }
                             }, new Response.ErrorListener() {
                         @Override
@@ -114,8 +101,7 @@ public class HomeFragment extends Fragment  {
         return myView;
     }
 
-    public void mostrar(JSONArray info) throws JSONException {
-
+    public void mostrar(JSONArray info, View myView) throws JSONException {
 
         for (int i = 0; i < info.length(); i++) {
             lugar = new PojoLugar();
@@ -125,6 +111,10 @@ public class HomeFragment extends Fragment  {
             lugar.setDescripcion(objeto.getString("Descripcion"));
             lugares.add(lugar);
         }
+        /*
+        * lugares.clear();//limpio al array anterior
+        adapter.notifyDataSetChanged();//le aviso al rc
+        * */
         adapter = new AdapterDeLugar(lugares);
         adapter.contexto = contexto;
         myRcView.setAdapter(adapter);

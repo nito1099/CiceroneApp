@@ -1,22 +1,25 @@
 package com.nitoelchidoceti.ciceroneapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nitoelchidoceti.ciceroneapp.Fragments.AccountFragment;
@@ -26,10 +29,14 @@ import com.nitoelchidoceti.ciceroneapp.Fragments.MapFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.SearchFragment;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class BottomNav extends AppCompatActivity {
 
     private EditText txtNombre,txtEmail,txtPlace,txtCell,txtBirthday;
-    Button btnListo;
+    TextView btnListo;
     FloatingActionButton btnEditar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +50,7 @@ public class BottomNav extends AppCompatActivity {
                 new HomeFragment()).commit();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //Toast.makeText(this,""+ Global.getObject().getId(),Toast.LENGTH_LONG).show();
+        txtBirthday = findViewById(R.id.txt_birthday_account);
 
     }
 
@@ -97,9 +104,53 @@ public class BottomNav extends AppCompatActivity {
                 }
             };
 
-    public void launchLoginFromAccount(View view) {
-        if (btnListo.getText().equals("Listo")){
+    public void launchLoginFromAccount(final View view) {
+        txtNombre = findViewById(R.id.txt_nombre_account);
+        txtEmail = findViewById(R.id.txt_email_account);
+        txtPlace = findViewById(R.id.txt_lugar_account);
+        txtCell = findViewById(R.id.txt_telefono_account);
+        txtBirthday = findViewById(R.id.txt_birthday_account);
+        btnEditar = findViewById(R.id.btn_edit_account);
+        btnListo = findViewById(R.id.btn_log_out);
 
+        if (btnListo.getText().equals("Listo")){
+            final String link = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/updateInfTurista.php" +
+                    "?nombre=" + txtNombre.getText().toString() + "&correo=" + txtEmail.getText().toString() + "&telefono=" + txtCell.getText().toString() +
+                    "&fecha=" + txtBirthday.getText().toString() + "&lugar=" + txtPlace.getText().toString() + "&ID=" + Global.getObject().getId();
+            JsonArrayRequest pet = new JsonArrayRequest(Request.Method.GET,
+                    link,
+                    null,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            //Toast.makeText(view.getContext(),""+link,Toast.LENGTH_LONG).show();
+                            try {
+                                JSONObject obj = response.getJSONObject(0);
+                                if (obj.getString("success").equals("true")) {
+                                    Toast.makeText(view.getContext(), "Datos actualizados correctamente", Toast.LENGTH_SHORT).show();
+                                    txtNombre.setEnabled(false);
+                                    txtEmail.setEnabled(false);
+                                    txtPlace.setEnabled(false);
+                                    txtCell.setEnabled(false);
+                                    txtBirthday.setEnabled(false);
+                                    btnListo.setText("Cerrar Sesión");
+                                    btnEditar.setEnabled(false);
+
+                                } else {
+                                    Toast.makeText(view.getContext(), "El correo ingresado ya existe.", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(view.getContext(), "" + error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            RequestQueue peticion = Volley.newRequestQueue(view.getContext());
+            peticion.add(pet);
         }else{
             Intent launchLoginFromAccount = new Intent(this,LoginActivity.class);
             launchLoginFromAccount.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -136,7 +187,6 @@ public class BottomNav extends AppCompatActivity {
         txtBirthday.setEnabled(true);
         btnListo.setText("Listo");
         btnEditar.setEnabled(false);
-
 
     }
 }

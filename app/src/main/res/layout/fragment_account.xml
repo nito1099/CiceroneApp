@@ -50,14 +50,16 @@
 
         <EditText
             android:id="@+id/txt_nombre_account"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
             android:enabled="false"
             android:fontFamily="@font/source_sans_pro"
             android:layout_marginVertical="5dp"
-            android:textSize="30sp" />
+            android:layout_marginHorizontal="10dp"
+            android:textSize="30sp"
+            android:gravity="center_horizontal"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -67,7 +69,7 @@
 
         <EditText
             android:id="@+id/txt_email_account"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/source_sans_pro"
@@ -75,6 +77,8 @@
             android:enabled="false"
             android:background="@android:color/transparent"
             android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center_horizontal"
             />
 
         <ImageView
@@ -84,7 +88,7 @@
 
         <EditText
             android:id="@+id/txt_lugar_account"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/source_sans_pro"
@@ -92,6 +96,8 @@
             android:enabled="false"
             android:background="@android:color/transparent"
             android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center_horizontal"
             />
 
         <ImageView
@@ -101,7 +107,7 @@
 
         <EditText
             android:id="@+id/txt_telefono_account"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/source_sans_pro"
@@ -109,6 +115,8 @@
             android:enabled="false"
             android:background="@android:color/transparent"
             android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center_horizontal"
             />
 
         <ImageView
@@ -118,7 +126,7 @@
 
         <EditText
             android:id="@+id/txt_birthday_account"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:fontFamily="@font/source_sans_pro"
@@ -126,13 +134,17 @@
             android:enabled="false"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
-            android:layout_marginVertical="5dp"/>
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center_horizontal"
+            android:focusableInTouchMode="false"
+            />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:background="#D6D6D6" />
 
-        <Button
+        <TextView
             android:id="@+id/btn_log_out"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -140,10 +152,12 @@
             android:layout_marginVertical="5dp"
             android:fontFamily="@font/source_sans_pro"
             android:text="@string/cerrar_sesion"
-            android:textSize="20sp"
+            android:textSize="30sp"
             android:textColor="@color/orange"
             android:onClick="launchLoginFromAccount"
+
             />
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="5dp"
@@ -165,7 +179,7 @@
             app:borderWidth="0dp"
             app:fabCustomSize="60dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:onClick="launchInboxActivity"
             />
 
@@ -174,7 +188,7 @@
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:layout_marginLeft="250dp"
             android:layout_marginRight="30dp"
             android:backgroundTint="#B3B3B3"

@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void launchBottomNavActivity(final View vista){
 
-        final String url = "http://ec2-52-25-238-53.us-west-2.compute.amazonaws.com/Cicerone/PHP/login.php?correo="+txtEmail.getText().toString()+
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/login.php?correo="+txtEmail.getText().toString()+
                 "&contraseña="+txtPass.getText().toString();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
                 url,
