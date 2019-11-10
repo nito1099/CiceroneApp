@@ -12,13 +12,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nitoelchidoceti.ciceroneapp.Fragments.AccountFragment;
-import com.nitoelchidoceti.ciceroneapp.Fragments.EditAccountFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.GuidesFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.HomeFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.MapFragment;
@@ -27,6 +28,9 @@ import com.nitoelchidoceti.ciceroneapp.Global.Global;
 
 public class BottomNav extends AppCompatActivity {
 
+    private EditText txtNombre,txtEmail,txtPlace,txtCell,txtBirthday;
+    Button btnListo;
+    FloatingActionButton btnEditar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,7 @@ public class BottomNav extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //Toast.makeText(this,""+ Global.getObject().getId(),Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -93,9 +98,14 @@ public class BottomNav extends AppCompatActivity {
             };
 
     public void launchLoginFromAccount(View view) {
-        Intent launchLoginFromAccount = new Intent(this,LoginActivity.class);
-        launchLoginFromAccount.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(launchLoginFromAccount);
+        if (btnListo.getText().equals("Listo")){
+
+        }else{
+            Intent launchLoginFromAccount = new Intent(this,LoginActivity.class);
+            launchLoginFromAccount.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(launchLoginFromAccount);
+        }
+
     }
 
     public void launchHomeFragment(View view) {
@@ -109,17 +119,24 @@ public class BottomNav extends AppCompatActivity {
     public void launchInboxActivity(View view) {
     }
 
-    /*public void launchEditFragment() {//AIIUUUDAAA D':
-        BottomNavigationView bottomNav = findViewById(R.id.menu_bottom_navigation);
-        bottomNav.getMenu().findItem(R.id.nav_account).setChecked(false);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new EditAccountFragment()).commit();
-       //*************************************
-       Fragment fragment = new EditAccountFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container,fragment);
-        transaction.commit();
-       Toast.makeText(getApplicationContext(),"Presionaste el obton de edita cuenta!",Toast.LENGTH_SHORT).show();
-    }*/
+
+    public void editarInfTurista(View view) {
+        txtNombre=findViewById(R.id.txt_nombre_account);
+        txtEmail=findViewById(R.id.txt_email_account);
+        txtPlace=findViewById(R.id.txt_lugar_account);
+        txtCell = findViewById(R.id.txt_telefono_account);
+        txtBirthday = findViewById(R.id.txt_birthday_account);
+        btnEditar=findViewById(R.id.btn_edit_account);
+        btnListo=findViewById(R.id.btn_log_out);
+
+        txtNombre.setEnabled(true);
+        txtEmail.setEnabled(true);
+        txtPlace.setEnabled(true);
+        txtCell.setEnabled(true);
+        txtBirthday.setEnabled(true);
+        btnListo.setText("Listo");
+        btnEditar.setEnabled(false);
+
+
+    }
 }

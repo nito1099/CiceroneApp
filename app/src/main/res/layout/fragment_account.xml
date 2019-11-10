@@ -48,28 +48,33 @@
             android:layout_height="5dp"
             android:background="#D6D6D6" />
 
-        <TextView
-            android:id="@+id/txt_nombre"
+        <EditText
+            android:id="@+id/txt_nombre_account"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginVertical="5dp"
+            android:background="@android:color/transparent"
+            android:enabled="false"
             android:fontFamily="@font/source_sans_pro"
+            android:layout_marginVertical="5dp"
             android:textSize="30sp" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="#D6D6D6" />
+            android:background="#D6D6D6"
+            />
 
-        <TextView
-            android:id="@+id/txt_email"
+        <EditText
+            android:id="@+id/txt_email_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/source_sans_pro"
+            android:textSize="30sp"
+            android:enabled="false"
+            android:background="@android:color/transparent"
             android:layout_marginVertical="5dp"
-            android:fontFamily="@font/source_sans_pro"
-            android:textSize="30sp"
             />
 
         <ImageView
@@ -77,30 +82,16 @@
             android:layout_height="5dp"
             android:background="#D6D6D6" />
 
-        <TextView
-            android:id="@+id/txt_lugar"
-            android:layout_width="wrap_content"
-            android:layout_height="31dp"
-            android:layout_gravity="center"
-            android:layout_marginVertical="7dp"
-            android:fontFamily="@font/source_sans_pro"
-            android:textSize="30sp"
-
-            />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="#D6D6D6" />
-
-        <TextView
-            android:id="@+id/txt_telefono"
+        <EditText
+            android:id="@+id/txt_lugar_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginVertical="5dp"
             android:fontFamily="@font/source_sans_pro"
             android:textSize="30sp"
+            android:enabled="false"
+            android:background="@android:color/transparent"
+            android:layout_marginVertical="5dp"
             />
 
         <ImageView
@@ -108,30 +99,48 @@
             android:layout_height="5dp"
             android:background="#D6D6D6" />
 
-        <TextView
-            android:id="@+id/txt_birthday"
+        <EditText
+            android:id="@+id/txt_telefono_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/source_sans_pro"
+            android:textSize="30sp"
+            android:enabled="false"
+            android:background="@android:color/transparent"
+            android:layout_marginVertical="5dp"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="#D6D6D6" />
+
+        <EditText
+            android:id="@+id/txt_birthday_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:layout_marginVertical="5dp"
             android:fontFamily="@font/source_sans_pro"
             android:textSize="30sp"
-
-            android:layout_gravity="center"/>
+            android:enabled="false"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:layout_marginVertical="5dp"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:background="#D6D6D6" />
 
-        <TextView
-            android:id="@+id/txt_button_log_out"
+        <Button
+            android:id="@+id/btn_log_out"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_marginVertical="5dp"
             android:fontFamily="@font/source_sans_pro"
             android:text="@string/cerrar_sesion"
-            android:textSize="30sp"
+            android:textSize="20sp"
             android:textColor="@color/orange"
             android:onClick="launchLoginFromAccount"
             />
@@ -169,10 +178,10 @@
             android:layout_marginLeft="250dp"
             android:layout_marginRight="30dp"
             android:backgroundTint="#B3B3B3"
-            android:onClick="launchEditFragment"
             android:src="@drawable/ic_edit"
             app:borderWidth="0dp"
-            app:fabCustomSize="60dp" />
+            app:fabCustomSize="60dp"
+            android:onClick="editarInfTurista"/>
 
     </LinearLayout>
 

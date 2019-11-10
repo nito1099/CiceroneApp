@@ -37,7 +37,7 @@ public class AccountFragment extends Fragment {
 
 
 
-    private TextView txtNombre,txtEmail,txtPlace,txtCell,txtBirthday;
+    private EditText txtNombre,txtEmail,txtPlace,txtCell,txtBirthday;
     Context contexto;
     public FloatingActionButton btnEditarInfCuenta;
     @Nullable
@@ -46,11 +46,11 @@ public class AccountFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_account,container,false);
 
-        txtNombre=myView.findViewById(R.id.txt_nombre);
-        txtEmail=myView.findViewById(R.id.txt_email);
-        txtPlace=myView.findViewById(R.id.txt_lugar);
-        txtCell=myView.findViewById(R.id.txt_telefono);
-        txtBirthday=myView.findViewById(R.id.txt_birthday);
+        txtNombre=myView.findViewById(R.id.txt_nombre_account);
+        txtEmail=myView.findViewById(R.id.txt_email_account);
+        txtPlace=myView.findViewById(R.id.txt_lugar_account);
+        txtCell=myView.findViewById(R.id.txt_telefono_account);
+        txtBirthday=myView.findViewById(R.id.txt_birthday_account);
         btnEditarInfCuenta = myView.findViewById(R.id.btn_edit_account);
 
         contexto=myView.getContext();
