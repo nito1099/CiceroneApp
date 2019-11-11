@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,46 +8,51 @@
     android:orientation="vertical"
     >
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/orange"
-        app:title="@string/Cicerone"
-        app:titleTextColor="@color/white"
-        app:titleMarginStart="30dp"
-        app:navigationContentDescription="@string/Cicerone"
-        />
-
-    <LinearLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/menu_bottom_navigation"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/menu_bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_gravity="top|start"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="60dp"
+            android:background="@color/orange"
+            app:navigationContentDescription="@string/Cicerone"
+            app:title="@string/Cicerone"
+            app:titleMarginStart="30dp"
+            app:titleTextColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/menu_bottom_navigation"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="-60dp"
+            android:orientation="vertical"
+            >
+
+        </LinearLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/menu_bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:background="?android:attr/windowBackground"
             android:backgroundTint="@color/orange"
             app:itemIconTint="@color/white_dark"
             app:itemTextColor="@color/white_dark"
             app:menu="@menu/bottom_navigation"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentBottom="true"
+            />
 
     </RelativeLayout>
 
 
-</LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,40 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/spinnerCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:tooltipText="Categorías"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="right|bottom"
-            android:src="@drawable/ic_favorites"
-            android:backgroundTint="#B3B3B3"
-            app:borderWidth="0dp"
-            app:fabCustomSize="60dp"
-            android:onClick="launchEditActivity"
-            android:layout_alignParentRight="true"
-
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinnerCategory"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:tooltipText="Categorías"
             />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="#D6D6D6" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recycle_home"/>
+
+    </LinearLayout>
+
     </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_favorites"
+        android:backgroundTint="#B3B3B3"
+        app:borderWidth="0dp"
+        app:fabCustomSize="60dp"
+        android:onClick="launchEditActivity"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        />
 
-
-</LinearLayout>
+</com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout>
