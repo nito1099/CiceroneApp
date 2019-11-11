@@ -70,7 +70,8 @@ public class BottomNav extends AppCompatActivity {
     }
 
     private void launchQr() {//CODIGO QR ACTIVITY
-        Toast.makeText(getApplicationContext(),"Se presionó QR",Toast.LENGTH_SHORT).show();
+        Intent launchQRActivity = new Intent(BottomNav.this,QrCodeActivity.class);
+        startActivity(launchQRActivity);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
