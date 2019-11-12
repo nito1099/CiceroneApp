@@ -16,6 +16,14 @@
     <string name="fb_login_protocol_scheme">fb796236860805014</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
     <string name="Listo">Listo</string>
+    <string name="escane_qrcode">Escánea el código QR</string>
+    <string name="cual_es_tu_problema">¿Cúal es tu problema?</string>
+    <string name="lamentamos_oir_eso">Lamentamos oir eso y por ello haremos todo lo posible por resolverlo.</string>
+    <string name="porfavor_elige">Por favor elige que enunciado se acerca a tu problema:</string>
+    <string name="explicanos">Explicanos en que consiste el problema:</string>
+    <string name="cuentanos">Cuéntanos:</string>
+    <string name="gracias_por_tu_tiempo">Gracias por tu tiempo, te responderemos lo más rápido posible.</string>
+    <string name="enviar">Enviar</string>
 
     <string-array name="categorias">
         <item>Iglesias y catedrales</item>
@@ -25,5 +33,11 @@
         <item>Categorías</item>
     </string-array>
 
+    <string-array name="problemas">
+        <item>Elige un tipo de problema:</item>
+        <item>Del Sistema</item>
+        <item>Del Sitio</item>
+        <item>Del Personal</item>
+    </string-array>
 
 </resources>
