@@ -51,7 +51,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(20.677056, -103.347000)).title("Catedral de Guadalajara").snippet("La Madre de Guadalajara"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(20.677056, -103.347000)).title("Catedral de Guadalajara").snippet(""));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(20.676287, -103.346172)).title("Museo de sitio Palacio de Gobierno").snippet("Palacio de gobierno de jalisco con un pequeño museo"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(20.677812, -103.347020)).title("Rotonda de los jalisciences ilustres").snippet("Rotonda con los monumentos y restos de los jalisciences destacados de Jalisco"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(20.677070, -103.344939)).title("Teatro Degollado").snippet("Teatro del siglo XV llamativo por su estructura griega"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(20.677012, -103.337684)).title("Hospicio Cabañas").snippet("Hospicio lleno de historia con más de 40 murales"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(20.677542, -103.349246)).title("Mercado Corona").snippet("Mercado Remodelado en el 2016"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(20.677574, -103.347880)).title("Palacio municipal"));
+
         CameraPosition catedral = CameraPosition.builder().target(new LatLng(20.677056, -103.347000)).zoom(16).bearing(0).tilt(45).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(catedral));
     }

@@ -24,6 +24,7 @@
     <string name="cuentanos">Cuéntanos:</string>
     <string name="gracias_por_tu_tiempo">Gracias por tu tiempo, te responderemos lo más rápido posible.</string>
     <string name="enviar">Enviar</string>
+    <string name="favoritos">Favoritos</string>
 
     <string-array name="categorias">
         <item>Iglesias y catedrales</item>

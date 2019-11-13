@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FavoritesActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarFavoritos"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/orange"
+        app:navigationContentDescription="@string/Cicerone"
+        app:title="@string/Cicerone"
+        app:titleMarginStart="30dp"
+        app:titleTextColor="@color/white" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/favoritos"
+        android:fontFamily="@font/source_sans_pro_bold"
+        android:textSize="35sp"
+        android:textAlignment="center"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#D6D6D6"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_favs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ReportProblemActivity"></activity>
+        <activity android:name=".InfoLugarActivity"></activity>
+        <activity android:name=".FavoritesActivity" />
+        <activity android:name=".ReportProblemActivity" />
         <activity android:name=".QrCodeActivity" />
 
         <meta-data

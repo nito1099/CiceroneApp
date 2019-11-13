@@ -190,4 +190,14 @@ public class BottomNav extends AppCompatActivity {
         btnEditar.setEnabled(false);
 
     }
+
+    public void launchFavoritesAct(View view) {
+        Intent intent = new Intent(BottomNav.this,FavoritesActivity.class);
+        startActivity(intent);
+    }
+    public void launchInfoLugar(View view) {
+        Intent intent = new Intent(BottomNav.this,InfoLugarActivity.class);
+        startActivity(intent);
+    }
+
 }

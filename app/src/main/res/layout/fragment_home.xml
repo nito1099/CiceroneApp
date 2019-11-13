@@ -42,9 +42,10 @@
         android:backgroundTint="#B3B3B3"
         app:borderWidth="0dp"
         app:fabCustomSize="60dp"
-        android:onClick="launchEditActivity"
+        android:onClick="launchFavoritesAct"
         android:layout_alignParentRight="true"
         android:layout_margin="20dp"
+
         />
 
 </com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout>
