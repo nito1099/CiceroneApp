@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment  {
     }
 
     public void mostrar(JSONArray info, View myView) throws JSONException {
-
+        lugares.clear();
         for (int i = 0; i < info.length(); i++) {
             lugar = new PojoLugar();
             objeto = new JSONObject();
@@ -111,10 +111,7 @@ public class HomeFragment extends Fragment  {
             lugar.setDescripcion(objeto.getString("Descripcion"));
             lugares.add(lugar);
         }
-        /*
-        * lugares.clear();//limpio al array anterior
-        adapter.notifyDataSetChanged();//le aviso al rc
-        * */
+        
         adapter = new AdapterDeLugar(lugares);
         adapter.contexto = contexto;
         myRcView.setAdapter(adapter);

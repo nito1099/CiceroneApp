@@ -17,7 +17,7 @@
         app:title="@string/Cicerone"
         app:titleMarginStart="30dp"
         app:titleTextColor="@color/white"
-        android:elevation="10dp"/>
+        android:elevation="3dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
         android:layout_marginVertical="10dp"
         android:orientation="horizontal"
         android:background="@color/white"
-        android:elevation="10dp"
+        android:elevation="3dp"
         >
 
         <TextView
@@ -36,7 +36,10 @@
             android:fontFamily="@font/source_sans_pro_bold"
             android:text="Catedral de Guadalajara"
             android:textColor="@color/colorPrimary"
-            android:textSize="25sp" />
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+
+            />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -47,76 +50,164 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/ic_favoritos" />
+                android:background="@drawable/ic_favoritos"
+                android:layout_marginRight="10dp"/>
         </RelativeLayout>
 
 
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="150dp"
-                        android:layout_height="250dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/img_catedral"
-                        />
-
-
-                </LinearLayout>
-
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginRight="10dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Catedral con sus agujas góticas gemelas, se puede ver desde toda la ciudad. Es uno de los sitios más reconocibles. Esta hermosa catedral se encuentra en el centro histórico de Guadalajara.\nLLeno de varios mitos y leyendas desde varios años, además debajo de ella de encuentra un museo con temática de las catacumbas que tiene  y su historia"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:fontFamily="@font/source_sans_pro"
-
-                    />
+                android:background="@color/white"
+                android:elevation="3dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
-                        android:background="@drawable/ic_pin_drop_black_24dp"
-                        />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="150dp"
+                            android:layout_height="250dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/img_catedral_premium"
+                            />
 
-                    <TextView
-                        android:id="@+id/txtDireccionSitio"
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Emilio Acevedo #2235 Colonia Centro Guadalajara"
-                        android:fontFamily="@font/source_sans_pro"
-                        android:layout_marginLeft="10dp"
-                        android:textColor="@color/colorPrimary"
-                        />
+                        android:orientation="vertical"
+                        android:layout_marginRight="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Catedral con sus agujas góticas gemelas, se puede ver desde toda la ciudad. Es uno de los sitios más reconocibles. Esta hermosa catedral se encuentra en el centro histórico de Guadalajara.\nLLeno de varios mitos y leyendas desde varios años, además debajo de ella de encuentra un museo con temática de las catacumbas que tiene  y su historia"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/source_sans_pro"
+
+                            />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="21dp"
+                                android:layout_height="21dp"
+                                android:background="@drawable/ic_pin_drop_black_24dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/txtDireccionSitio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Emilio Acevedo #2235 Colonia Centro Guadalajara"
+                                android:fontFamily="@font/source_sans_pro"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/colorPrimary"
+                                />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
+                            >
+
+                            <ImageView
+                                android:layout_width="21dp"
+                                android:layout_height="21dp"
+                                android:background="@drawable/ic_phone_black_24dp"
+                                />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="3318420499"
+                                android:fontFamily="@font/source_sans_pro"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/colorPrimary"
+                                />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
+                            >
+
+                            <ImageView
+                                android:layout_width="21dp"
+                                android:layout_height="21dp"
+                                android:background="@drawable/ic_horario"
+                                />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="10:00 a 18:00"
+                                android:fontFamily="@font/source_sans_pro"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/colorPrimary"
+                                />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
+                            >
+
+                            <ImageView
+                                android:layout_width="21dp"
+                                android:layout_height="21dp"
+                                android:background="@drawable/ic_costos"
+                                />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="*Niños: 5 pesos \n*Estudiantes y 3ra edad: 7 pesos \n*Adultos: 10 pesos "
+                                android:fontFamily="@font/source_sans_pro"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/colorPrimary"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
@@ -126,107 +217,82 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
-                    >
+                    android:layout_marginBottom="10dp">
 
-                    <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
-                        android:background="@drawable/ic_phone_black_24dp"
-                        />
-
-                    <TextView
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="3318420499"
-                        android:fontFamily="@font/source_sans_pro"
-                        android:layout_marginLeft="10dp"
-                        android:textColor="@color/colorPrimary"
-                        />
+                        android:background="@color/white"
+                        android:layout_marginTop="10dp"
+                        >
 
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    >
+                        <Button
+                            android:layout_width="130dp"
+                            android:layout_height="45dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginLeft="30dp"
+                            android:background="@drawable/custom_button"
+                            android:textColor="@color/colorPrimary"
+                            android:text="Pagar nuestro tour guiado"
+                            android:fontFamily="@font/source_sans_pro"
+                            android:textSize="10dp"
+                            android:textAlignment="center"
+                            />
 
-                    <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
-                        android:background="@drawable/ic_horario"
-                        />
+                        <Button
+                            android:layout_width="130dp"
+                            android:layout_height="45dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginRight="30dp"
+                            android:textColor="@color/colorPrimary"
+                            android:background="@drawable/custom_button"
+                            android:textAlignment="center"
+                            android:fontFamily="@font/source_sans_pro"
+                            android:text="Necesitas un guía?"
+                            android:textSize="10dp"
+                            />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="10:00 a 18:00"
-                        android:fontFamily="@font/source_sans_pro"
-                        android:layout_marginLeft="10dp"
-                        android:textColor="@color/colorPrimary"
-                        />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    >
-
-                    <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
-                        android:background="@drawable/ic_costos"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="*Niños: 5 pesos \n*Estudiantes y 3ra edad: 7 pesos \n*Adultos: 10 pesos "
-                        android:fontFamily="@font/source_sans_pro"
-                        android:layout_marginLeft="10dp"
-                        android:textColor="@color/colorPrimary"
-                        />
+                    </RelativeLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
 
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:background="@color/white">
 
-                <Button
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="20dp"/>
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"/>
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="20dp"/>
+                    android:fontFamily="@font/source_sans_pro"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="15sp"
+                    android:text="@string/multimedia"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="10dp"
+                    />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="800px"
+                    android:background="@drawable/img_portada_premium"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="20dp"
+                    />
 
-            </RelativeLayout>
 
+
+
+            </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
+
+
+
 </LinearLayout>
