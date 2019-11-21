@@ -26,6 +26,7 @@
     <string name="enviar">Enviar</string>
     <string name="favoritos">Favoritos</string>
     <string name="multimedia">Multimedia</string>
+    <string name="calificacion">Calificación</string>
 
     <string-array name="categorias">
         <item>Iglesias y catedrales</item>

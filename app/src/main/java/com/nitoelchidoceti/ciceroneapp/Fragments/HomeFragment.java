@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment  {
                                 public void onResponse(JSONArray response) {
 
                                         try {
-                                            mostrar(response,view);
+                                            mostrar(response);
                                         } catch (Exception e) {
                                             Toast.makeText(contexto, "" + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment  {
         return myView;
     }
 
-    public void mostrar(JSONArray info, View myView) throws JSONException {
+    public void mostrar(JSONArray info) throws JSONException {
         lugares.clear();
         for (int i = 0; i < info.length(); i++) {
             lugar = new PojoLugar();

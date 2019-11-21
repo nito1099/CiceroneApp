@@ -54,6 +54,9 @@ public class AdapterDeLugar extends RecyclerView.Adapter<AdapterDeLugar.FichaHol
         public void asignarDatos(PojoLugar pojoLugar) {
             nombre.setText(pojoLugar.getNombre());
             descripcion.setText(pojoLugar.getDescripcion());
+
         }
     }
+
+
 }

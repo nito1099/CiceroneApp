@@ -1,12 +1,12 @@
 package com.nitoelchidoceti.ciceroneapp.POJOS;
 
-import com.nitoelchidoceti.ciceroneapp.Fragments.HomeFragment;
-
 public class PojoLugar {
 
     private int PK_ID,FK_Categoria;
     private String Descripcion,Nombre,Telefono,
             Direccion,Horario_Inicio,Horario_Final;
+
+    private Double[] costos;
 
     public PojoLugar(){
         PK_ID=0;
@@ -17,6 +17,7 @@ public class PojoLugar {
         Direccion="";
         Horario_Final="";
         Horario_Inicio="";
+        costos = new Double[3];
     }
 
     public int getPK_ID() {
