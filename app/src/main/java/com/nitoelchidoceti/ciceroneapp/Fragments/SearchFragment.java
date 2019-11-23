@@ -117,31 +117,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         });
     }
 
-    /*@Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        getActivity().getMenuInflater().inflate(R.menu.menu_buscador, menu);
-        MenuItem item = menu.findItem(R.id.buscador);
-
-        androidx.appcompat.widget.SearchView searchView;
-        searchView = (androidx.appcompat.widget.SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(this);
-
-        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-
-                adapter.setFilter(lugares);
-                return true;
-            }
-        });
-    }*/
-
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
