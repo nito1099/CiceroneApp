@@ -1,4 +1,5 @@
 package com.nitoelchidoceti.ciceroneapp.Adapters;
 
-public class AdapterDeLugarCompleto {
+public class AdapterDeComentarios {
+
 }

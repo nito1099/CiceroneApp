@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment  {
         myRcView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         lugares = new ArrayList<>();
         contexto = this.getContext();
-        spinner.setSelection(4);
+        spinner.setSelection(0);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, final View view, int position, long id) {
