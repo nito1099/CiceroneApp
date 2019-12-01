@@ -3,12 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <SearchView
-        android:id="@+id/search_bar_guides"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/GrisClaro"
-        android:elevation="5dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_guides"

@@ -23,6 +23,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeBusqueda;
+import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeBusquedaGuias;
+import com.nitoelchidoceti.ciceroneapp.BottomNav;
+import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 import com.nitoelchidoceti.ciceroneapp.R;
 
@@ -35,9 +38,8 @@ import java.util.ArrayList;
 
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
-    private RecyclerView myRcView;
+    public RecyclerView searchRecycle;
     private AdapterDeBusqueda adapter;
-    private ArrayList<PojoLugar> lugares;
     private View view;
 
     @Nullable
@@ -45,52 +47,14 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
-        lugares = new ArrayList<>();
-        myRcView =view.findViewById(R.id.recycle_search);
-        myRcView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
+        searchRecycle =view.findViewById(R.id.recycle_search);
+        searchRecycle.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         setHasOptionsMenu(true);
-        llenarpojo();
+        adapter = new AdapterDeBusqueda(Global.getObject().getLugares());
+        searchRecycle.setAdapter(adapter);
         return view;
     }
 
-    private void llenarpojo() {
-        String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/lugares.php";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
-                url,
-                null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            llenarLugaresAlPojo(response);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(view.getContext(), "Volley error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
-        requestQueue.add(jsonArrayRequest);
-    }
-
-    private void llenarLugaresAlPojo(JSONArray info) throws JSONException {
-        lugares.clear();
-        for (int i = 0; i < info.length(); i++) {
-            PojoLugar lugar = new PojoLugar();
-            JSONObject objeto = new JSONObject();
-            objeto = info.getJSONObject(i);
-            lugar.setNombre(objeto.getString("Nombre"));
-            lugar.setDescripcion(objeto.getString("Descripcion"));
-            lugares.add(lugar);
-        }
-        adapter = new AdapterDeBusqueda(lugares);
-        myRcView.setAdapter(adapter);
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -111,7 +75,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
 
-                adapter.setFilter(lugares);
+                adapter.setFilter(Global.getObject().getLugares());
                 return true;
             }
         });
@@ -125,14 +89,14 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
 
     @Override
-    public boolean onQueryTextChange(String newText) {// nunca entra a esta funcion
+    public boolean onQueryTextChange(String newText) {
 
         try {
             if (!isVisible()) {
                 // The fragment was replaced so ignore
                 return true;
             }
-            ArrayList<PojoLugar> filteredList = filterLugares(lugares, newText);
+            ArrayList<PojoLugar> filteredList = filterLugares(Global.getObject().getLugares(), newText);
             adapter.setFilter(filteredList);
         } catch (Exception e) {
             e.printStackTrace();

@@ -35,9 +35,34 @@ public class InfoLugarActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_inf_lugar);
         addFav = findViewById(R.id.imgbtnFav);
         setSupportActionBar(toolbar);
+        comprobarFav();
+
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_actionbar,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == R.id.qr_code){
+            launchQr();
+        }
+        return true;
+    }
+
+    /**
+     * Comprueba si ya tiene el sitio como favorito
+     */
+    private void comprobarFav(){
         final String url="http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/comprobarFavoritos.php" +
                 "?user="+ Global.getObject().getId()+"&lugar=1";//**************FALTA ENVIAR ID DE LUGAR
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,//*************COMPROBAR SI TIENE EL SITIO COMO FAV
                 url,
                 null,
                 new Response.Listener<JSONArray>() {
@@ -68,20 +93,6 @@ public class InfoLugarActivity extends AppCompatActivity {
         queue.add(jsonArrayRequest);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_actionbar,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        if(id == R.id.qr_code){
-            launchQr();
-        }
-        return true;
-    }
 
     private void launchQr() {//CODIGO QR ACTIVITY
         Intent launchQRActivity = new Intent(InfoLugarActivity.this,QrCodeActivity.class);

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,36 +23,84 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeBusqueda;
 import com.nitoelchidoceti.ciceroneapp.Fragments.AccountFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.GuidesFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.HomeFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.MapFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.SearchFragment;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
+import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class BottomNav extends AppCompatActivity {
 
     private EditText txtNombre,txtEmail,txtPlace,txtCell,txtBirthday;
     TextView btnListo;
+    private AdapterDeBusqueda adapter;
+    public ArrayList<PojoLugar> lugaresDeAqui;
     FloatingActionButton btnEditar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_nav);
-
         BottomNavigationView bottomNav = findViewById(R.id.menu_bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-
+        lugaresDeAqui=new ArrayList<>();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new HomeFragment()).commit();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         txtBirthday = findViewById(R.id.txt_birthday_account);
+        llenarpojo();
+    }
 
+    private void llenarpojo() {
+        String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/lugares.php";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            llenarLugaresAlPojo(response);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(BottomNav.this, "Volley error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(BottomNav.this);
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private void llenarLugaresAlPojo(JSONArray info) throws JSONException {
+        if (lugaresDeAqui.isEmpty()){
+
+        }else{
+            lugaresDeAqui.clear();
+        }
+        for (int i = 0; i < info.length(); i++) {
+            PojoLugar lugar = new PojoLugar();
+            JSONObject objeto;
+            objeto = info.getJSONObject(i);
+            lugar.setNombre(objeto.getString("Nombre"));
+            lugar.setDescripcion(objeto.getString("Descripcion"));
+            lugaresDeAqui.add(lugar);
+        }
+        Global.getObject().setLugares(lugaresDeAqui);
     }
 
     @Override

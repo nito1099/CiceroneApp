@@ -53,7 +53,7 @@ public class GuidesFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
     private void llenarpojo() {
-        String url = "http://192.168.84.118/Cicerone/PHP/gu%C3%ADas.php";
+        String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/guias.php";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
                 url,
                 null,
