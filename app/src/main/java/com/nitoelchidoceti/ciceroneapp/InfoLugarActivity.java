@@ -1,24 +1,22 @@
 package com.nitoelchidoceti.ciceroneapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 
@@ -28,18 +26,43 @@ import org.json.JSONObject;
 public class InfoLugarActivity extends AppCompatActivity {
     ImageButton addFav;
     Boolean selected;
+    TextView nombreDelSitio,descripcionDeLugarCompleto,direccion,telefono,horario, costos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_lugar);
         Toolbar toolbar = findViewById(R.id.toolbar_inf_lugar);
         addFav = findViewById(R.id.imgbtnFav);
+        nombreDelSitio=findViewById(R.id.txtNombreLugar);
+        descripcionDeLugarCompleto=findViewById(R.id.txtDescripcion);
+        direccion=findViewById(R.id.txtDireccionSitio);
+        telefono=findViewById(R.id.txtTelefonoSitio);
+        horario=findViewById(R.id.txtHorarioSitio);
+        costos=findViewById(R.id.txtCostosSitio);
+
         setSupportActionBar(toolbar);
         comprobarFav();
-
+        llenarInformacion();
     }
 
+    /**
+     * Llena la inf de los lugares
+     */
+    private void llenarInformacion() {
 
+        Global.getObject().getLugares().get(0);
+        nombreDelSitio.setText(Global.getObject().getLugares().get(0).getNombre());
+        descripcionDeLugarCompleto.setText(Global.getObject().getLugares().get(0).getDescripcion());
+        direccion.setText(Global.getObject().getLugares().get(0).getDireccion());
+        telefono.setText(Global.getObject().getLugares().get(0).getTelefono());
+        horario.setText(Global.getObject().getLugares().get(0).getHorario_Inicio()+ " hrs a "+
+                Global.getObject().getLugares().get(0).getHorario_Final()+" hrs");
+        Double []array;
+        array=Global.getObject().getLugares().get(0).getCostos();
+        costos.setText("Niños: "+ array[0]+" MXN"+ "\n" +
+                "Estudiantes o 3ra Edad: "+ array[1]+" MXN"+"\n" +
+                "Adultos: "+ array[2]+" MXN");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -99,6 +122,11 @@ public class InfoLugarActivity extends AppCompatActivity {
         startActivity(launchQRActivity);
     }
 
+    /**
+     * Cuando se presiona el boton de favoritos
+     * Agrega el sitio si no lo tiene o lo elimina
+     * @param view vista de xml
+     */
     public void addFavPlace(View view) {//AGREGAR O ELIMINAR LUGAR DE FAVORITOS
         if (selected==false){
             final String url="http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/agregarFavoritos.php" +

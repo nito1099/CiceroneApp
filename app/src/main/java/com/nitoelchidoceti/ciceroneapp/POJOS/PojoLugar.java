@@ -8,6 +8,14 @@ public class PojoLugar {
 
     private Double[] costos;
 
+    public Double[] getCostos() {
+        return costos;
+    }
+
+    public void setCostos(Double[] costos) {
+        this.costos = costos;
+    }
+
     public PojoLugar(){
         PK_ID=0;
         FK_Categoria=0;

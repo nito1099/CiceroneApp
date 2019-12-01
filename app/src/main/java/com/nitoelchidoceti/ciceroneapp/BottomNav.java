@@ -98,6 +98,17 @@ public class BottomNav extends AppCompatActivity {
             objeto = info.getJSONObject(i);
             lugar.setNombre(objeto.getString("Nombre"));
             lugar.setDescripcion(objeto.getString("Descripcion"));
+            lugar.setPK_ID(objeto.getInt("PK_ID"));
+            lugar.setTelefono(objeto.getString("Telefono"));
+            lugar.setDireccion(objeto.getString("Direccion"));
+            lugar.setHorario_Inicio(objeto.getString("Horario_Inicio"));
+            lugar.setHorario_Final(objeto.getString("Horario_Final"));
+            lugar.setFK_Categoria(objeto.getInt("FK_Categoria"));
+            Double [] array = new Double[3];
+            array[0]=objeto.getDouble("Ninos");
+            array[1]=objeto.getDouble("Especial");
+            array[2]=objeto.getDouble("Adultos");
+            lugar.setCostos(array);
             lugaresDeAqui.add(lugar);
         }
         Global.getObject().setLugares(lugaresDeAqui);

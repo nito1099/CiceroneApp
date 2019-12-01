@@ -7,32 +7,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.appcompat.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeBusqueda;
-import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeBusquedaGuias;
-import com.nitoelchidoceti.ciceroneapp.BottomNav;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 import com.nitoelchidoceti.ciceroneapp.R;
-
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
