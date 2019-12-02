@@ -1,5 +1,6 @@
 package com.nitoelchidoceti.ciceroneapp.Adapters;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,9 +16,16 @@ import java.util.ArrayList;
 public class AdapterDeBusqueda extends RecyclerView.Adapter<AdapterDeBusqueda.FichaHolderSearch> {
 
     private ArrayList<PojoLugar> lugaresParaAgregar;
+    private Context context;
+    private AdapterDeBusqueda.OnItemClickListener listener;
 
-    public AdapterDeBusqueda(ArrayList<PojoLugar> lugaresParaAgregar) {
+    public interface OnItemClickListener{
+        void OnItemClick(int position);
+    }
+    public AdapterDeBusqueda(ArrayList<PojoLugar> lugaresParaAgregar,Context context, AdapterDeBusqueda.OnItemClickListener listener) {
         this.lugaresParaAgregar = lugaresParaAgregar;
+        this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -30,7 +38,7 @@ public class AdapterDeBusqueda extends RecyclerView.Adapter<AdapterDeBusqueda.Fi
 
     @Override
     public void onBindViewHolder(@NonNull FichaHolderSearch holder, int position) {
-        holder.llenarDatos(lugaresParaAgregar.get(position));
+        holder.llenarDatos(lugaresParaAgregar.get(position),position,listener);
     }
 
     @Override
@@ -49,17 +57,23 @@ public class AdapterDeBusqueda extends RecyclerView.Adapter<AdapterDeBusqueda.Fi
             descripcion = itemView.findViewById(R.id.txtPlaceDescricpionHome);
         }
 
-        public void llenarDatos(PojoLugar lugar) {
+        public void llenarDatos(PojoLugar lugar , final int posicion, final AdapterDeBusqueda.OnItemClickListener listener) {
             nombre.setText(lugar.getNombre());
             descripcion.setText(lugar.getDescripcion());
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.OnItemClick(posicion);
+                }
+            });
         }
     }
 
-    public void setFilter(ArrayList<PojoLugar> lugares) {
+    public void setFilter(ArrayList<PojoLugar> lugares ) {
         this.lugaresParaAgregar = new ArrayList<>();
         this.lugaresParaAgregar.addAll(lugares);
         notifyDataSetChanged();
+
     }
-
-
 }

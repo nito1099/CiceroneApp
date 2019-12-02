@@ -1,5 +1,6 @@
 package com.nitoelchidoceti.ciceroneapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeBusqueda;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
+import com.nitoelchidoceti.ciceroneapp.InfoLugarActivity;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 import com.nitoelchidoceti.ciceroneapp.R;
 
@@ -27,6 +29,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     public RecyclerView searchRecycle;
     private AdapterDeBusqueda adapter;
     private View view;
+    private ArrayList<PojoLugar> lugares;
 
     @Nullable
     @Override
@@ -36,11 +39,22 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         searchRecycle =view.findViewById(R.id.recycle_search);
         searchRecycle.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         setHasOptionsMenu(true);
-        adapter = new AdapterDeBusqueda(Global.getObject().getLugares());
+        lugares= Global.getObject().getLugares();
+        adapter = new AdapterDeBusqueda(lugares, view.getContext(), new AdapterDeBusqueda.OnItemClickListener() {
+            @Override
+            public void OnItemClick(int position) {
+                launchInfoLugarCompleto(position);
+            }
+        });
         searchRecycle.setAdapter(adapter);
         return view;
     }
 
+    private void launchInfoLugarCompleto(int position) {
+        Intent intent = new Intent(view.getContext(), InfoLugarActivity.class);
+        intent.putExtra("Lugar", lugares.get(position));
+        startActivity(intent);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -108,6 +122,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.lugares=lugaresFiltrados;
         return lugaresFiltrados;
     }
 }
