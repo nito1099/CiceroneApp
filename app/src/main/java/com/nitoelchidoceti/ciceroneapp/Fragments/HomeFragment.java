@@ -1,6 +1,7 @@
 package com.nitoelchidoceti.ciceroneapp.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeLugar;
+import com.nitoelchidoceti.ciceroneapp.InfoLugarActivity;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 import com.nitoelchidoceti.ciceroneapp.R;
 
@@ -111,15 +113,32 @@ public class HomeFragment extends Fragment  {
             objeto = info.getJSONObject(i);
             lugar.setNombre(objeto.getString("Nombre"));
             lugar.setDescripcion(objeto.getString("Descripcion"));
+            lugar.setPK_ID(objeto.getInt("PK_ID"));
+            lugar.setTelefono(objeto.getString("Telefono"));
+            lugar.setDireccion(objeto.getString("Direccion"));
+            lugar.setHorario_Inicio(objeto.getString("Horario_Inicio"));
+            lugar.setHorario_Final(objeto.getString("Horario_Final"));
+            lugar.setFK_Categoria(objeto.getInt("FK_Categoria"));
+            Double [] array = new Double[3];
+            array[0]=objeto.getDouble("Ninos");
+            array[1]=objeto.getDouble("Especial");
+            array[2]=objeto.getDouble("Adultos");
+            lugar.setCostos(array);
             lugares.add(lugar);
         }
 
         adapter = new AdapterDeLugar(lugares,myView.getContext(), new AdapterDeLugar.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
-                Toast.makeText(myView.getContext(),"posicion "+position,Toast.LENGTH_LONG).show();
+                launchInfoLugarCompleto(position);
             }
         });
         myRcView.setAdapter(adapter);
+    }
+
+    private void launchInfoLugarCompleto(int position) {
+        Intent intent = new Intent(myView.getContext(), InfoLugarActivity.class);
+        intent.putExtra("Lugar", lugares.get(position));
+        startActivity(intent);
     }
 }

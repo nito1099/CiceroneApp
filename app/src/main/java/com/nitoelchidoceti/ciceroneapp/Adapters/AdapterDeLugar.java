@@ -20,7 +20,6 @@ public class AdapterDeLugar extends RecyclerView.Adapter<AdapterDeLugar.FichaHol
     private Context context;
     private  OnItemClickListener listener;
 
-
     public interface OnItemClickListener{
         void OnItemClick(int position);
     }
@@ -37,8 +36,6 @@ public class AdapterDeLugar extends RecyclerView.Adapter<AdapterDeLugar.FichaHol
         FichaHolder respect = new FichaHolder(vista);
         return respect;
     }
-
-
 
     @Override
     public void onBindViewHolder(@NonNull AdapterDeLugar.FichaHolder holder, int position) {
@@ -69,8 +66,5 @@ public class AdapterDeLugar extends RecyclerView.Adapter<AdapterDeLugar.FichaHol
                 }
             });
         }
-
     }
-
-
 }

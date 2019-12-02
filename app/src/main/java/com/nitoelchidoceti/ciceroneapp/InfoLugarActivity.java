@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
+import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 public class InfoLugarActivity extends AppCompatActivity {
     ImageButton addFav;
     Boolean selected;
+    PojoLugar pojoLugar;
     TextView nombreDelSitio,descripcionDeLugarCompleto,direccion,telefono,horario, costos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +41,11 @@ public class InfoLugarActivity extends AppCompatActivity {
         telefono=findViewById(R.id.txtTelefonoSitio);
         horario=findViewById(R.id.txtHorarioSitio);
         costos=findViewById(R.id.txtCostosSitio);
-
+        pojoLugar =(PojoLugar) getIntent().getSerializableExtra("Lugar");
         setSupportActionBar(toolbar);
-        comprobarFav();
         llenarInformacion();
+        comprobarFav();
+
     }
 
     /**
@@ -50,15 +53,16 @@ public class InfoLugarActivity extends AppCompatActivity {
      */
     private void llenarInformacion() {
 
-        Global.getObject().getLugares().get(0);
-        nombreDelSitio.setText(Global.getObject().getLugares().get(0).getNombre());
-        descripcionDeLugarCompleto.setText(Global.getObject().getLugares().get(0).getDescripcion());
-        direccion.setText(Global.getObject().getLugares().get(0).getDireccion());
-        telefono.setText(Global.getObject().getLugares().get(0).getTelefono());
-        horario.setText(Global.getObject().getLugares().get(0).getHorario_Inicio()+ " hrs a "+
-                Global.getObject().getLugares().get(0).getHorario_Final()+" hrs");
+
+
+        nombreDelSitio.setText(pojoLugar.getNombre());
+        descripcionDeLugarCompleto.setText(pojoLugar.getDescripcion());
+        direccion.setText(pojoLugar.getDireccion());
+        telefono.setText(pojoLugar.getTelefono());
+        horario.setText(pojoLugar.getHorario_Inicio()+ " hrs a "+
+                pojoLugar.getHorario_Final()+" hrs");
         Double []array;
-        array=Global.getObject().getLugares().get(0).getCostos();
+        array=pojoLugar.getCostos();
         costos.setText("Niños: "+ array[0]+" MXN"+ "\n" +
                 "Estudiantes o 3ra Edad: "+ array[1]+" MXN"+"\n" +
                 "Adultos: "+ array[2]+" MXN");
@@ -84,7 +88,7 @@ public class InfoLugarActivity extends AppCompatActivity {
      */
     private void comprobarFav(){
         final String url="http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/comprobarFavoritos.php" +
-                "?user="+ Global.getObject().getId()+"&lugar=1";//**************FALTA ENVIAR ID DE LUGAR
+                "?user="+ Global.getObject().getId()+"&lugar="+pojoLugar.getPK_ID();//**************FALTA ENVIAR ID DE LUGAR
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,//*************COMPROBAR SI TIENE EL SITIO COMO FAV
                 url,
                 null,
@@ -130,7 +134,7 @@ public class InfoLugarActivity extends AppCompatActivity {
     public void addFavPlace(View view) {//AGREGAR O ELIMINAR LUGAR DE FAVORITOS
         if (selected==false){
             final String url="http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/agregarFavoritos.php" +
-                    "?user="+ Global.getObject().getId()+"&lugar=1";//**************FALTA ENVIAR ID DE LUGAR
+                    "?user="+ Global.getObject().getId()+"&lugar="+pojoLugar.getPK_ID();//**************FALTA ENVIAR ID DE LUGAR
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
                     url,
                     null,
@@ -140,7 +144,7 @@ public class InfoLugarActivity extends AppCompatActivity {
                             try{
                                 addFav.setBackgroundResource(R.drawable.ic_favoritos_selected);
                                 selected=true;
-                                Toast.makeText(InfoLugarActivity.this,"Se ha agregado a favoritos correctamente",
+                                Toast.makeText(InfoLugarActivity.this,"Se ha agregado a favoritos correctamente ",
                                         Toast.LENGTH_SHORT).show();
                             }catch (Exception e){
                                 e.printStackTrace();
@@ -161,7 +165,7 @@ public class InfoLugarActivity extends AppCompatActivity {
             queue.add(jsonArrayRequest);
         }else{
             final String url="http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/eliminarFavoritos.php" +
-                    "?user="+ Global.getObject().getId()+"&lugar=1";//**************FALTA ENVIAR ID DE LUGAR
+                    "?user="+ Global.getObject().getId()+"&lugar="+pojoLugar.getPK_ID();//**************FALTA ENVIAR ID DE LUGAR
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
                     url,
                     null,
@@ -171,7 +175,7 @@ public class InfoLugarActivity extends AppCompatActivity {
                             try{
                                 addFav.setBackgroundResource(R.drawable.ic_favoritos);
                                 selected=false;
-                                Toast.makeText(InfoLugarActivity.this,"Se ha elminado a favoritos correctamente",
+                                Toast.makeText(InfoLugarActivity.this,"Se ha elminado a favoritos correctamente ",
                                         Toast.LENGTH_SHORT).show();
                             }catch (Exception e){
                                 Toast.makeText(InfoLugarActivity.this,""+url,

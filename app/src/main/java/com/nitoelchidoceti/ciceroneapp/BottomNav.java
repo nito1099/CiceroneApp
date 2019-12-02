@@ -217,13 +217,6 @@ public class BottomNav extends AppCompatActivity {
 
     }
 
-    public void launchHomeFragment(View view) {
-
-        BottomNavigationView bottomNav = findViewById(R.id.menu_bottom_navigation);
-        bottomNav.getMenu().findItem(R.id.nav_home).setChecked(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new HomeFragment()).commit();
-    }
 
     public void launchInboxActivity(View view) {
     }

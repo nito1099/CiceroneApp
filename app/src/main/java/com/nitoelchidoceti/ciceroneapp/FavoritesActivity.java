@@ -60,7 +60,7 @@ public class FavoritesActivity extends AppCompatActivity {
                         try {
                             mostrar(response);
                         } catch (Exception e) {
-                            Toast.makeText(contexto, "" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(contexto, "No cuentas con lugares Favoritos" , Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -96,27 +96,38 @@ public class FavoritesActivity extends AppCompatActivity {
 
     public void mostrar(JSONArray info) throws JSONException {
         lugares.clear();
+
         for (int i = 0; i < info.length(); i++) {
             lugar = new PojoLugar();
             objeto = new JSONObject();
             objeto = info.getJSONObject(i);
             lugar.setNombre(objeto.getString("Nombre"));
             lugar.setDescripcion(objeto.getString("Descripcion"));
+            lugar.setPK_ID(objeto.getInt("PK_ID"));
+            lugar.setTelefono(objeto.getString("Telefono"));
+            lugar.setDireccion(objeto.getString("Direccion"));
+            lugar.setHorario_Inicio(objeto.getString("Horario_Inicio"));
+            lugar.setHorario_Final(objeto.getString("Horario_Final"));
+            lugar.setFK_Categoria(objeto.getInt("FK_Categoria"));
+            Double [] array = new Double[3];
+            array[0]=objeto.getDouble("Ninos");
+            array[1]=objeto.getDouble("Especial");
+            array[2]=objeto.getDouble("Adultos");
+            lugar.setCostos(array);
             lugares.add(lugar);
         }
 
         adapter = new AdapterDeLugar(lugares, contexto, new AdapterDeLugar.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
-                Toast.makeText(contexto,"posicion "+position,Toast.LENGTH_LONG).show();
+                launchInfoLugarCompleto(position);
             }
         });
         myRcView.setAdapter(adapter);
-
     }
-
-    public void launchInfoLugar(View view) {
-        Intent intent = new Intent(FavoritesActivity.this,InfoLugarActivity.class);
+    private void launchInfoLugarCompleto(int position) {
+        Intent intent = new Intent(FavoritesActivity.this, InfoLugarActivity.class);
+        intent.putExtra("Lugar", lugares.get(position));
         startActivity(intent);
     }
 }

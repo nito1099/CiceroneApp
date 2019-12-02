@@ -1,6 +1,8 @@
 package com.nitoelchidoceti.ciceroneapp.POJOS;
 
-public class PojoLugar {
+import java.io.Serializable;
+
+public class PojoLugar implements Serializable {
 
     private int PK_ID,FK_Categoria;
     private String Descripcion,Nombre,Telefono,
