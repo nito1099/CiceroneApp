@@ -105,8 +105,12 @@ public class FavoritesActivity extends AppCompatActivity {
             lugares.add(lugar);
         }
 
-        adapter = new AdapterDeLugar(lugares);
-        adapter.contexto = contexto;
+        adapter = new AdapterDeLugar(lugares, contexto, new AdapterDeLugar.OnItemClickListener() {
+            @Override
+            public void OnItemClick(int position) {
+                Toast.makeText(contexto,"posicion "+position,Toast.LENGTH_LONG).show();
+            }
+        });
         myRcView.setAdapter(adapter);
 
     }

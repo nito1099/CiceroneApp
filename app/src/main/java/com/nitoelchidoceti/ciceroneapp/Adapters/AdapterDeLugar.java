@@ -3,6 +3,7 @@ package com.nitoelchidoceti.ciceroneapp.Adapters;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,27 +16,33 @@ import com.nitoelchidoceti.ciceroneapp.R;
 import java.util.ArrayList;
 
 public class AdapterDeLugar extends RecyclerView.Adapter<AdapterDeLugar.FichaHolder>{
-    public AdapterDeLugar(ArrayList<PojoLugar> datos) {
-        this.datos = datos;
-    }
-
     public ArrayList<PojoLugar> datos;
-    public Context contexto;
+    private Context context;
+    private  OnItemClickListener listener;
+
+
+    public interface OnItemClickListener{
+        void OnItemClick(int position);
+    }
+    public AdapterDeLugar(ArrayList<PojoLugar> datos, Context context, OnItemClickListener listener) {
+        this.datos = datos;
+        this.context = context;
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
     public AdapterDeLugar.FichaHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View vista = View.inflate(parent.getContext(), R.layout.home_recycle_view,null);
         FichaHolder respect = new FichaHolder(vista);
-        contexto=parent.getContext();
         return respect;
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull AdapterDeLugar.FichaHolder holder, int position) {
-
-        holder.asignarDatos(datos.get(position));
-
+        holder.asignarDatos(datos.get(position),position,listener);
     }
 
     @Override
@@ -51,11 +58,18 @@ public class AdapterDeLugar extends RecyclerView.Adapter<AdapterDeLugar.FichaHol
             descripcion = itemView.findViewById(R.id.txtPlaceDescricpionHome);
         }
 
-        public void asignarDatos(PojoLugar pojoLugar) {
+        public void asignarDatos(PojoLugar pojoLugar, final int posicion, final OnItemClickListener listener) {
             nombre.setText(pojoLugar.getNombre());
             descripcion.setText(pojoLugar.getDescripcion());
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.OnItemClick(posicion);
+                }
+            });
         }
+
     }
 
 

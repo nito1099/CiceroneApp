@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,7 +22,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeBusqueda;
 import com.nitoelchidoceti.ciceroneapp.Fragments.AccountFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.GuidesFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.HomeFragment;
@@ -42,7 +40,6 @@ public class BottomNav extends AppCompatActivity {
 
     private EditText txtNombre,txtEmail,txtPlace,txtCell,txtBirthday;
     TextView btnListo;
-    private AdapterDeBusqueda adapter;
     public ArrayList<PojoLugar> lugaresDeAqui;
     FloatingActionButton btnEditar;
 

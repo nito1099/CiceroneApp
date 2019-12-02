@@ -39,12 +39,14 @@ public class HomeFragment extends Fragment  {
     AdapterDeLugar adapter;
     ArrayList<PojoLugar> lugares;
     public PojoLugar lugar;
+
     JSONObject objeto;
+    View myView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View myView = inflater.inflate(R.layout.fragment_home,container,false);
+        myView = inflater.inflate(R.layout.fragment_home,container,false);
 
         final Spinner spinner = myView.findViewById(R.id.spinnerCategory);
 
@@ -94,7 +96,7 @@ public class HomeFragment extends Fragment  {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                spinner.setSelection(4);
+                spinner.setSelection(0);
             }
         });
 
@@ -111,9 +113,13 @@ public class HomeFragment extends Fragment  {
             lugar.setDescripcion(objeto.getString("Descripcion"));
             lugares.add(lugar);
         }
-        
-        adapter = new AdapterDeLugar(lugares);
-        adapter.contexto = contexto;
+
+        adapter = new AdapterDeLugar(lugares,myView.getContext(), new AdapterDeLugar.OnItemClickListener() {
+            @Override
+            public void OnItemClick(int position) {
+                Toast.makeText(myView.getContext(),"posicion "+position,Toast.LENGTH_LONG).show();
+            }
+        });
         myRcView.setAdapter(adapter);
     }
 }
