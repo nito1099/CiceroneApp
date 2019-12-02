@@ -29,12 +29,19 @@ public class InfoLugarActivity extends AppCompatActivity {
     Boolean selected;
     PojoLugar pojoLugar;
     TextView nombreDelSitio,descripcionDeLugarCompleto,direccion,telefono,horario, costos;
+    String previous;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_lugar);
         Toolbar toolbar = findViewById(R.id.toolbar_inf_lugar);
         addFav = findViewById(R.id.imgbtnFav);
+
+        if ( (getIntent().getSerializableExtra("previusActivity"))==null){
+            previous="nada";
+        }else{
+            previous=(String) getIntent().getSerializableExtra("previusActivity");
+        }
         nombreDelSitio=findViewById(R.id.txtNombreLugar);
         descripcionDeLugarCompleto=findViewById(R.id.txtDescripcion);
         direccion=findViewById(R.id.txtDireccionSitio);
@@ -124,6 +131,17 @@ public class InfoLugarActivity extends AppCompatActivity {
     private void launchQr() {//CODIGO QR ACTIVITY
         Intent launchQRActivity = new Intent(InfoLugarActivity.this,QrCodeActivity.class);
         startActivity(launchQRActivity);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (previous.equals("favoritos")){
+            Intent intent = new Intent(InfoLugarActivity.this,FavoritesActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     /**

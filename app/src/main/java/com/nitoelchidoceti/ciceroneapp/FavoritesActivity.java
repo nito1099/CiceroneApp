@@ -128,6 +128,11 @@ public class FavoritesActivity extends AppCompatActivity {
     private void launchInfoLugarCompleto(int position) {
         Intent intent = new Intent(FavoritesActivity.this, InfoLugarActivity.class);
         intent.putExtra("Lugar", lugares.get(position));
+        intent.putExtra("previusActivity", "favoritos");
+
         startActivity(intent);
+        finish();
     }
+
+
 }
