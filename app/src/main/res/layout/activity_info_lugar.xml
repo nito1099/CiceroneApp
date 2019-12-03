@@ -423,6 +423,13 @@
                     android:layout_marginRight="30dp"
                     />
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:background="#D6D6D6"
+                    android:layout_marginBottom="1dp"
+                    />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycle_comentarios"
                     android:layout_width="match_parent"
@@ -430,6 +437,8 @@
                     android:layout_marginBottom="25dp"
                     android:layout_marginTop="20dp"
                     />
+
+
             </LinearLayout>
 
         </LinearLayout>

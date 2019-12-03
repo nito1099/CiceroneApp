@@ -81,7 +81,7 @@ public class GuidesFragment extends Fragment implements SearchView.OnQueryTextLi
         guias.clear();
         for (int i = 0; i < info.length(); i++) {
             PojoGuia guia = new PojoGuia();
-            JSONObject objeto = new JSONObject();
+            JSONObject objeto ;
             objeto = info.getJSONObject(i);
             guia.setId(Integer.parseInt(objeto.getString("PK_Registro")));
             guia.setNombre(objeto.getString("Nombre"));
@@ -166,6 +166,7 @@ public class GuidesFragment extends Fragment implements SearchView.OnQueryTextLi
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.guias=lugaresFiltrados;
         return lugaresFiltrados;
     }
 

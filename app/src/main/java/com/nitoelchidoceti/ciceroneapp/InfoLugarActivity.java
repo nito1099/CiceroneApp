@@ -60,8 +60,6 @@ public class InfoLugarActivity extends AppCompatActivity {
      */
     private void llenarInformacion() {
 
-
-
         nombreDelSitio.setText(pojoLugar.getNombre());
         descripcionDeLugarCompleto.setText(pojoLugar.getDescripcion());
         direccion.setText(pojoLugar.getDireccion());
