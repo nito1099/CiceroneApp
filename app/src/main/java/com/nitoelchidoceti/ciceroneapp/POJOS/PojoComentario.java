@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class PojoComentario implements Serializable {
 
-    private String comentario, userName, fecha;
+    private String comentario, userName, fecha, FK_lugar;
 
     public PojoComentario() {
         comentario="";
@@ -24,7 +24,7 @@ public class PojoComentario implements Serializable {
     }
 
     public void setUserName(String userName) {
-        userName = userName;
+        this.userName = userName;
     }
 
     public String getFecha() {
@@ -33,5 +33,13 @@ public class PojoComentario implements Serializable {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public String getFK_lugar() {
+        return FK_lugar;
+    }
+
+    public void setFK_lugar(String FK_lugar) {
+        this.FK_lugar = FK_lugar;
     }
 }
