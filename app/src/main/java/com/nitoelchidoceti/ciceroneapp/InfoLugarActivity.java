@@ -20,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.textfield.TextInputLayout;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeComentarios;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoComentario;
@@ -33,19 +34,34 @@ import java.util.ArrayList;
 
 public class InfoLugarActivity extends AppCompatActivity {
     ImageButton addFav;
-    Boolean selected;
+    Boolean selected, oneSelected, twoSelected, threeSelected, fourSelected, fiveSelected;
     PojoLugar pojoLugar;
     ArrayList<PojoComentario> comentarios;
     TextView nombreDelSitio,descripcionDeLugarCompleto,direccion,telefono,horario, costos;
     String previous;
     AdapterDeComentarios adapterDeComentario;
     RecyclerView recycleComentario;
+    TextInputLayout escribirComentario;
+    ImageButton oneStar, twoStar, threeStar, fourStar, fiveStar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_lugar);
         Toolbar toolbar = findViewById(R.id.toolbar_inf_lugar);
         addFav = findViewById(R.id.imgbtnFav);
+        escribirComentario = findViewById(R.id.inTxtEscComentario);
+        escribirComentario.setCounterMaxLength(255);
+        escribirComentario.setNextFocusDownId(R.id.btnPublicarComentario);
+        oneSelected = false;
+        twoSelected = false;
+        threeSelected = false;
+        fourSelected = false;
+        fiveSelected = false;
+        oneStar=findViewById(R.id.UnaEstrella);
+        twoStar=findViewById(R.id.DosEstrellas);
+        threeStar=findViewById(R.id.TresEstrellas);
+        fourStar=findViewById(R.id.CuatroEstrellas);
+        fiveStar=findViewById(R.id.CincoEstrellas);
         comentarios = new ArrayList<>();
         recycleComentario = findViewById(R.id.recycle_comentarios);
         recycleComentario.setLayoutManager(new LinearLayoutManager(InfoLugarActivity.this,
@@ -274,5 +290,173 @@ public class InfoLugarActivity extends AppCompatActivity {
             queue.add(jsonArrayRequest);
 
         }
+    }
+
+    public void selectedStar(View view) {
+        stars(1,(oneSelected==true)?true:false);
+
+    }
+
+    public void selected2Stars(View view) {
+        stars(2,(twoSelected==true)?true:false);
+    }
+
+    public void selectedThreeStars(View view) {
+        stars(3,(threeSelected==true)?true:false);
+
+    }
+
+    public void selectedFourStars(View view) {
+        stars(4,(fourSelected==true)?true:false);
+
+    }
+
+    public void selected5FiveStars(View view) {
+
+        stars(5,(fiveSelected==true)?true:false);
+    }
+
+    private void stars(int numero, boolean isSelected){
+
+        if (isSelected==false){
+            switch (numero){
+                case 1:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    threeStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fourStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+
+                    oneSelected=true;
+                    twoSelected=false;
+                    threeSelected=false;
+                    fourSelected=false;
+                    fiveSelected=false;
+                    break;
+                case 2:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                    threeStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fourStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+
+                    oneSelected=true;
+                    twoSelected=true;
+                    threeSelected=false;
+                    fourSelected=false;
+                    fiveSelected=false;
+                    break;
+                case 3:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                    threeStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fourStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+
+                    oneSelected=true;
+                    twoSelected=true;
+                    threeSelected=true;
+                    fourSelected=false;
+                    fiveSelected=false;
+                    break;
+                case 4:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                    threeStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fourStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+
+                    oneSelected=true;
+                    twoSelected=true;
+                    threeSelected=true;
+                    fourSelected=true;
+                    fiveSelected=false;
+                    break;
+                case 5:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                    threeStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fourStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic_one_star);
+
+                    oneSelected=true;
+                    twoSelected=true;
+                    threeSelected=true;
+                    fourSelected=true;
+                    fiveSelected=true;
+
+                    break;
+            }
+        }else{
+            switch (numero){
+                case 1:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    threeStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fourStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+
+                    oneSelected=true;
+                    twoSelected=false;
+                    threeSelected=false;
+                    fourSelected=false;
+                    fiveSelected=false;
+                    break;
+                case 2:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                    threeStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fourStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+
+                    oneSelected=true;
+                    twoSelected=true;
+                    threeSelected=false;
+                    fourSelected=false;
+                    fiveSelected=false;
+                    break;
+                case 3:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                    threeStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fourStar.setBackgroundResource(R.drawable.ic__empty_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+
+                    oneSelected=true;
+                    twoSelected=true;
+                    threeSelected=true;
+                    fourSelected=false;
+                    fiveSelected=false;
+                    break;
+                case 4:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                    threeStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fourStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+
+                    oneSelected=true;
+                    twoSelected=true;
+                    threeSelected=true;
+                    fourSelected=true;
+                    fiveSelected=false;
+                    break;
+                case 5:
+                    oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                    twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                    threeStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fourStar.setBackgroundResource(R.drawable.ic_one_star);
+                    fiveStar.setBackgroundResource(R.drawable.ic_one_star);
+
+                    oneSelected=true;
+                    twoSelected=true;
+                    threeSelected=true;
+                    fourSelected=true;
+                    fiveSelected=true;
+
+                    break;
+            }
+        }
+
     }
 }

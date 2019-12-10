@@ -243,12 +243,11 @@
                             android:layout_alignParentStart="true"
                             android:layout_marginLeft="30dp"
                             android:background="@drawable/custom_button"
-                            android:textColor="@color/colorPrimary"
-                            android:text="Pagar nuestro tour guiado"
                             android:fontFamily="@font/source_sans_pro"
-                            android:textSize="10dp"
+                            android:text="Pagar nuestro tour guiado"
                             android:textAlignment="center"
-                            />
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="10dp" />
 
                         <Button
                             android:layout_width="130dp"
@@ -358,49 +357,94 @@
                         android:layout_marginRight="20dp"
                         />
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/UnaEstrella"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic__favourite_star"
+                        android:background="@drawable/ic__empty_star"
                         android:layout_marginHorizontal="5dp"
                         android:layout_gravity="center_vertical"
+                        android:onClick="selectedStar"
+
                         />
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/DosEstrellas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic__favourite_star"
+                        android:background="@drawable/ic__empty_star"
                         android:layout_marginHorizontal="5dp"
                         android:layout_gravity="center_vertical"
+                        android:onClick="selected2Stars"
                         />
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/TresEstrellas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic__favourite_star"
+                        android:background="@drawable/ic__empty_star"
                         android:layout_marginHorizontal="5dp"
                         android:layout_gravity="center_vertical"
+                        android:onClick="selectedThreeStars"
                         />
-                    <ImageView
+
+                    <ImageButton
                         android:id="@+id/CuatroEstrellas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic__favourite_star"
-                        android:layout_marginHorizontal="5dp"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/ic__empty_star"
+                        android:onClick="selectedFourStars" />
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/CincoEstrellas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic__favourite_star"
+                        android:background="@drawable/ic__empty_star"
                         android:layout_marginHorizontal="5dp"
                         android:layout_gravity="center_vertical"
+                        android:onClick="selected5FiveStars"
                         />
 
                 </LinearLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inTxtEscComentario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true"
+                    app:counterEnabled="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtComentarioNuevo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Escriba un comentario y califique el lugar"
+                        android:maxLength="255"
+                        android:inputType="textAutoCorrect"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+                <Button
+                    android:id="@+id/btnPublicarComentario"
+                    android:layout_width="130dp"
+                    android:layout_height="35dp"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/custom_button"
+                    android:fontFamily="@font/source_sans_pro"
+                    android:textSize="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="Publicar"/>
+
 
 
 
@@ -411,9 +455,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/white"
-                android:elevation="3dp">
+                android:background="@color/white">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -438,7 +480,6 @@
                     android:id="@+id/recycle_comentarios"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="25dp"
                     />
             </LinearLayout>
 
