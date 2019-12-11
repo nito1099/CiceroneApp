@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,8 @@ public class InfoLugarActivity extends AppCompatActivity {
     RecyclerView recycleComentario;
     TextInputLayout escribirComentario;
     ImageButton oneStar, twoStar, threeStar, fourStar, fiveStar;
+    EditText comentario;
+    String calificacion;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ public class InfoLugarActivity extends AppCompatActivity {
         threeStar=findViewById(R.id.TresEstrellas);
         fourStar=findViewById(R.id.CuatroEstrellas);
         fiveStar=findViewById(R.id.CincoEstrellas);
+        comentario=findViewById(R.id.txtComentarioNuevo);
         comentarios = new ArrayList<>();
         recycleComentario = findViewById(R.id.recycle_comentarios);
         recycleComentario.setLayoutManager(new LinearLayoutManager(InfoLugarActivity.this,
@@ -332,6 +336,8 @@ public class InfoLugarActivity extends AppCompatActivity {
                     threeSelected=false;
                     fourSelected=false;
                     fiveSelected=false;
+
+                    calificacion ="1";
                     break;
                 case 2:
                     oneStar.setBackgroundResource(R.drawable.ic_one_star);
@@ -345,6 +351,8 @@ public class InfoLugarActivity extends AppCompatActivity {
                     threeSelected=false;
                     fourSelected=false;
                     fiveSelected=false;
+                    calificacion ="2";
+
                     break;
                 case 3:
                     oneStar.setBackgroundResource(R.drawable.ic_one_star);
@@ -358,6 +366,8 @@ public class InfoLugarActivity extends AppCompatActivity {
                     threeSelected=true;
                     fourSelected=false;
                     fiveSelected=false;
+
+                    calificacion ="3";
                     break;
                 case 4:
                     oneStar.setBackgroundResource(R.drawable.ic_one_star);
@@ -371,6 +381,8 @@ public class InfoLugarActivity extends AppCompatActivity {
                     threeSelected=true;
                     fourSelected=true;
                     fiveSelected=false;
+
+                    calificacion ="4";
                     break;
                 case 5:
                     oneStar.setBackgroundResource(R.drawable.ic_one_star);
@@ -385,6 +397,7 @@ public class InfoLugarActivity extends AppCompatActivity {
                     fourSelected=true;
                     fiveSelected=true;
 
+                    calificacion ="5";
                     break;
             }
         }else{
@@ -401,6 +414,7 @@ public class InfoLugarActivity extends AppCompatActivity {
                     threeSelected=false;
                     fourSelected=false;
                     fiveSelected=false;
+                    calificacion ="1";
                     break;
                 case 2:
                     oneStar.setBackgroundResource(R.drawable.ic_one_star);
@@ -414,6 +428,8 @@ public class InfoLugarActivity extends AppCompatActivity {
                     threeSelected=false;
                     fourSelected=false;
                     fiveSelected=false;
+
+                    calificacion ="2";
                     break;
                 case 3:
                     oneStar.setBackgroundResource(R.drawable.ic_one_star);
@@ -427,6 +443,8 @@ public class InfoLugarActivity extends AppCompatActivity {
                     threeSelected=true;
                     fourSelected=false;
                     fiveSelected=false;
+
+                    calificacion ="3";
                     break;
                 case 4:
                     oneStar.setBackgroundResource(R.drawable.ic_one_star);
@@ -440,6 +458,8 @@ public class InfoLugarActivity extends AppCompatActivity {
                     threeSelected=true;
                     fourSelected=true;
                     fiveSelected=false;
+
+                    calificacion ="4";
                     break;
                 case 5:
                     oneStar.setBackgroundResource(R.drawable.ic_one_star);
@@ -454,9 +474,55 @@ public class InfoLugarActivity extends AppCompatActivity {
                     fourSelected=true;
                     fiveSelected=true;
 
+                    calificacion ="5";
+
                     break;
             }
         }
 
+    }
+
+    /**
+     * Se agrega el review a la DB
+     * @param view
+     */
+    public void agregarReview(View view) {
+        if (calificacion!=null||comentario.getText()==null){
+            String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/" +
+                    "agregarReviewSitio.php?nombre="+Global.getObject().getId()+"&sitio="+ pojoLugar.getPK_ID()+
+                    "&calificacion="+calificacion+"&comentario="+comentario.getText();
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                    Request.Method.GET,
+                    url,
+                    null,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            JSONObject jsonObject ;
+                            try {
+                                jsonObject = response.getJSONObject(0);
+                                if (jsonObject.getString("success").equals("true")){
+                                    Toast.makeText(InfoLugarActivity.this,"Se ha " +
+                                            "publicado su comentario correctamente",Toast.LENGTH_SHORT).show();
+                                }else {
+                                    Toast.makeText(InfoLugarActivity.this,"Ya ha agregado " +
+                                            "un comentario previamente.",Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+            RequestQueue requestQueue = Volley.newRequestQueue(InfoLugarActivity.this);
+            requestQueue.add(jsonArrayRequest);
+        }else {
+            Toast.makeText(InfoLugarActivity.this,"Porfavor no deje campos vacios.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

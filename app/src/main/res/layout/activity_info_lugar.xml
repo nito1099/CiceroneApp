@@ -430,8 +430,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-
-
                 <Button
                     android:id="@+id/btnPublicarComentario"
                     android:layout_width="130dp"
@@ -443,10 +441,8 @@
                     android:fontFamily="@font/source_sans_pro"
                     android:textSize="10dp"
                     android:layout_marginBottom="20dp"
-                    android:text="Publicar"/>
-
-
-
+                    android:text="Publicar"
+                    android:onClick="agregarReview"/>
 
             </LinearLayout>
 

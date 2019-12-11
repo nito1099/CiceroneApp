@@ -49,7 +49,7 @@ public class AdapterDeComentarios extends RecyclerView.Adapter<AdapterDeComentar
 
         public void asignarDatos(PojoComentario pojoComentario) {
             nombreUser.setText(pojoComentario.getUserName());
-            fecha.setText(pojoComentario.getFecha());
+            fecha.setText(pojoComentario.getFecha()+" ");
             comentario.setText(pojoComentario.getComentario());
         }
     }
