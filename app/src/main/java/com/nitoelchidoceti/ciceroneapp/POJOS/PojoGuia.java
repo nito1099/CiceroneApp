@@ -1,6 +1,8 @@
 package com.nitoelchidoceti.ciceroneapp.POJOS;
 
-public class PojoGuia {
+import java.io.Serializable;
+
+public class PojoGuia implements Serializable {
 
     private int Id;
     private String nombre, telefono, duracion, correo, sitio, fotografia;

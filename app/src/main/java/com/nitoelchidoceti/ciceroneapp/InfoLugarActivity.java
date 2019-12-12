@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class InfoLugarActivity extends AppCompatActivity {
+
     ImageButton addFav;
     Boolean selected, oneSelected, twoSelected, threeSelected, fourSelected, fiveSelected;
     PojoLugar pojoLugar;
@@ -47,10 +48,23 @@ public class InfoLugarActivity extends AppCompatActivity {
     ImageButton oneStar, twoStar, threeStar, fourStar, fiveStar;
     EditText comentario;
     String calificacion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_lugar);
+        inicializacion();
+        consultaComentarios();
+        llenarInformacion();
+        comprobarFav();
+        calcularCalificacion();
+    }
+
+    /**
+     * inicializa todas la variables de la actividad
+     * y los configura
+     */
+    private void  inicializacion(){
         Toolbar toolbar = findViewById(R.id.toolbar_inf_lugar);
         addFav = findViewById(R.id.imgbtnFav);
         escribirComentario = findViewById(R.id.inTxtEscComentario);
@@ -85,12 +99,11 @@ public class InfoLugarActivity extends AppCompatActivity {
         costos=findViewById(R.id.txtCostosSitio);
         pojoLugar =(PojoLugar) getIntent().getSerializableExtra("Lugar");
         setSupportActionBar(toolbar);
-        consultaComentarios();
-        llenarInformacion();
-        comprobarFav();
-        calcularCalificacion();
     }
 
+    /**
+     * calcula el promedio del lugar
+     */
     private void calcularCalificacion() {
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/promedioCalificacion.php?lugar=" + pojoLugar.getPK_ID();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -118,6 +131,9 @@ public class InfoLugarActivity extends AppCompatActivity {
         queue.add(jsonArrayRequest);
     }
 
+    /**
+     * obtiene los comentarios de la DB
+     */
     private void consultaComentarios() {
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/comentariosLugar.php?id_place=" + pojoLugar.getPK_ID();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -258,7 +274,7 @@ public class InfoLugarActivity extends AppCompatActivity {
 
     /**
      * Cuando se presiona el boton de favoritos
-     * Agrega el sitio si no lo tiene o lo elimina
+     * Agrega el sitio o si no lo tiene lo elimina
      * @param view vista de xml
      */
     public void addFavPlace(View view) {//AGREGAR O ELIMINAR LUGAR DE FAVORITOS
@@ -333,6 +349,7 @@ public class InfoLugarActivity extends AppCompatActivity {
 
     public void selected2Stars(View view) {
         stars(2,(twoSelected==true)?true:false);
+
     }
 
     public void selectedThreeStars(View view) {
@@ -350,6 +367,12 @@ public class InfoLugarActivity extends AppCompatActivity {
         stars(5,(fiveSelected==true)?true:false);
     }
 
+    /**
+     * Dependiendo del numero de estrella de calificacion presionado cambia la vista
+     * de la calificacion del lugar y registra que ya se ha asignado una calificacion
+     * @param numero numero de estrella clickeada
+     * @param isSelected si la estrella ya ha sido seleccionada anteriormente
+     */
     private void stars(int numero, boolean isSelected){
 
         if (isSelected==false){

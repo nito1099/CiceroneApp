@@ -15,9 +15,13 @@ import java.util.ArrayList;
 public class AdapterDeBusquedaGuias extends RecyclerView.Adapter<AdapterDeBusquedaGuias.FichaHolderSearchGuias>{
 
     private ArrayList<PojoGuia> guiasParaAgregar;
-
-    public AdapterDeBusquedaGuias(ArrayList<PojoGuia> lugaresParaAgregar) {
+    private AdapterDeBusquedaGuias.OnItemClickListener listener;
+     public interface  OnItemClickListener{
+         void OnItemClick(int position);
+     }
+    public AdapterDeBusquedaGuias(ArrayList<PojoGuia> lugaresParaAgregar, AdapterDeBusquedaGuias.OnItemClickListener listener) {
         this.guiasParaAgregar = lugaresParaAgregar;
+        this.listener = listener;
     }
 
     @NonNull
@@ -30,7 +34,7 @@ public class AdapterDeBusquedaGuias extends RecyclerView.Adapter<AdapterDeBusque
 
     @Override
     public void onBindViewHolder(@NonNull FichaHolderSearchGuias holder, int position) {
-        holder.llenarDatos(guiasParaAgregar.get(position));
+        holder.llenarDatos(guiasParaAgregar.get(position),position,listener);
     }
 
     @Override
@@ -48,9 +52,16 @@ public class AdapterDeBusquedaGuias extends RecyclerView.Adapter<AdapterDeBusque
             descripcion = itemView.findViewById(R.id.txtPlaceDescricpionHome);
         }
 
-        public void llenarDatos(PojoGuia guia) {
+        public void llenarDatos(PojoGuia guia, final  int posicion, final AdapterDeBusquedaGuias.OnItemClickListener listener) {
             nombre.setText(guia.getNombre());
             descripcion.setText("Correo: "+guia.getCorreo()+"\n"+"Sitio: "+guia.getSitio());
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.OnItemClick(posicion);
+                }
+            });
         }
     }
 

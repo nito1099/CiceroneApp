@@ -1,5 +1,6 @@
 package com.nitoelchidoceti.ciceroneapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeBusquedaGuias;
+import com.nitoelchidoceti.ciceroneapp.InfoGuiaActivity;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoGuia;
 import com.nitoelchidoceti.ciceroneapp.R;
 
@@ -35,7 +37,7 @@ import java.util.ArrayList;
 public class GuidesFragment extends Fragment implements SearchView.OnQueryTextListener {
     private RecyclerView myRcView;
     private AdapterDeBusquedaGuias adapter;
-    private ArrayList<PojoGuia> guias;
+    private ArrayList<PojoGuia> guias,guiascompletos;
     private View view;
 
     @Nullable
@@ -45,6 +47,7 @@ public class GuidesFragment extends Fragment implements SearchView.OnQueryTextLi
         view = inflater.inflate(R.layout.fragment_guides,container,false);
 
         guias = new ArrayList<>();
+        guiascompletos = new ArrayList<>();
         myRcView = view.findViewById(R.id.recycle_guides);
         myRcView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         setHasOptionsMenu(true);
@@ -96,9 +99,21 @@ public class GuidesFragment extends Fragment implements SearchView.OnQueryTextLi
             aux[2] = Double.valueOf(objeto.getString("Adultos"));
             guia.setCostos(aux);
             guias.add(guia);
+            guiascompletos.add(guia);
         }
-        adapter = new AdapterDeBusquedaGuias(guias);
+        adapter = new AdapterDeBusquedaGuias(guias, new AdapterDeBusquedaGuias.OnItemClickListener() {
+            @Override
+            public void OnItemClick(int position) {
+                launchInfoActivity(position);
+            }
+        });
         myRcView.setAdapter(adapter);
+    }
+
+    private void launchInfoActivity(int position) {
+        Intent intent = new Intent(view.getContext(), InfoGuiaActivity.class);
+        intent.putExtra("Guia", guias.get(position));
+        startActivity(intent);
     }
 
     @Override
@@ -120,7 +135,7 @@ public class GuidesFragment extends Fragment implements SearchView.OnQueryTextLi
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
 
-                adapter.setFilter(guias);
+                adapter.setFilter(guiascompletos);
                 return true;
             }
         });
@@ -133,14 +148,14 @@ public class GuidesFragment extends Fragment implements SearchView.OnQueryTextLi
 
 
     @Override
-    public boolean onQueryTextChange(String newText) {// nunca entra a esta funcion
+    public boolean onQueryTextChange(String newText) {
 
         try {
             if (!isVisible()) {
                 // The fragment was replaced so ignore
                 return true;
             }
-            ArrayList<PojoGuia> filteredList = filterGuias(guias, newText);
+            ArrayList<PojoGuia> filteredList = filterGuias(guiascompletos, newText);
             adapter.setFilter(filteredList);
         } catch (Exception e) {
             e.printStackTrace();
