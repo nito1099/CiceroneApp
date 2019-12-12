@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputLayout;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeComentarios;
@@ -38,7 +39,7 @@ public class InfoLugarActivity extends AppCompatActivity {
     Boolean selected, oneSelected, twoSelected, threeSelected, fourSelected, fiveSelected;
     PojoLugar pojoLugar;
     ArrayList<PojoComentario> comentarios;
-    TextView nombreDelSitio,descripcionDeLugarCompleto,direccion,telefono,horario, costos;
+    TextView nombreDelSitio,descripcionDeLugarCompleto,direccion,telefono,horario, costos, calificacionLugar;
     String previous;
     AdapterDeComentarios adapterDeComentario;
     RecyclerView recycleComentario;
@@ -66,6 +67,7 @@ public class InfoLugarActivity extends AppCompatActivity {
         fourStar=findViewById(R.id.CuatroEstrellas);
         fiveStar=findViewById(R.id.CincoEstrellas);
         comentario=findViewById(R.id.txtComentarioNuevo);
+        calificacionLugar=findViewById(R.id.txtCalificacionNumero);
         comentarios = new ArrayList<>();
         recycleComentario = findViewById(R.id.recycle_comentarios);
         recycleComentario.setLayoutManager(new LinearLayoutManager(InfoLugarActivity.this,
@@ -86,6 +88,34 @@ public class InfoLugarActivity extends AppCompatActivity {
         consultaComentarios();
         llenarInformacion();
         comprobarFav();
+        calcularCalificacion();
+    }
+
+    private void calcularCalificacion() {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/promedioCalificacion.php?lugar=" + pojoLugar.getPK_ID();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jsonObject;
+                            jsonObject = response.getJSONObject(0);
+                            calificacionLugar.setText(jsonObject.getString("Calificacion"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(InfoLugarActivity.this);
+        queue.add(jsonArrayRequest);
     }
 
     private void consultaComentarios() {
