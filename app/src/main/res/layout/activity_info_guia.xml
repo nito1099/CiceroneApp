@@ -452,7 +452,7 @@
                     android:textSize="10dp"
                     android:layout_marginBottom="20dp"
                     android:text="Publicar"
-                    android:onClick="agregarReview"/>
+                    android:onClick="agregarReviewGuia"/>
 
             </LinearLayout>
 

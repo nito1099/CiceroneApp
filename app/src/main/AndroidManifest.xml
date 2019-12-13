@@ -17,7 +17,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity android:name=".InfoGuiaActivity"></activity>
-        <activity android:name=".InfoLugarActivity" />
+        <activity android:name=".InfoLugarGuia" />
         <activity android:name=".FavoritesActivity" />
         <activity android:name=".ReportProblemActivity" />
         <activity android:name=".QrCodeActivity" />

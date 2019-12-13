@@ -54,7 +54,7 @@ public class AdapterDeBusquedaGuias extends RecyclerView.Adapter<AdapterDeBusque
 
         public void llenarDatos(PojoGuia guia, final  int posicion, final AdapterDeBusquedaGuias.OnItemClickListener listener) {
             nombre.setText(guia.getNombre());
-            descripcion.setText("Correo: "+guia.getCorreo()+"\n"+"Sitio: "+guia.getSitio());
+            descripcion.setText("Correo: "+guia.getCorreo()+"\n"+"Sitio: "+guia.getNombreDelSitio());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
