@@ -1,95 +1,149 @@
 package com.nitoelchidoceti.ciceroneapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.zxing.qrcode.encoder.QRCode;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import java.io.IOException;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
+
+import github.nisrulz.qreader.QRDataListener;
+import github.nisrulz.qreader.QREader;
 
 public class QrCodeActivity extends AppCompatActivity {
-    SurfaceView surfaceView;
-    CameraSource cameraSource;
-    BarcodeDetector barcodeDetector;
+    private SurfaceView surfaceView;
+    private TextView textView;
+    private QREader qrEader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_code);
-
-        surfaceView = findViewById(R.id.cameraPreview);
-        barcodeDetector = new BarcodeDetector.Builder(this)
-                .setBarcodeFormats(Barcode.QR_CODE).build();
+        textView = findViewById(R.id.txtEscanea2);
         Toolbar toolbar = findViewById(R.id.toolbarQR);
         setSupportActionBar(toolbar);
+        //Request Permission
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.CAMERA)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        setUpCamera();
+                    }
 
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(QrCodeActivity.this, "Debes Habilitar los permisos de camara", Toast.LENGTH_SHORT).show();
+                    }
 
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
 
-
-        cameraSource = new CameraSource.Builder(this,barcodeDetector)
-                .setRequestedPreviewSize(640,480).build();
-        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                    return;
-                }
-                try {
-                    cameraSource.start(holder);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                cameraSource.stop();
-            }
-        });
-
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-            @Override
-            public void release() {
-
-            }
-
-            @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
-                SparseArray<Barcode> qrCodes = detections.getDetectedItems();
-                if(qrCodes.size()!=0){
-                    Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                    vibrator.vibrate(100);
-                    vibrator.cancel();
-                    Toast.makeText(QrCodeActivity.this,""+qrCodes.valueAt(0).displayValue,Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+                    }
+                }).check();
     }
 
+    private void setUpCamera() {
+        surfaceView = findViewById(R.id.cameraPreview);
+        setUpQR();
+        qrEader.start();
+    }
+
+    private void setUpQR() {
+        qrEader = new QREader.Builder(this, surfaceView, new QRDataListener() {
+            @Override
+            public void onDetected(final String data) {
+                textView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (data.equals("mirasifuncionaestamadre")) {
+                            qrEader.stop();
+                            launchReproduccionTour(data);
+                        }
+                        textView.setText(data);
+                    }
+                });
+
+            }
+        }).facing(QREader.BACK_CAM)
+                .enableAutofocus(true)
+                .height(surfaceView.getHeight())
+                .width(surfaceView.getWidth())
+                .build();
+    }
+
+    private void launchReproduccionTour(String dato) {
+        Intent intent = new Intent(QrCodeActivity.this,ReproduccionTourActivity.class);
+        intent.putExtra("tour",dato);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.CAMERA)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        if (qrEader != null) {
+                            qrEader.initAndStart(surfaceView);
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                    }
+                }).check();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.CAMERA)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        if (qrEader != null) {
+                            qrEader.releaseAndCleanup();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                    }
+                }).check();
+    }
+
+    //TOOLBAR
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_actionbar_panic_btn,menu);

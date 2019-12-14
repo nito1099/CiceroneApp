@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".InfoGuiaActivity"/>
+        <activity android:name=".ReproduccionTourActivity"></activity>
+        <activity android:name=".InfoGuiaActivity" />
         <activity android:name=".InfoLugarActivity" />
         <activity android:name=".FavoritesActivity" />
         <activity android:name=".ReportProblemActivity" />
