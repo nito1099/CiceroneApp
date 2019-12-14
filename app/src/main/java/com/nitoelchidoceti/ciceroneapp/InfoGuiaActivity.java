@@ -51,9 +51,9 @@ public class InfoGuiaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_guia);
         inicializacion();
-        //consultaComentarios();****************************** NO JALA AUN ****************************************
+        consultaComentarios();//VERSION BETA*****
         llenarInformacion();
-        //calcularCalificacion();****************************** NO JALA AUN *****************************************
+        calcularCalificacion();
     }
 
     /**
@@ -65,13 +65,13 @@ public class InfoGuiaActivity extends AppCompatActivity {
         escribirComentarioGuia = findViewById(R.id.inTxtEscComentarioGuia);
         escribirComentarioGuia.setCounterMaxLength(255);
         escribirComentarioGuia.setNextFocusDownId(R.id.btnPublicarComentarioGuia);
-        oneStar = findViewById(R.id.UnaEstrella);
-        twoStar = findViewById(R.id.DosEstrellas);
-        threeStar = findViewById(R.id.TresEstrellas);
-        fourStar = findViewById(R.id.CuatroEstrellas);
-        fiveStar = findViewById(R.id.CincoEstrellas);
-        comentario = findViewById(R.id.txtComentarioNuevo);
-        calificacionGuia = findViewById(R.id.txtCalificacionNumero);
+        oneStar = findViewById(R.id.UnaEstrellaGuia);
+        twoStar = findViewById(R.id.DosEstrellasGuia);
+        threeStar = findViewById(R.id.TresEstrellasGuia);
+        fourStar = findViewById(R.id.CuatroEstrellasGuia);
+        fiveStar = findViewById(R.id.CincoEstrellasGuia);
+        comentario = findViewById(R.id.txtComentarioNuevoGuia);
+        calificacionGuia = findViewById(R.id.txtCalificacionNumeroGuia);
         comentarios = new ArrayList<>();
         recycleComentarioGuia = findViewById(R.id.recycleComentariosGuia);
         recycleComentarioGuia.setLayoutManager(new LinearLayoutManager(InfoGuiaActivity.this,
@@ -82,6 +82,7 @@ public class InfoGuiaActivity extends AppCompatActivity {
         duracionTourGuia = findViewById(R.id.txtDuracionTourGuia);
         horarioGuia = findViewById(R.id.txtHorarioGuia);
         costosGuia = findViewById(R.id.txtCostosTourGuia);
+        idiomasGuia=findViewById(R.id.txtIdiomasGuia);
         Intent intent = getIntent();
         pojoGuia = (PojoGuia) intent.getSerializableExtra("Guia");
         setSupportActionBar(toolbar);
@@ -91,7 +92,8 @@ public class InfoGuiaActivity extends AppCompatActivity {
      * calcula el promedio del Guia
      */
     private void calcularCalificacion() {
-        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/promedioCalificacion.php?lugar=" + pojoGuia.getId();
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/promedioCalificacion.php?lugar=" + pojoGuia.getId()+
+                "&esSitio=false";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
                 url,
@@ -121,7 +123,8 @@ public class InfoGuiaActivity extends AppCompatActivity {
      * obtiene los comentarios de la DB
      */
     private void consultaComentarios() {
-        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/comentariosLugar.php?id_place=" + pojoGuia.getId();
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/comentariosLugar.php?id_place=" + pojoGuia.getId()+
+                "&esSitio=false";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
                 url,
@@ -138,7 +141,7 @@ public class InfoGuiaActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(InfoGuiaActivity.this,""+error.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(InfoGuiaActivity.this);
@@ -167,7 +170,6 @@ public class InfoGuiaActivity extends AppCompatActivity {
         }
         adapterDeComentarioGuia = new AdapterDeComentarios(comentarios);
         recycleComentarioGuia.setAdapter(adapterDeComentarioGuia);
-
     }
 
 
@@ -190,7 +192,7 @@ public class InfoGuiaActivity extends AppCompatActivity {
         for (int i=0;i<pojoGuia.getIdiomas().size();i++){
             aux2+=aux2+pojoGuia.getIdiomas().get(i)+"\n";
         }
-        idiomasGuia.setText(aux);
+        idiomasGuia.setText(aux2);
 
         horarioGuia.setText(pojoGuia.getHorario());
         duracionTourGuia.setText("Aproximadamente "+pojoGuia.getDuracion()+ " Hrs.");
@@ -322,7 +324,7 @@ public class InfoGuiaActivity extends AppCompatActivity {
         if (calificacion != null || comentario.getText() == null) {
             String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/" +
                     "agregarReviewSitio.php?nombre=" + Global.getObject().getId() + "&sitio=" + pojoGuia.getId() +
-                    "&calificacion=" + calificacion + "&comentario=" + comentario.getText();
+                    "&calificacion=" + calificacion + "&comentario=" + comentario.getText()+"&esSitio=false";
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                     Request.Method.GET,
                     url,

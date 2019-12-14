@@ -134,7 +134,8 @@ public class InfoLugarActivity extends AppCompatActivity {
      * obtiene los comentarios de la DB
      */
     private void consultaComentarios() {
-        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/comentariosLugar.php?id_place=" + pojoLugar.getPK_ID();
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/comentariosLugar.php?id_place=" + pojoLugar.getPK_ID()+
+                "&esSitio=true";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
                 url,
@@ -542,7 +543,7 @@ public class InfoLugarActivity extends AppCompatActivity {
         if (calificacion!=null||comentario.getText()==null){
             String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/" +
                     "agregarReviewSitio.php?nombre="+Global.getObject().getId()+"&sitio="+ pojoLugar.getPK_ID()+
-                    "&calificacion="+calificacion+"&comentario="+comentario.getText();
+                    "&calificacion="+calificacion+"&comentario="+comentario.getText()+"&esSitio=true";
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                     Request.Method.GET,
                     url,

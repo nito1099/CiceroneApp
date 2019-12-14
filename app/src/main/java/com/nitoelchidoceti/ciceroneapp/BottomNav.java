@@ -28,6 +28,7 @@ import com.nitoelchidoceti.ciceroneapp.Fragments.HomeFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.MapFragment;
 import com.nitoelchidoceti.ciceroneapp.Fragments.SearchFragment;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
+import com.nitoelchidoceti.ciceroneapp.POJOS.PojoGuia;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 
 import org.json.JSONArray;
@@ -41,6 +42,7 @@ public class BottomNav extends AppCompatActivity {
     private EditText txtNombre,txtEmail,txtPlace,txtCell,txtBirthday;
     TextView btnListo;
     public ArrayList<PojoLugar> lugaresDeAqui;
+    private  ArrayList<PojoGuia> guias;
     FloatingActionButton btnEditar;
 
     @Override
@@ -49,14 +51,132 @@ public class BottomNav extends AppCompatActivity {
         setContentView(R.layout.activity_bottom_nav);
         BottomNavigationView bottomNav = findViewById(R.id.menu_bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
+        guias=new ArrayList<>();
         lugaresDeAqui=new ArrayList<>();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new HomeFragment()).commit();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         txtBirthday = findViewById(R.id.txt_birthday_account);
-        llenarpojo();
+        llenarpojo();//lugares
+        llenarpojo2();
     }
+
+    private void llenarpojo2() {
+        String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/guias.php";
+        JsonArrayRequest jsonArrayRequestGuia = new JsonArrayRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try{
+                            llenarGuiasAlPojo(response);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(BottomNav.this, "Volley error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                error.printStackTrace();
+            }
+        });
+        RequestQueue requestQueueGuia = Volley.newRequestQueue(BottomNav.this);
+        requestQueueGuia.add(jsonArrayRequestGuia);
+    }
+
+    private void llenarGuiasAlPojo(JSONArray info) throws JSONException {
+        guias.clear();
+        for (int i = 0; i < info.length(); i++) {
+            PojoGuia guia = new PojoGuia();
+            JSONObject objeto ;
+            objeto = info.getJSONObject(i);
+            guia.setId(Integer.parseInt(objeto.getString("PK_Registro")));
+            guia.setNombre(objeto.getString("Nombre"));
+            guia.setTelefono(objeto.getString("Telefono"));
+            guia.setDuracion(objeto.getString("Duracion"));
+            guia.setCorreo(objeto.getString("Correo"));
+            guia.setFotografia(objeto.getString("Fotografia"));
+            guia.setNombreDelSitio(objeto.getString("Sitio"));
+            guia.setHorario("De " + objeto.getString("Horario_Inicio") + " a " + objeto.getString("Horario_Final"));
+            guia.setFK_Sitio(objeto.getString("FK_Sitio"));
+            //FALTA LA FOTOGRAFÍA********
+            Double[] aux = new Double[3];
+            aux[0] = Double.valueOf(objeto.getString("Ninos"));
+            aux[1] = Double.valueOf(objeto.getString("Especial"));
+            aux[2] = Double.valueOf(objeto.getString("Adultos"));
+            guia.setCostos(aux);
+            guia.setIdiomas(consultaIdiomas(guia.getId()));  //agrego los idiomas que me regresa mi funcion
+            guia.setTitulos(consultaTitulos(guia.getId()));  //lo mismo de arriba pero con titulos
+            guias.add(guia);
+        }
+        Global.getObject().setGuias(guias);
+    }
+    private ArrayList<String> consultaTitulos(int guia) {
+        final ArrayList<String> titulos = new ArrayList<>();
+        String url2 = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/titulosGuia.php?FK_guia="+guia;
+        System.out.println(url2);
+        JsonArrayRequest jsonArrayRequest2 = new JsonArrayRequest(Request.Method.GET,
+                url2,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for(int i=0;i<response.length();i++){
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                titulos.add(jsonObject.getString("Especialidad")+" en " +
+                                        jsonObject.getString("Carrera")+" en el "+
+                                        jsonObject.getString("Universidad"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(BottomNav.this, "Volley error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue requestQueue2 = Volley.newRequestQueue(BottomNav.this);
+        requestQueue2.add(jsonArrayRequest2);
+        return  titulos;
+    }
+
+    private ArrayList<String> consultaIdiomas(int  guia) {
+        final ArrayList<String> idiomas = new ArrayList<>();
+        String url2 = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/idiomasGuias.php?FK_guia="+guia;
+        JsonArrayRequest jsonArrayRequest2 = new JsonArrayRequest(Request.Method.GET,
+                url2,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for(int j=0;j<response.length();j++){
+                            JSONObject jsonObject = response.getJSONObject(j);
+                            idiomas.add(jsonObject.getString("Idioma"));
+                        }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(BottomNav.this, "Volley error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue requestQueue2 = Volley.newRequestQueue(BottomNav.this);
+        requestQueue2.add(jsonArrayRequest2);
+        return idiomas;
+    }
+
+
 
     private void llenarpojo() {
         String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/lugares.php";
