@@ -183,14 +183,14 @@ public class InfoGuiaActivity extends AppCompatActivity {
         String aux = new String();
 
         for (int i=0;i<pojoGuia.getTitulos().size();i++){
-            aux+=aux+pojoGuia.getTitulos().get(i)+"\n";
+            aux+="* "+pojoGuia.getTitulos().get(i)+"\n";
         }
         infAcademicaGuia.setText(aux);
 
         String aux2 = new String();
 
         for (int i=0;i<pojoGuia.getIdiomas().size();i++){
-            aux2+=aux2+pojoGuia.getIdiomas().get(i)+"\n";
+            aux2+="* "+pojoGuia.getIdiomas().get(i)+"\n";
         }
         idiomasGuia.setText(aux2);
 

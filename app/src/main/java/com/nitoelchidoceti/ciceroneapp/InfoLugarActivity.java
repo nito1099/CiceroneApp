@@ -104,7 +104,8 @@ public class InfoLugarActivity extends AppCompatActivity {
      * calcula el promedio del lugar
      */
     private void calcularCalificacion() {
-        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/promedioCalificacion.php?lugar=" + pojoLugar.getPK_ID();
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/promedioCalificacion.php?lugar=" + pojoLugar.getPK_ID()+
+                "&esSitio=true";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
                 url,

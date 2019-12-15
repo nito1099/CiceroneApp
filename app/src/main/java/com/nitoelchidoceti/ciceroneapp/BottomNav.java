@@ -159,7 +159,7 @@ public class BottomNav extends AppCompatActivity {
                             for(int j=0;j<response.length();j++){
                             JSONObject jsonObject = response.getJSONObject(j);
                             idiomas.add(jsonObject.getString("Idioma"));
-                        }
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

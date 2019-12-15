@@ -153,12 +153,21 @@ public class QrCodeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
-        if(id == R.id.item_panic_button){
-            launchReporProblem();
+        switch (id) {
+            case R.id.item_panic_button:
+                launchReporProblem();
+                break;
+            case R.id.item_help:
+                launchUserHelpActivity();
+                break;
         }
         return true;
     }
 
+    private void launchUserHelpActivity() {
+        Intent intent = new Intent(QrCodeActivity.this, UserHelpActivity.class);
+        startActivity(intent);
+    }
     private void launchReporProblem() {
         Intent IlaunchReportProblem = new Intent(QrCodeActivity.this,ReportProblemActivity.class);
         startActivity(IlaunchReportProblem);

@@ -2,10 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:title="Ayuda"
+        android:id="@+id/item_help"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_help_to_users"
+        android:iconTint="@color/white"
+        />
     <item android:title="Panic Button"
         android:id="@+id/item_panic_button"
         app:showAsAction="always"
         android:icon="@drawable/ic_panic_button"
         android:iconTint="@color/white"
         />
+
 </menu>
