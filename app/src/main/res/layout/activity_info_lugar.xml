@@ -355,6 +355,7 @@
                         android:textStyle="bold"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="20dp"
+                        android:maxLength="3"
                         />
 
                     <ImageButton
