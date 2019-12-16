@@ -11,6 +11,7 @@ public final class  Global {
     private String id ;
     private ArrayList<PojoLugar> lugares;
     private ArrayList<PojoGuia> guias;
+    private ArrayList<String> malasPalabras;
     private Global(){
     }
 
@@ -43,5 +44,13 @@ public final class  Global {
 
     public void setGuias(ArrayList<PojoGuia> guias) {
         this.guias = guias;
+    }
+
+    public ArrayList<String> getMalasPalabras() {
+        return malasPalabras;
+    }
+
+    public void setMalasPalabras(ArrayList<String> malasPalabras) {
+        this.malasPalabras = malasPalabras;
     }
 }

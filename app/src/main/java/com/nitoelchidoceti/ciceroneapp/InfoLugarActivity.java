@@ -541,42 +541,58 @@ public class InfoLugarActivity extends AppCompatActivity {
      * @param view
      */
     public void agregarReview(View view) {
-        if (calificacion!=null||comentario.getText()==null){
-            String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/" +
-                    "agregarReviewSitio.php?nombre="+Global.getObject().getId()+"&sitio="+ pojoLugar.getPK_ID()+
-                    "&calificacion="+calificacion+"&comentario="+comentario.getText()+"&esSitio=true";
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                    Request.Method.GET,
-                    url,
-                    null,
-                    new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            JSONObject jsonObject ;
-                            try {
-                                jsonObject = response.getJSONObject(0);
-                                if (jsonObject.getString("success").equals("true")){
-                                    Toast.makeText(InfoLugarActivity.this,"Se ha " +
-                                            "publicado su comentario correctamente",Toast.LENGTH_SHORT).show();
-                                }else {
-                                    Toast.makeText(InfoLugarActivity.this,"Ya ha agregado " +
-                                            "un comentario previamente.",Toast.LENGTH_SHORT).show();
+        if (chicoMalo() == false){
+            if (calificacion != null || comentario.getText() != null ) {
+                String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/" +
+                        "agregarReviewSitio.php?nombre="+Global.getObject().getId()+"&sitio="+ pojoLugar.getPK_ID()+
+                        "&calificacion="+calificacion+"&comentario="+comentario.getText()+"&esSitio=true";
+                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                        Request.Method.GET,
+                        url,
+                        null,
+                        new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                JSONObject jsonObject ;
+                                try {
+                                    jsonObject = response.getJSONObject(0);
+                                    if (jsonObject.getString("success").equals("true")){
+                                        Toast.makeText(InfoLugarActivity.this,"Se ha " +
+                                                "publicado su comentario correctamente",Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        Toast.makeText(InfoLugarActivity.this,"Ya ha agregado " +
+                                                "un comentario previamente.",Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            });
-            RequestQueue requestQueue = Volley.newRequestQueue(InfoLugarActivity.this);
-            requestQueue.add(jsonArrayRequest);
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+                RequestQueue requestQueue = Volley.newRequestQueue(InfoLugarActivity.this);
+                requestQueue.add(jsonArrayRequest);
+            }else {
+                Toast.makeText(InfoLugarActivity.this,"Porfavor no deje campos vacios.",
+                        Toast.LENGTH_SHORT).show();
+            }
         }else {
-            Toast.makeText(InfoLugarActivity.this,"Porfavor no deje campos vacios.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Su comentario cuenta con Palabras malsonantes", Toast.LENGTH_LONG).show();
+            comentario.setText("");
         }
+
+    }
+
+    private boolean chicoMalo() {
+        String sentence = comentario.getText().toString().toLowerCase();
+        for (String malaPalabra : Global.getObject().getMalasPalabras()) {
+            if (sentence.indexOf(malaPalabra.toLowerCase()) != -1) {
+                return true;//chico malo
+            }
+        }
+        return false;//chico Bueno
     }
 }

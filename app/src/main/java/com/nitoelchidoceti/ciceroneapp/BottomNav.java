@@ -59,7 +59,39 @@ public class BottomNav extends AppCompatActivity {
         setSupportActionBar(toolbar);
         txtBirthday = findViewById(R.id.txt_birthday_account);
         llenarpojo();//lugares
-        llenarpojo2();
+        llenarpojo2();//guias
+        chicoMalo();
+    }
+
+    private void chicoMalo() {
+        String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/malasPalabras.php";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            ArrayList<String> aux = new ArrayList<>();
+                            for (int i=0;i<response.length();i++){
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                aux.add(jsonObject.getString("BadWord"));
+                            }
+                            Global.getObject().setMalasPalabras(aux);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(BottomNav.this, "Volley error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                System.out.println("valeverga"+error.getMessage());
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(BottomNav.this);
+        requestQueue.add(jsonArrayRequest);
     }
 
     private void llenarpojo2() {
@@ -114,6 +146,7 @@ public class BottomNav extends AppCompatActivity {
         }
         Global.getObject().setGuias(guias);
     }
+
     private ArrayList<String> consultaTitulos(int guia) {
         final ArrayList<String> titulos = new ArrayList<>();
         String url2 = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/titulosGuia.php?FK_guia="+guia;
@@ -175,8 +208,6 @@ public class BottomNav extends AppCompatActivity {
         requestQueue2.add(jsonArrayRequest2);
         return idiomas;
     }
-
-
 
     private void llenarpojo() {
         String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/lugares.php";

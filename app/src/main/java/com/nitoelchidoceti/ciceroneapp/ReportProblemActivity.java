@@ -84,37 +84,52 @@ public class ReportProblemActivity extends AppCompatActivity {
     }
 
     public void sendReportAndLaunchHomeFragment(){
-        if(Position!=0||problema.getText().equals("")||problema.getText().equals("Cuéntanos:")){
-            String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone" +
-                    "/PHP/enviarReporte.php?tipo="+Position+"&descripcion="+problema.getText()+"&id="+Global.getObject().getId();
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                    url,
-                    null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                if(response.getString("success").equals("true")){
-                                    Toast.makeText(ReportProblemActivity.this,"Reporte enviado correctamente, gracias! :).",Toast.LENGTH_SHORT).show();
-                                    Intent launchBottomFromReport = new Intent(ReportProblemActivity.this,BottomNav.class);
-                                    launchBottomFromReport.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(launchBottomFromReport);
+        if (chicoMalo()==false){
+            if(Position!=0||problema.getText().equals("")||problema.getText().equals("Cuéntanos:")){
+                String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone" +
+                        "/PHP/enviarReporte.php?tipo="+Position+"&descripcion="+problema.getText()+"&id="+Global.getObject().getId();
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+                        url,
+                        null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    if(response.getString("success").equals("true")){
+                                        Toast.makeText(ReportProblemActivity.this,"Reporte enviado correctamente, gracias! :).",Toast.LENGTH_SHORT).show();
+                                        Intent launchBottomFromReport = new Intent(ReportProblemActivity.this,BottomNav.class);
+                                        launchBottomFromReport.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(launchBottomFromReport);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(ReportProblemActivity.this,"Volley error: "+ error.getMessage(),Toast.LENGTH_LONG).show();
-                }
-            });
-            RequestQueue ejecutaRquest = Volley.newRequestQueue(ReportProblemActivity.this);
-            ejecutaRquest.add(jsonObjectRequest);
-        }else{
-            Toast.makeText(ReportProblemActivity.this,"Porfavor no dejes campos vacíos.",Toast.LENGTH_SHORT).show();
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ReportProblemActivity.this,"Volley error: "+ error.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                });
+                RequestQueue ejecutaRquest = Volley.newRequestQueue(ReportProblemActivity.this);
+                ejecutaRquest.add(jsonObjectRequest);
+            }else{
+                Toast.makeText(ReportProblemActivity.this,"Porfavor no dejes campos vacíos.",Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(this, "Su descripcion cuenta con palabras malsonantes.", Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+
+    private boolean chicoMalo() {
+        String sentence = problema.getText().toString().toLowerCase();
+        for (String malaPalabra : Global.getObject().getMalasPalabras()) {
+            if (sentence.indexOf(malaPalabra.toLowerCase()) != -1) {
+                return true;//chico malo
+            }
+        }
+        return false;//chico Bueno
     }
 }
