@@ -30,7 +30,7 @@ public class ReproduccionTourActivity extends AppCompatActivity {
     int index = 0;//indica que numero de cancion se esta reproducciendo
     private MediaPlayer mediaPlayer;
     private  boolean estaEnPlay;
-    String can[] = {"audio1_introduccion.mp3", "audio2_Sala1.mp3", "audio3_sala2.mp3"};
+    String can[] = {"audio1_introduccion.mp3", "audio2_Sala1dddddddddddddddddddddddddddddddddd.mp3", "audio3_sala2.mp3"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

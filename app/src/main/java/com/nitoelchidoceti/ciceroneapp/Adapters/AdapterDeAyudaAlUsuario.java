@@ -1,7 +1,10 @@
 package com.nitoelchidoceti.ciceroneapp.Adapters;
 
+import android.app.ActionBar;
+import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,14 +16,19 @@ import java.util.ArrayList;
 
 public class AdapterDeAyudaAlUsuario extends RecyclerView.Adapter<AdapterDeAyudaAlUsuario.FichaHolderUserHelp> {
 
-    private ArrayList<String> problemas;
+    private ArrayList<String> problemas,problemasCompletos;
     private AdapterDeAyudaAlUsuario.OnItemClickListener listener;
+
+
+
     public interface  OnItemClickListener{
         void OnItemClick(int position);
     }
-    public AdapterDeAyudaAlUsuario(ArrayList<String> problemas, AdapterDeAyudaAlUsuario.OnItemClickListener listener) {
+
+    public AdapterDeAyudaAlUsuario(ArrayList<String> problemas,ArrayList<String> problemasCompletos, AdapterDeAyudaAlUsuario.OnItemClickListener listener) {
         this.problemas = problemas;
         this.listener = listener;
+        this.problemasCompletos=problemasCompletos;
     }
 
     @NonNull
@@ -51,12 +59,19 @@ public class AdapterDeAyudaAlUsuario extends RecyclerView.Adapter<AdapterDeAyuda
             descripcion = itemView.findViewById(R.id.txtProblemaUserHelp);
         }
 
-        public void llenarDatos(String problems, final  int posicion, final AdapterDeAyudaAlUsuario.OnItemClickListener listener) {
+        public void llenarDatos(final String problems, final  int posicion, final AdapterDeAyudaAlUsuario.OnItemClickListener listener) {
             descripcion.setText(problems);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.OnItemClick(posicion);
+
+                    ViewGroup.LayoutParams params = descripcion.getLayoutParams();
+                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    descripcion.setLayoutParams(params);
+                    //descripcion.setHeight(350);
+                    descripcion.setText(problemasCompletos.get(posicion));
+                    notifyDataSetChanged();
                 }
             });
         }
