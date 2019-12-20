@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ReservacionActivity extends AppCompatActivity {
 
@@ -98,7 +99,7 @@ public class ReservacionActivity extends AppCompatActivity {
     }
 
     private void configuracionPickers() {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
 
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
@@ -108,16 +109,16 @@ public class ReservacionActivity extends AppCompatActivity {
         etxtDate.setOnClickListener(new View.OnClickListener() {//ONCLICK DE FECHA DE NACIMIENTO
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                final DatePickerDialog datePickerDialog = new DatePickerDialog(
                         ReservacionActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         month = month + 1;
                         String date = year + "-" + month + "-" + day;
-
                         etxtDate.setText(date);
                     }
                 }, year, month, day);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
                 datePickerDialog.show();
             }
         });
@@ -149,6 +150,7 @@ public class ReservacionActivity extends AppCompatActivity {
 
             }
         });
+
         etxtHora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,8 +159,8 @@ public class ReservacionActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         String horaFormateada = (hourOfDay < 10) ? ("0" + hourOfDay) : String.valueOf(hourOfDay);
-                        String minutoFormateado = (minute < 10) ? ("0" + minute) : String.valueOf(minute);
-                        etxtHora.setText(horaFormateada + ":" + minutoFormateado + " ");
+                        //String minutoFormateado = (minute < 10) ? ("0" + minute) : String.valueOf(minute);
+                        etxtHora.setText(horaFormateada + ":" + "00" + " ");
                     }
                 }, hora, minuto, true);
                 timePickerDialog.show();
