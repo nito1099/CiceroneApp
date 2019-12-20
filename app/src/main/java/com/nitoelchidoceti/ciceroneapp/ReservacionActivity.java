@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -13,6 +15,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +58,7 @@ public class ReservacionActivity extends AppCompatActivity {
     }
 
     private void consultarReservaciones() {
+
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
                 "Cicerone/PHP/consultaReservaciones.php?guia=" + pojoGuia.getId();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -174,6 +178,8 @@ public class ReservacionActivity extends AppCompatActivity {
         etxtDate = findViewById(R.id.etxt_fecha_reservacion);
         etxtHora = findViewById(R.id.etxt_hora_reservacion);
         reservacionesFiltradas=new ArrayList<>();
+        Toolbar toolbar = findViewById(R.id.toolbarReservacion);
+        setSupportActionBar(toolbar);
         recycleReservaciones = findViewById(R.id.recycle_reservaciones_rec);
         recycleReservaciones.setLayoutManager(new LinearLayoutManager(ReservacionActivity.this,
                 LinearLayoutManager.VERTICAL, false));
@@ -181,37 +187,64 @@ public class ReservacionActivity extends AppCompatActivity {
     }
 
     public void reservarTour(View view) {
-        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/reservarTour.php?fecha=" +
-                etxtDate.getText() + "&hora=" +
-                etxtHora.getText() + ":00" +
-                "&turista=" + Global.getObject().getId() +
-                "&guia=" + pojoGuia.getId();
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET,
-                url,
-                null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            JSONObject jsonObject;
-                            jsonObject = response.getJSONObject(0);
-                            if (jsonObject.getString("success").equals(false)) {
-                                Toast.makeText(ReservacionActivity.this, "Ya hay una reservacion a esa hora.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(ReservacionActivity.this, "Se ha reservado correctamente.", Toast.LENGTH_SHORT).show();
+        if (etxtHora.getText().toString().matches("")||etxtDate.getText().toString().matches("")){
+            Toast.makeText(this, "Por favor no deje campos vacios", Toast.LENGTH_SHORT).show();
+        }else {
+            final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/reservarTour.php?fecha=" +
+                    etxtDate.getText() + "&hora=" +
+                    etxtHora.getText() + ":00" +
+                    "&turista=" + Global.getObject().getId() +
+                    "&guia=" + pojoGuia.getId();
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                    Request.Method.GET,
+                    url,
+                    null,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            try {
+                                JSONObject jsonObject;
+                                jsonObject = response.getJSONObject(0);
+                                if (jsonObject.getString("success").equals(false)) {
+                                    Toast.makeText(ReservacionActivity.this, "Ya hay una reservacion a esa hora.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ReservacionActivity.this, "Se ha reservado correctamente.", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        RequestQueue queue = Volley.newRequestQueue(ReservacionActivity.this);
-        queue.add(jsonArrayRequest);
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+            RequestQueue queue = Volley.newRequestQueue(ReservacionActivity.this);
+            queue.add(jsonArrayRequest);
+        }
+
+    }
+
+    //toolbar
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_actionbar,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == R.id.qr_code){
+            launchQr();
+        }
+        return true;
+    }
+
+    private void launchQr() {//CODIGO QR ACTIVITY
+        Intent launchQRActivity = new Intent(ReservacionActivity.this,QrCodeActivity.class);
+        startActivity(launchQRActivity);
     }
 }
