@@ -270,6 +270,7 @@
                             android:fontFamily="@font/source_sans_pro"
                             android:text="Reservar Tour"
                             android:textSize="10dp"
+                            android:onClick="launchReservacionactivity"
                             />
 
                     </RelativeLayout>

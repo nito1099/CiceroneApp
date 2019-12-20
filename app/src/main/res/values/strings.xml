@@ -27,6 +27,10 @@
     <string name="favoritos">Favoritos</string>
     <string name="multimedia">Multimedia</string>
     <string name="calificacion">Calificación</string>
+    <string name="fecha">Fecha</string>
+    <string name="selecciona_una_fecha">Selecciona una fecha:</string>
+    <string name="selecciona_una_hora">Selecciona una hora:</string>
+    <string name="reservar">Reservar</string>
 
     <string-array name="categorias">
         <item>Iglesias y catedrales</item>

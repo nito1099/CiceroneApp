@@ -375,4 +375,10 @@ public class InfoGuiaActivity extends AppCompatActivity {
         }
         return false;//chico Bueno
     }
+
+    public void launchReservacionactivity(View view) {
+        Intent intent = new Intent(InfoGuiaActivity.this, ReservacionActivity.class);
+        intent.putExtra("Guia", this.pojoGuia);
+        startActivity(intent);
+    }
 }

@@ -370,6 +370,8 @@ public class BottomNav extends AppCompatActivity {
 
 
     public void launchInboxActivity(View view) {
+        Intent intent = new Intent(BottomNav.this,InboxActivity.class);
+        startActivity(intent);
     }
 
 
@@ -396,6 +398,7 @@ public class BottomNav extends AppCompatActivity {
         Intent intent = new Intent(BottomNav.this,FavoritesActivity.class);
         startActivity(intent);
     }
+
     public void launchInfoLugar(View view) {
         Intent intent = new Intent(BottomNav.this,InfoLugarActivity.class);
         startActivity(intent);

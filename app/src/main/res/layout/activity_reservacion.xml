@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ReservacionActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarReservacion"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/orange"
+        app:navigationContentDescription="@string/Cicerone"
+        app:title="@string/Cicerone"
+        app:titleMarginStart="30dp"
+        app:titleTextColor="@color/white"
+        android:elevation="3dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="320dp"
+            android:layout_height="480dp"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:background="@drawable/custom_recycle_user_help"
+            android:elevation="3dp"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/source_sans_pro_bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:text="Reservacion de tour"
+                android:textAlignment="center"
+                />
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/source_sans_pro"
+                android:textColor="#444444"
+                android:textSize="16sp"
+                android:text="Tours reservados:"
+                android:textAlignment="center"
+
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycle_reservaciones_rec"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="20dp"
+                />
+
+            <EditText
+                android:id="@+id/etxt_fecha_reservacion"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/source_sans_pro"
+                android:hint="@string/selecciona_una_fecha"
+                android:textColor="#696969"
+                android:textColorHint="#AFAFAF"
+                android:textSize="16sp"
+                android:maxLength="10"
+                android:inputType="date"
+                android:focusableInTouchMode="false"
+                />
+
+            <EditText
+                android:id="@+id/etxt_hora_reservacion"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/source_sans_pro"
+                android:hint="@string/selecciona_una_hora"
+                android:textColor="#696969"
+                android:textColorHint="#AFAFAF"
+                android:textSize="16sp"
+                android:maxLength="10"
+                android:inputType="time"
+                android:focusableInTouchMode="false"
+                />
+
+            <Button
+                android:id="@+id/btnReservar"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginHorizontal="70dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/orange"
+                android:background="@drawable/button_background"
+                android:fontFamily="@font/source_sans_pro"
+                android:src="@drawable/button_background"
+                android:text="@string/reservar"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:onClick="reservarTour"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>
