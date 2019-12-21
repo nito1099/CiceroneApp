@@ -248,10 +248,10 @@
                         >
 
                         <Button
-                            android:layout_width="130dp"
+                            android:layout_width="100dp"
                             android:layout_height="45dp"
                             android:layout_alignParentStart="true"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="20dp"
                             android:background="@drawable/custom_button"
                             android:fontFamily="@font/source_sans_pro"
                             android:text="Ver informacion\ndel lugar"
@@ -260,10 +260,24 @@
                             android:textSize="10dp" />
 
                         <Button
-                            android:layout_width="130dp"
+                            android:layout_width="100dp"
+                            android:layout_height="45dp"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="20dp"
+                            android:background="@drawable/custom_button"
+                            android:fontFamily="@font/source_sans_pro"
+                            android:text="Enviar Mensaje"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="10dp"
+                            android:onClick="launchChatActivity"
+                            />
+
+                        <Button
+                            android:layout_width="100dp"
                             android:layout_height="45dp"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginRight="30dp"
+                            android:layout_marginRight="20dp"
                             android:textColor="@color/colorPrimary"
                             android:background="@drawable/custom_button"
                             android:textAlignment="center"

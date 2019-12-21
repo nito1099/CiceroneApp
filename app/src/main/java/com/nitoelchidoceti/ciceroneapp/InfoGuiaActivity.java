@@ -381,4 +381,9 @@ public class InfoGuiaActivity extends AppCompatActivity {
         intent.putExtra("Guia", this.pojoGuia);
         startActivity(intent);
     }
+
+    public void launchChatActivity(View view) {
+        Intent intent = new Intent(InfoGuiaActivity.this,ChatActivity.class);
+        startActivity(intent);
+    }
 }

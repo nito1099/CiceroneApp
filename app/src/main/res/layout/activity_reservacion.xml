@@ -55,19 +55,20 @@
                 android:textSize="16sp"
                 android:text="Tours reservados:"
                 android:textAlignment="center"
-
+                android:textStyle="bold"
                 />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycle_reservaciones_rec"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="198dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginHorizontal="20dp"
+                android:background="@drawable/custom_recycle_user_help"
                 />
 
             <EditText
                 android:id="@+id/etxt_fecha_reservacion"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginHorizontal="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

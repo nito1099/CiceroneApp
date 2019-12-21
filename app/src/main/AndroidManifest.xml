@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".InboxActivity"></activity>
+        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".InboxActivity" />
         <activity android:name=".ReservacionActivity" />
         <activity android:name=".TourEscritoActivity" />
         <activity android:name=".UserHelpActivity" />
