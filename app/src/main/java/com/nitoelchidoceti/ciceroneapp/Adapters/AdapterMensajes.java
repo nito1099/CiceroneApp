@@ -4,11 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import com.bumptech.glide.Glide;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoMensaje;
 import com.nitoelchidoceti.ciceroneapp.R;
 
@@ -40,6 +43,9 @@ public class AdapterMensajes  extends RecyclerView.Adapter<AdapterMensajes.Holde
         holder.getNombre().setText(mensajes.get(position).getNombre());
         holder.getMensaje().setText(mensajes.get(position).getMensaje());
         holder.getHora().setText(mensajes.get(position).getFecha());
+        if (mensajes.get(position).getType_mensaje().equals("2")){
+            Glide.with(context).load(mensajes.get(position).getUrlFoto()).into(holder.imgMensaje);
+        }
     }
 
     @Override
@@ -49,37 +55,34 @@ public class AdapterMensajes  extends RecyclerView.Adapter<AdapterMensajes.Holde
 
     public class HolderMensajes extends RecyclerView.ViewHolder {
         private TextView nombre, hora, mensaje;
+        public ImageView imgMensaje;
+
 
         public HolderMensajes(@NonNull View itemView) {
             super(itemView);
             nombre=itemView.findViewById(R.id.txtNombreCardView);
             hora=itemView.findViewById(R.id.txtFechaCardView);
             mensaje=itemView.findViewById(R.id.txtMensajeCardView);
+            imgMensaje= itemView.findViewById(R.id.imagenChat);
         }
 
         public TextView getNombre() {
             return nombre;
         }
-
         public void setNombre(TextView nombre) {
             this.nombre = nombre;
         }
-
         public TextView getHora() {
             return hora;
         }
-
         public void setHora(TextView hora) {
             this.hora = hora;
         }
-
         public TextView getMensaje() {
             return mensaje;
         }
-
         public void setMensaje(TextView mensaje) {
             this.mensaje = mensaje;
         }
-
     }
 }

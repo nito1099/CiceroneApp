@@ -1,21 +1,14 @@
 package com.nitoelchidoceti.ciceroneapp;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,7 +16,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.request.RequestOptions;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -31,22 +23,14 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.login.Login;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.material.textfield.TextInputLayout;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.nitoelchidoceti.ciceroneapp.Fragments.HomeFragment;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -58,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private EditText txtEmail, txtName, txtPass;
     public String ID;
+    private ImageView imgPortada;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         textInputPassword.setCounterMaxLength(14);
         textInputPassword.setCounterEnabled(true);
         textInputPassword.setNextFocusDownId(R.id.btnLogin);
-
+        imgPortada = findViewById(R.id.imglogin);
         loginButtonFb = findViewById(R.id.login_button_fb);
         txtName = findViewById(R.id.etxt_contraseña_login);
         txtEmail = findViewById(R.id.etxt_correo_login);

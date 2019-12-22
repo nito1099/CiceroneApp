@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -38,9 +37,12 @@ dependencies {
     //firebase
     implementation 'com.google.firebase:firebase-database:18.0.0'
     implementation 'com.google.firebase:firebase-storage:18.0.0'
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
     //edito de imgs
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //cardview
     implementation 'androidx.cardview:cardview'
 }
-apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+

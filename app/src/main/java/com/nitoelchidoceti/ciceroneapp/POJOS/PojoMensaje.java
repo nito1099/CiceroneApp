@@ -1,7 +1,7 @@
 package com.nitoelchidoceti.ciceroneapp.POJOS;
 
 public class PojoMensaje {
-    private String mensaje,fecha,Nombre,type_mensaje;
+    private String mensaje,fecha,Nombre,type_mensaje,urlFoto;
 
     public PojoMensaje() {
     }
@@ -11,6 +11,14 @@ public class PojoMensaje {
         this.fecha = fecha;
         Nombre = nombre;
         this.type_mensaje = type_mensaje;
+    }
+
+    public PojoMensaje(String mensaje, String fecha, String nombre, String type_mensaje, String urlFoto) {
+        this.mensaje = mensaje;
+        this.fecha = fecha;
+        Nombre = nombre;
+        this.type_mensaje = type_mensaje;
+        this.urlFoto = urlFoto;
     }
 
     public String getMensaje() {
@@ -43,5 +51,13 @@ public class PojoMensaje {
 
     public void setType_mensaje(String type_mensaje) {
         this.type_mensaje = type_mensaje;
+    }
+
+    public String getUrlFoto() {
+        return urlFoto;
+    }
+
+    public void setUrlFoto(String urlFoto) {
+        this.urlFoto = urlFoto;
     }
 }
