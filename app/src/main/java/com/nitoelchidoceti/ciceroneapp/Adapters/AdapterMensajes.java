@@ -12,14 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
+import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeRecibir;
-import com.nitoelchidoceti.ciceroneapp.POJOS.PojoMensaje;
+import com.nitoelchidoceti.ciceroneapp.POJOS.PojoGuia;
 import com.nitoelchidoceti.ciceroneapp.R;
 
-import java.text.SimpleDateFormat;
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AdapterMensajes  extends RecyclerView.Adapter<AdapterMensajes.HolderMensajes>{
 
@@ -37,7 +40,12 @@ public class AdapterMensajes  extends RecyclerView.Adapter<AdapterMensajes.Holde
     @NonNull
     @Override
     public HolderMensajes onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.card_view_mensajes,parent,false);
+        View view;
+        if (viewType==1){//si el mensaje es nuestro usa esa card view
+             view = LayoutInflater.from(context).inflate(R.layout.card_view_emisor,parent,false);
+        }else {
+             view = LayoutInflater.from(context).inflate(R.layout.card_view_receptor,parent,false);
+        }
         return new HolderMensajes(view);
     }
 
@@ -50,13 +58,30 @@ public class AdapterMensajes  extends RecyclerView.Adapter<AdapterMensajes.Holde
         }
         Long codigoHora = mensajes.get(position).getHora();
         Date date = new Date(codigoHora);
+        /*
         SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd HH:mm");
-        holder.getHora().setText(sdf.format(date));
+        holder.getHora().setText(sdf.format(date));*/
+        PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
+        holder.getHora().setText(prettyTime.format(date));
     }
 
     @Override
     public int getItemCount() {
         return mensajes.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {//conocer si el mensaje es nuestro de aqui se va al on create view holder
+        //return super.getItemViewType(position);
+        if (mensajes.get(position).getNombre()!=null){//por si todavia no cargan los datos
+            if (mensajes.get(position).getNombre()== Global.getObject().getNombre()){
+                return 1;
+            }else {
+                return 0;
+            }
+        }else {
+            return 0;
+        }
     }
 
     public class HolderMensajes extends RecyclerView.ViewHolder {

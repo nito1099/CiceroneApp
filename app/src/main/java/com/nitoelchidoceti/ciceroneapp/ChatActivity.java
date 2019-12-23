@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.internal.GmsLogger;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,8 +32,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterMensajes;
+import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeEnviar;
 import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeRecibir;
+import com.nitoelchidoceti.ciceroneapp.POJOS.PojoGuia;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoMensaje;
 
 import java.net.URI;
@@ -44,11 +47,13 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton btnEnviarMensaje, btnEnviarImagen;
     private AdapterMensajes adapterMensajes;
     private TextView txtNombreChat;
+    private PojoGuia pojoGuia;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private FirebaseStorage storage;
     private StorageReference storageReference;
+
 
     private static final int PHOTO_SEND = 1;
     @Override
@@ -65,6 +70,7 @@ public class ChatActivity extends AppCompatActivity {
         btnEnviarMensaje=findViewById(R.id.btnEnviarMsgChat);
         btnEnviarImagen = findViewById(R.id.imgEnviarImagen);
         txtNombreChat=findViewById(R.id.txtNombreChat);
+        pojoGuia = (PojoGuia) getIntent().getSerializableExtra("Guia");
         databaseConfiguration();
         recycleConfiguration();
         onClickEnviarMensaje();
@@ -108,7 +114,7 @@ public class ChatActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Uri downloadUri = task.getResult();
                         PojoMensaje mensaje = new MensajeEnviar("Te han enviado una imagen",
-                                txtNombreChat.getText().toString(),"2",downloadUri.toString(),ServerValue.TIMESTAMP);
+                                Global.getObject().getNombre(),"2",downloadUri.toString(), "turista"+Global.getObject().getId(),ServerValue.TIMESTAMP);
                         databaseReference.push().setValue(mensaje);
                     }else {
                         Toast.makeText(ChatActivity.this, "No se ha podido subir la imagen correctamente.", Toast.LENGTH_SHORT).show();
@@ -123,7 +129,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 databaseReference.push().setValue(new MensajeEnviar(etxtMensaje.getText().toString()
-                        , txtNombreChat.getText().toString(), "1",ServerValue.TIMESTAMP));
+                        , txtNombreChat.getText().toString(), "1", "turista"+Global.getObject().getId(),ServerValue.TIMESTAMP));
                 etxtMensaje.setText("");
             }
         });

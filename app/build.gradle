@@ -43,6 +43,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //cardview
     implementation 'androidx.cardview:cardview'
+    //diseño bonito para chat
+    implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
 }
 apply plugin: 'com.google.gms.google-services'
 

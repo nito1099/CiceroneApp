@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public final class  Global {
 
     private static Global Turista;
-    private String id ;
+    private String id,nombre ;
     private ArrayList<PojoLugar> lugares;
     private ArrayList<PojoGuia> guias;
     private ArrayList<String> malasPalabras;
@@ -52,5 +52,13 @@ public final class  Global {
 
     public void setMalasPalabras(ArrayList<String> malasPalabras) {
         this.malasPalabras = malasPalabras;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }

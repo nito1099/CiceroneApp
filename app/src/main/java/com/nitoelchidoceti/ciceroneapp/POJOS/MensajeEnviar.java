@@ -12,13 +12,13 @@ public class MensajeEnviar extends PojoMensaje{
         this.hora = hora;
     }
 
-    public MensajeEnviar(String mensaje, String nombre, String type_mensaje, String urlFoto, Map hora) {
-        super(mensaje, nombre, type_mensaje, urlFoto);
+    public MensajeEnviar(String mensaje, String nombre, String type_mensaje, String idUsuario, Map hora) {
+        super(mensaje, nombre, type_mensaje, idUsuario);
         this.hora = hora;
     }
 
-    public MensajeEnviar(String mensaje, String nombre, String type_mensaje, Map hora) {
-        super(mensaje, nombre, type_mensaje);
+    public MensajeEnviar(String mensaje, String nombre, String type_mensaje, String urlFoto, String idUsuario, Map hora) {
+        super(mensaje, nombre, type_mensaje, urlFoto, idUsuario);
         this.hora = hora;
     }
 

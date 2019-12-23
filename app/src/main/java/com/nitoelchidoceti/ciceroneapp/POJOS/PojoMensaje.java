@@ -1,22 +1,24 @@
 package com.nitoelchidoceti.ciceroneapp.POJOS;
 
 public class PojoMensaje {
-    private String mensaje,Nombre,type_mensaje,urlFoto;
+    private String mensaje,Nombre,type_mensaje,urlFoto, idUsuario;
 
     public PojoMensaje() {
     }
 
-    public PojoMensaje(String mensaje, String nombre, String type_mensaje) {
+    public PojoMensaje(String mensaje, String nombre, String type_mensaje,String idUsuario) {
         this.mensaje = mensaje;
         Nombre = nombre;
         this.type_mensaje = type_mensaje;
+        this.idUsuario = idUsuario;
     }
 
-    public PojoMensaje(String mensaje, String nombre, String type_mensaje, String urlFoto) {
+    public PojoMensaje(String mensaje, String nombre, String type_mensaje, String urlFoto,String idUsuario) {
         this.mensaje = mensaje;
         Nombre = nombre;
         this.type_mensaje = type_mensaje;
         this.urlFoto = urlFoto;
+        this.idUsuario=idUsuario;
     }
 
     public String getMensaje() {
@@ -49,5 +51,13 @@ public class PojoMensaje {
 
     public void setUrlFoto(String urlFoto) {
         this.urlFoto = urlFoto;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 }
