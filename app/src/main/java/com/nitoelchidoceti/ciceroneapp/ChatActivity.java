@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,12 +68,16 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void instancias() {
+        Toolbar toolbar = findViewById(R.id.toolbar_chat);
+        setSupportActionBar(toolbar);
+        pojoGuia = (PojoGuia) getIntent().getSerializableExtra("Guia");
         etxtMensaje=findViewById(R.id.etxtMensaje);
         recyclerViewMensajes=findViewById(R.id.recycleChat);
         btnEnviarMensaje=findViewById(R.id.btnEnviarMsgChat);
         btnEnviarImagen = findViewById(R.id.imgEnviarImagen);
         txtNombreChat=findViewById(R.id.txtNombreChat);
-        pojoGuia = (PojoGuia) getIntent().getSerializableExtra("Guia");
+        txtNombreChat.setText(pojoGuia.getNombre());
+
         databaseConfiguration();
         recycleConfiguration();
         onClickEnviarMensaje();
@@ -113,8 +120,8 @@ public class ChatActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()){
                         Uri downloadUri = task.getResult();
-                        PojoMensaje mensaje = new MensajeEnviar("Te han enviado una imagen",
-                                Global.getObject().getNombre(),"2",downloadUri.toString(), "turista"+Global.getObject().getId(),ServerValue.TIMESTAMP);
+                        PojoMensaje mensaje = new MensajeEnviar(pojoGuia.getNombre()+" te ha enviado una imagen",
+                                pojoGuia.getNombre(),"2",downloadUri.toString(), "guia"+pojoGuia.getId(),ServerValue.TIMESTAMP);
                         databaseReference.push().setValue(mensaje);
                     }else {
                         Toast.makeText(ChatActivity.this, "No se ha podido subir la imagen correctamente.", Toast.LENGTH_SHORT).show();
@@ -128,9 +135,11 @@ public class ChatActivity extends AppCompatActivity {
         btnEnviarMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseReference.push().setValue(new MensajeEnviar(etxtMensaje.getText().toString()
-                        , txtNombreChat.getText().toString(), "1", "turista"+Global.getObject().getId(),ServerValue.TIMESTAMP));
-                etxtMensaje.setText("");
+                if (etxtMensaje.getText().length()!=0){
+                    databaseReference.push().setValue(new MensajeEnviar(etxtMensaje.getText().toString()
+                            , Global.getObject().getNombre(), "1", "turista"+Global.getObject().getId(),ServerValue.TIMESTAMP));
+                    etxtMensaje.setText("");
+                }
             }
         });
     }
@@ -151,7 +160,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void databaseConfiguration() {
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("chat");//Sala de chat(nombre)
+        databaseReference = database.getReference("chat_turista"+Global.getObject().getId()+"_guia"+pojoGuia.getId());//Sala de chat(nombre)
         storage = FirebaseStorage.getInstance();
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -203,5 +212,26 @@ public class ChatActivity extends AppCompatActivity {
         }else{
             return true;
         }
+    }
+
+    //toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_actionbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.qr_code) {
+            launchQr();
+        }
+        return true;
+    }
+
+    private void launchQr() {//CODIGO QR ACTIVITY
+        Intent launchQRActivity = new Intent(ChatActivity.this, QrCodeActivity.class);
+        startActivity(launchQRActivity);
     }
 }

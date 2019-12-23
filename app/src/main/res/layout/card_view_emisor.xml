@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 cardview:contentPadding="5dp"
-                cardview:cardCornerRadius="5sp"
+                cardview:cardCornerRadius="10dp"
                 cardview:cardBackgroundColor="@color/colorPrimary"
                 >
                 <LinearLayout

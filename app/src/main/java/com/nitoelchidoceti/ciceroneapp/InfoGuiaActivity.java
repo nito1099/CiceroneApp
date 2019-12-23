@@ -62,6 +62,7 @@ public class InfoGuiaActivity extends AppCompatActivity {
      */
     private void inicializacion() {
         Toolbar toolbar = findViewById(R.id.toolbar_inf_guia);
+        setSupportActionBar(toolbar);
         escribirComentarioGuia = findViewById(R.id.inTxtEscComentarioGuia);
         escribirComentarioGuia.setCounterMaxLength(255);
         escribirComentarioGuia.setNextFocusDownId(R.id.btnPublicarComentarioGuia);
@@ -85,7 +86,7 @@ public class InfoGuiaActivity extends AppCompatActivity {
         idiomasGuia=findViewById(R.id.txtIdiomasGuia);
         Intent intent = getIntent();
         pojoGuia = (PojoGuia) intent.getSerializableExtra("Guia");
-        setSupportActionBar(toolbar);
+
     }
 
     /**

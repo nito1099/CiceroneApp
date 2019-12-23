@@ -74,7 +74,7 @@ public class AdapterMensajes  extends RecyclerView.Adapter<AdapterMensajes.Holde
     public int getItemViewType(int position) {//conocer si el mensaje es nuestro de aqui se va al on create view holder
         //return super.getItemViewType(position);
         if (mensajes.get(position).getNombre()!=null){//por si todavia no cargan los datos
-            if (mensajes.get(position).getNombre()== Global.getObject().getNombre()){
+            if (mensajes.get(position).getIdUsuario().equals("turista"+Global.getObject().getId()) ){
                 return 1;
             }else {
                 return 0;

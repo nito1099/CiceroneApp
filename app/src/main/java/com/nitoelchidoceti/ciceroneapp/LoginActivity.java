@@ -152,7 +152,6 @@ public class LoginActivity extends AppCompatActivity {
                                 ID=loginTurista.getString("id");
                                 Global.getObject().setId(ID);
                                 Global.getObject().setNombre(loginTurista.getString("Nombre"));
-                                Toast.makeText(LoginActivity.this, "Bienvenido:"+ loginTurista.getString("Nombre"), LENGTH_SHORT).show();
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                             }
