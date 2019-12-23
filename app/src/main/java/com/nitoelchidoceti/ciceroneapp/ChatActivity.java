@@ -23,10 +23,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterMensajes;
+import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeEnviar;
+import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeRecibir;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoMensaje;
 
 import java.net.URI;
@@ -100,8 +103,8 @@ public class ChatActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()){
                         Uri downloadUri = task.getResult();
-                        PojoMensaje mensaje = new PojoMensaje("Te han enviado una imagen","00:00",
-                                txtNombreChat.getText().toString(),"2",downloadUri.toString());
+                        PojoMensaje mensaje = new MensajeEnviar("Te han enviado una imagen"+
+                                txtNombreChat.getText().toString(),"2",downloadUri.toString(),ServerValue.TIMESTAMP);
                         databaseReference.push().setValue(mensaje);
                     }else {
                         Toast.makeText(ChatActivity.this, "No se ha podido subir la imagen correctamente.", Toast.LENGTH_SHORT).show();
@@ -115,8 +118,8 @@ public class ChatActivity extends AppCompatActivity {
         btnEnviarMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseReference.push().setValue(new PojoMensaje(etxtMensaje.getText().toString(),
-                        "00:00", txtNombreChat.getText().toString(), "1"));
+                databaseReference.push().setValue(new MensajeEnviar(etxtMensaje.getText().toString()
+                        , txtNombreChat.getText().toString(), "1",ServerValue.TIMESTAMP));
                 etxtMensaje.setText("");
             }
         });
@@ -143,7 +146,7 @@ public class ChatActivity extends AppCompatActivity {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                PojoMensaje mensaje = dataSnapshot.getValue(PojoMensaje.class);
+                MensajeRecibir mensaje = dataSnapshot.getValue(MensajeRecibir.class);
                 adapterMensajes.addMensaje(mensaje);
             }
 

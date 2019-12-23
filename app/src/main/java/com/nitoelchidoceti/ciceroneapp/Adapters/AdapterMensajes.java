@@ -12,22 +12,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
+import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeRecibir;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoMensaje;
 import com.nitoelchidoceti.ciceroneapp.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AdapterMensajes  extends RecyclerView.Adapter<AdapterMensajes.HolderMensajes>{
 
-    private List<PojoMensaje> mensajes = new ArrayList<>();
+    private List<MensajeRecibir > mensajes = new ArrayList<>();
     private Context context;
 
     public AdapterMensajes( Context context) {
         this.context = context;
     }
 
-    public void addMensaje(PojoMensaje mensaje){
+    public void addMensaje(MensajeRecibir mensaje){
         mensajes.add(mensaje);
         notifyItemInserted(mensajes.size());
     }
@@ -42,10 +45,13 @@ public class AdapterMensajes  extends RecyclerView.Adapter<AdapterMensajes.Holde
     public void onBindViewHolder(@NonNull HolderMensajes holder, int position) {
         holder.getNombre().setText(mensajes.get(position).getNombre());
         holder.getMensaje().setText(mensajes.get(position).getMensaje());
-        holder.getHora().setText(mensajes.get(position).getFecha());
         if (mensajes.get(position).getType_mensaje().equals("2")){
             Glide.with(context).load(mensajes.get(position).getUrlFoto()).into(holder.imgMensaje);
         }
+        Long codigoHora = mensajes.get(position).getHora();
+        Date date = new Date(codigoHora);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd HH:mm");
+        holder.getHora().setText(sdf.format(date));
     }
 
     @Override
