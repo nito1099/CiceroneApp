@@ -1,8 +1,10 @@
 package com.nitoelchidoceti.ciceroneapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -33,6 +36,7 @@ public class QrCodeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_code);
+        verifyCameraPermissions(this);
         textView = findViewById(R.id.txtEscanea2);
         Toolbar toolbar = findViewById(R.id.toolbarQR);
         setSupportActionBar(toolbar);
@@ -108,6 +112,7 @@ public class QrCodeActivity extends AppCompatActivity {
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(QrCodeActivity.this, "Debes Habilitar los permisos de camara", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -133,6 +138,7 @@ public class QrCodeActivity extends AppCompatActivity {
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(QrCodeActivity.this, "Debes Habilitar los permisos de camara", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -171,5 +177,22 @@ public class QrCodeActivity extends AppCompatActivity {
     private void launchReporProblem() {
         Intent IlaunchReportProblem = new Intent(QrCodeActivity.this,ReportProblemActivity.class);
         startActivity(IlaunchReportProblem);
+    }
+    public static boolean verifyCameraPermissions(Activity activity) {
+        String[] PERMISSIONS_STORAGE = {
+                Manifest.permission.CAMERA
+        };
+        int REQUEST_EXTERNAL_STORAGE = 1;
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+            return false;
+        }else{
+            return true;
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.nitoelchidoceti.ciceroneapp;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,6 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        verifyStoragePermissions(this);
         instancias();
     }
 
@@ -103,7 +107,7 @@ public class ChatActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()){
                         Uri downloadUri = task.getResult();
-                        PojoMensaje mensaje = new MensajeEnviar("Te han enviado una imagen"+
+                        PojoMensaje mensaje = new MensajeEnviar("Te han enviado una imagen",
                                 txtNombreChat.getText().toString(),"2",downloadUri.toString(),ServerValue.TIMESTAMP);
                         databaseReference.push().setValue(mensaje);
                     }else {
@@ -174,5 +178,24 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setScrollBar() {//scroll la posicion del recycle view al ultimo item agregado
         recyclerViewMensajes.scrollToPosition(adapterMensajes.getItemCount() - 1);
+    }
+
+    public static boolean verifyStoragePermissions(ChatActivity activity) {
+        String[] PERMISSIONS_STORAGE = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+
+        };
+        int REQUEST_EXTERNAL_STORAGE = 1;
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+            return false;
+        }else{
+            return true;
+        }
     }
 }
