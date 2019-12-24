@@ -121,7 +121,7 @@ public class ChatActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Uri downloadUri = task.getResult();
                         PojoMensaje mensaje = new MensajeEnviar(pojoGuia.getNombre()+" te ha enviado una imagen",
-                                pojoGuia.getNombre(),"2",downloadUri.toString(), "guia"+pojoGuia.getId(),ServerValue.TIMESTAMP);
+                                pojoGuia.getNombre(),"2",downloadUri.toString(), "guia"+pojoGuia.getId(),pojoGuia.getNombre(),ServerValue.TIMESTAMP);
                         databaseReference.push().setValue(mensaje);
                     }else {
                         Toast.makeText(ChatActivity.this, "No se ha podido subir la imagen correctamente.", Toast.LENGTH_SHORT).show();
@@ -137,7 +137,8 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (etxtMensaje.getText().length()!=0){
                     databaseReference.push().setValue(new MensajeEnviar(etxtMensaje.getText().toString()
-                            , Global.getObject().getNombre(), "1", "turista"+Global.getObject().getId(),ServerValue.TIMESTAMP));
+                            , Global.getObject().getNombre(), "1",
+                            "turista"+Global.getObject().getId(),pojoGuia.getNombre(),ServerValue.TIMESTAMP));
                     etxtMensaje.setText("");
                 }
             }
@@ -160,7 +161,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void databaseConfiguration() {
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("chat_turista"+Global.getObject().getId()+"_guia"+pojoGuia.getId());//Sala de chat(nombre)
+        databaseReference = database.getReference("chatTurista_"+Global.getObject().getId()+"_Guia_"+pojoGuia.getId()+"_");//Sala de chat(nombre)
         storage = FirebaseStorage.getInstance();
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override

@@ -1,24 +1,26 @@
 package com.nitoelchidoceti.ciceroneapp.POJOS;
 
 public class PojoMensaje {
-    private String mensaje,Nombre,type_mensaje,urlFoto, idUsuario;
+    private String mensaje,Nombre,type_mensaje,urlFoto, idUsuario,nombreDestinatario;
 
     public PojoMensaje() {
     }
 
-    public PojoMensaje(String mensaje, String nombre, String type_mensaje,String idUsuario) {
-        this.mensaje = mensaje;
-        Nombre = nombre;
-        this.type_mensaje = type_mensaje;
-        this.idUsuario = idUsuario;
-    }
-
-    public PojoMensaje(String mensaje, String nombre, String type_mensaje, String urlFoto,String idUsuario) {
+    public PojoMensaje(String mensaje, String nombre, String type_mensaje, String urlFoto, String idUsuario, String nombreDestinatario) {
         this.mensaje = mensaje;
         Nombre = nombre;
         this.type_mensaje = type_mensaje;
         this.urlFoto = urlFoto;
-        this.idUsuario=idUsuario;
+        this.idUsuario = idUsuario;
+        this.nombreDestinatario = nombreDestinatario;
+    }
+
+    public PojoMensaje(String mensaje, String nombre, String type_mensaje, String idUsuario, String nombreDestinatario) {
+        this.mensaje = mensaje;
+        Nombre = nombre;
+        this.type_mensaje = type_mensaje;
+        this.idUsuario = idUsuario;
+        this.nombreDestinatario = nombreDestinatario;
     }
 
     public String getMensaje() {
@@ -59,5 +61,13 @@ public class PojoMensaje {
 
     public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public String getNombreDestinatario() {
+        return nombreDestinatario;
+    }
+
+    public void setNombreDestinatario(String nombreDestinatario) {
+        this.nombreDestinatario = nombreDestinatario;
     }
 }

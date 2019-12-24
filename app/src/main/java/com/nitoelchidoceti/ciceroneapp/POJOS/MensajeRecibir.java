@@ -1,8 +1,8 @@
 package com.nitoelchidoceti.ciceroneapp.POJOS;
 
-import android.util.Log;
+import java.io.Serializable;
 
-public class MensajeRecibir extends  PojoMensaje{
+public class MensajeRecibir extends PojoMensaje implements Serializable {
     private Long hora;
 
     public MensajeRecibir() {
@@ -12,8 +12,8 @@ public class MensajeRecibir extends  PojoMensaje{
         this.hora = hora;
     }
 
-    public MensajeRecibir(String mensaje, String nombre, String type_mensaje, String urlFoto, Long hora) {
-        super(mensaje, nombre, type_mensaje, urlFoto);
+    public MensajeRecibir(String mensaje, String nombre, String type_mensaje, String urlFoto, String idUsuario, String nombreDestinatario, Long hora) {
+        super(mensaje, nombre, type_mensaje, urlFoto, idUsuario, nombreDestinatario);
         this.hora = hora;
     }
 
