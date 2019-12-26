@@ -39,6 +39,12 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
         notifyItemInserted(mensajes.size());
     }
 
+    public void clearList(){
+        int size = mensajes.size();
+        mensajes.clear();
+        notifyItemRangeRemoved(0,size);
+    }
+
     @NonNull
     @Override
     public HolderMensajes onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".InboxActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#E9E7E4"
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarInbox"
@@ -18,11 +20,17 @@
         app:titleTextColor="@color/white"
         android:elevation="3dp"/>
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_inbox"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="3dp"/>
+        android:layout_marginTop="5dp"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#D6D6D6"
+        />
 
 </LinearLayout>

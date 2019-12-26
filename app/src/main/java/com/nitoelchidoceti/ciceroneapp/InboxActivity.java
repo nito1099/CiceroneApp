@@ -23,6 +23,9 @@ import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeRecibir;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoGuia;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InboxActivity extends AppCompatActivity {
     private RecyclerView recyclerViewMensajes;
     private AdapterInbox adapterInbox;
@@ -30,7 +33,8 @@ public class InboxActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseDatabase database;
     private MensajeRecibir mensaje;
-    private String []idGuia;
+
+    private ArrayList<String> idsGuias = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +58,13 @@ public class InboxActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {//recorro todas las conversaciones
-
-                    idGuia = ds.getKey().split("_");
-
+                    String []idGuia = ds.getKey().split("_");
+                    idsGuias.add(idGuia[3]);
                     if (ds.getKey().indexOf("Turista_" + Global.getObject().getId()) != -1) {//filtro las conversaciones del turista
                         Query lastQuery = databaseReference.child(ds.getKey()).orderByChild(ds.getKey()).limitToLast(1);//obtengo el ultimo mensaje enviado de cada conversacion
                         lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                                     mensaje = child.getValue(MensajeRecibir.class);
                                     adapterInbox.addMensaje(mensaje);
@@ -71,7 +73,7 @@ public class InboxActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                Toast.makeText(InboxActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -85,12 +87,19 @@ public class InboxActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onRestart() {//cuando presione el boton de regreso hacia esta act
+        super.onRestart();
+        adapterInbox.clearList();
+        databaseConfiguration();
+        recycleConfiguration();
+    }
 
     private void recycleConfiguration() {
         adapterInbox = new AdapterInbox(this, new AdapterInbox.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
-                launchChat();
+                launchChat(position);
             }
         });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -98,10 +107,10 @@ public class InboxActivity extends AppCompatActivity {
         recyclerViewMensajes.setAdapter(adapterInbox);
     }
 
-    private void launchChat() {
+    private void launchChat(int pos) {
         Intent intent = new Intent(this, ChatActivity.class);
         for (PojoGuia guia : Global.getObject().getGuias()){
-            if (idGuia[3].equals(String.valueOf(guia.getId()))) {
+            if (idsGuias.get(pos).equals(String.valueOf(guia.getId()))) {
                 intent.putExtra("Guia",guia);
                 startActivity(intent);
             }else {
