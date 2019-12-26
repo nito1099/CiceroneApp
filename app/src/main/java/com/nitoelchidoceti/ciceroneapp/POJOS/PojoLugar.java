@@ -6,7 +6,7 @@ public class PojoLugar implements Serializable {
 
     private int PK_ID,FK_Categoria;
     private String Descripcion,Nombre,Telefono,
-            Direccion,Horario_Inicio,Horario_Final;
+            Direccion,Horario_Inicio,Horario_Final,Fotografia;
 
     private Double[] costos;
 
@@ -27,6 +27,7 @@ public class PojoLugar implements Serializable {
         Direccion="";
         Horario_Final="";
         Horario_Inicio="";
+        Fotografia="null";
         costos = new Double[3];
     }
 
@@ -92,5 +93,13 @@ public class PojoLugar implements Serializable {
 
     public void setHorario_Final(String horario_Final) {
         Horario_Final = horario_Final;
+    }
+
+    public String getFotografia() {
+        return Fotografia;
+    }
+
+    public void setFotografia(String fotografia) {
+        Fotografia = fotografia;
     }
 }

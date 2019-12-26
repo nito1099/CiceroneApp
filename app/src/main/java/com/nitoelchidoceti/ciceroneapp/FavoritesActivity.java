@@ -106,6 +106,7 @@ public class FavoritesActivity extends AppCompatActivity {
             lugar.setPK_ID(objeto.getInt("PK_ID"));
             lugar.setTelefono(objeto.getString("Telefono"));
             lugar.setDireccion(objeto.getString("Direccion"));
+            lugar.setFotografia(objeto.getString("Fotografia"));
             lugar.setHorario_Inicio(objeto.getString("Horario_Inicio"));
             lugar.setHorario_Final(objeto.getString("Horario_Final"));
             lugar.setFK_Categoria(objeto.getInt("FK_Categoria"));

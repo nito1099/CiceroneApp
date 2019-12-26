@@ -54,7 +54,7 @@ public class GuidesFragment extends Fragment implements SearchView.OnQueryTextLi
         myRcView = view.findViewById(R.id.recycle_guides);
         myRcView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         setHasOptionsMenu(true);
-        adapter = new AdapterDeBusquedaGuias(guiascompletos, new AdapterDeBusquedaGuias.OnItemClickListener() {
+        adapter = new AdapterDeBusquedaGuias(view.getContext(),guiascompletos, new AdapterDeBusquedaGuias.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
                 launchInfoGuiasActivity(position);

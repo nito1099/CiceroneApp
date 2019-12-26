@@ -3,15 +3,19 @@ package com.nitoelchidoceti.ciceroneapp.Adapters;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 import com.nitoelchidoceti.ciceroneapp.R;
 
 import java.util.ArrayList;
+
+import static com.nitoelchidoceti.ciceroneapp.R.drawable.img_catedral_premium;
 
 public class AdapterDeBusqueda extends RecyclerView.Adapter<AdapterDeBusqueda.FichaHolderSearch> {
 
@@ -50,17 +54,24 @@ public class AdapterDeBusqueda extends RecyclerView.Adapter<AdapterDeBusqueda.Fi
     class FichaHolderSearch extends RecyclerView.ViewHolder {
 
         TextView nombre, descripcion;
+        ImageView portada;
 
         public FichaHolderSearch(@NonNull View itemView) {
             super(itemView);
             nombre = itemView.findViewById(R.id.txtPlaceNameHome);
             descripcion = itemView.findViewById(R.id.txtPlaceDescricpionHome);
+            portada = itemView.findViewById(R.id.imgPlace);
         }
 
         public void llenarDatos(PojoLugar lugar , final int posicion, final AdapterDeBusqueda.OnItemClickListener listener) {
             nombre.setText(lugar.getNombre());
             descripcion.setText(lugar.getDescripcion());
-
+            if (!lugar.getFotografia().equals("null")){
+                portada.setBackground(null);
+                Glide.with(context).load(lugar.getFotografia()).into(portada);
+            }else {
+                portada.setImageResource(img_catedral_premium);
+            }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

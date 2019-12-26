@@ -115,6 +115,7 @@ public class HomeFragment extends Fragment  {
             lugar.setDescripcion(objeto.getString("Descripcion"));
             lugar.setPK_ID(objeto.getInt("PK_ID"));
             lugar.setTelefono(objeto.getString("Telefono"));
+            lugar.setFotografia(objeto.getString("Fotografia"));
             lugar.setDireccion(objeto.getString("Direccion"));
             lugar.setHorario_Inicio(objeto.getString("Horario_Inicio"));
             lugar.setHorario_Final(objeto.getString("Horario_Final"));

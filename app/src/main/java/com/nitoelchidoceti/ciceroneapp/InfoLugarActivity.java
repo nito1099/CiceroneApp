@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeComentarios;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
@@ -47,6 +49,7 @@ public class InfoLugarActivity extends AppCompatActivity {
     ImageButton oneStar, twoStar, threeStar, fourStar, fiveStar;
     EditText comentario;
     String calificacion;
+    ImageView fotoPerfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class InfoLugarActivity extends AppCompatActivity {
     private void  inicializacion(){
         Toolbar toolbar = findViewById(R.id.toolbar_inf_lugar);
         addFav = findViewById(R.id.imgbtnFav);
+        fotoPerfil = findViewById(R.id.imgFotoPerfilLugar);
         escribirComentario = findViewById(R.id.inTxtEscComentario);
         escribirComentario.setCounterMaxLength(255);
         escribirComentario.setNextFocusDownId(R.id.btnPublicarComentario);
@@ -97,7 +101,12 @@ public class InfoLugarActivity extends AppCompatActivity {
         horario=findViewById(R.id.txtHorarioSitio);
         costos=findViewById(R.id.txtCostosSitio);
         pojoLugar =(PojoLugar) getIntent().getSerializableExtra("Lugar");
-        setSupportActionBar(toolbar);
+        if (!pojoLugar.getFotografia().equals("null")){
+            fotoPerfil.setBackground(null);
+            Glide.with(this).load(pojoLugar.getFotografia()).into(fotoPerfil);
+        }
+
+            setSupportActionBar(toolbar);
     }
 
     /**

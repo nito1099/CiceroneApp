@@ -29,6 +29,8 @@
             android:layout_height="180dp"
             android:layout_marginLeft="15dp"
             android:background="@drawable/img_catedral_premium"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             />
 
         <TextView

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeComentarios;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
@@ -45,7 +47,7 @@ public class InfoGuiaActivity extends AppCompatActivity {
     ImageButton oneStar, twoStar, threeStar, fourStar, fiveStar;
     EditText comentario;
     String calificacion;
-
+    ImageView fotoPerfil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +87,12 @@ public class InfoGuiaActivity extends AppCompatActivity {
         costosGuia = findViewById(R.id.txtCostosTourGuia);
         idiomasGuia=findViewById(R.id.txtIdiomasGuia);
         Intent intent = getIntent();
+        fotoPerfil = findViewById(R.id.imgFotoPerfilGuia);
         pojoGuia = (PojoGuia) intent.getSerializableExtra("Guia");
-
+        if (!pojoGuia.getFotografia().equals("null")){
+            fotoPerfil.setBackground(null);
+            Glide.with(this).load(pojoGuia.getFotografia()).into(fotoPerfil);
+        }
     }
 
     /**

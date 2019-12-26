@@ -4,12 +4,14 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 import com.nitoelchidoceti.ciceroneapp.R;
 
@@ -49,16 +51,21 @@ public class AdapterDeLugar extends RecyclerView.Adapter<AdapterDeLugar.FichaHol
 
     public class FichaHolder extends RecyclerView.ViewHolder{
         TextView nombre, descripcion;
+        ImageView fotoPerfil;
         public FichaHolder(@NonNull View itemView) {
             super(itemView);
             nombre = itemView.findViewById(R.id.txtPlaceNameHome);
             descripcion = itemView.findViewById(R.id.txtPlaceDescricpionHome);
+            fotoPerfil = itemView.findViewById(R.id.imgPlace);
         }
 
         public void asignarDatos(PojoLugar pojoLugar, final int posicion, final OnItemClickListener listener) {
             nombre.setText(pojoLugar.getNombre());
             descripcion.setText(pojoLugar.getDescripcion());
-
+            if (!pojoLugar.getFotografia().equals("null")){
+                fotoPerfil.setBackground(null);
+                Glide.with(context).load(pojoLugar.getFotografia()).into(fotoPerfil);
+            }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -249,6 +249,7 @@ public class BottomNav extends AppCompatActivity {
             lugar.setPK_ID(objeto.getInt("PK_ID"));
             lugar.setTelefono(objeto.getString("Telefono"));
             lugar.setDireccion(objeto.getString("Direccion"));
+            lugar.setFotografia(objeto.getString("Fotografia"));
             lugar.setHorario_Inicio(objeto.getString("Horario_Inicio"));
             lugar.setHorario_Final(objeto.getString("Horario_Final"));
             lugar.setFK_Categoria(objeto.getInt("FK_Categoria"));
@@ -396,11 +397,6 @@ public class BottomNav extends AppCompatActivity {
 
     public void launchFavoritesAct(View view) {
         Intent intent = new Intent(BottomNav.this,FavoritesActivity.class);
-        startActivity(intent);
-    }
-
-    public void launchInfoLugar(View view) {
-        Intent intent = new Intent(BottomNav.this,InfoLugarActivity.class);
         startActivity(intent);
     }
 
