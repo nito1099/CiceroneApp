@@ -325,14 +325,13 @@
                     android:layout_marginLeft="5dp"
                     />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="800px"
-                    android:background="@drawable/img_portada_premium"
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/viewPagerGuia"
+                    android:layout_width="350dp"
+                    android:layout_height="525dp"
                     android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="20dp"
-
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
                     />
             </LinearLayout>
 

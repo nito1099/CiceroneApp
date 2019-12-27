@@ -1,22 +1,15 @@
 package com.nitoelchidoceti.ciceroneapp.POJOS;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class PojoLugar implements Serializable {
 
     private int PK_ID,FK_Categoria;
     private String Descripcion,Nombre,Telefono,
             Direccion,Horario_Inicio,Horario_Final,Fotografia;
-
     private Double[] costos;
-
-    public Double[] getCostos() {
-        return costos;
-    }
-
-    public void setCostos(Double[] costos) {
-        this.costos = costos;
-    }
+    private ArrayList<String> imagenes;
 
     public PojoLugar(){
         PK_ID=0;
@@ -29,6 +22,7 @@ public class PojoLugar implements Serializable {
         Horario_Inicio="";
         Fotografia="null";
         costos = new Double[3];
+        imagenes = new ArrayList<>();
     }
 
     public int getPK_ID() {
@@ -101,5 +95,21 @@ public class PojoLugar implements Serializable {
 
     public void setFotografia(String fotografia) {
         Fotografia = fotografia;
+    }
+
+    public Double[] getCostos() {
+        return costos;
+    }
+
+    public void setCostos(Double[] costos) {
+        this.costos = costos;
+    }
+
+    public ArrayList<String> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(ArrayList<String> imagenes) {
+        this.imagenes = imagenes;
     }
 }

@@ -63,6 +63,8 @@ public class BottomNav extends AppCompatActivity {
         chicoMalo();
     }
 
+
+
     private void chicoMalo() {
         String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/malasPalabras.php";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
@@ -126,7 +128,7 @@ public class BottomNav extends AppCompatActivity {
             JSONObject objeto ;
             objeto = info.getJSONObject(i);
             guia.setId(Integer.parseInt(objeto.getString("PK_Registro")));
-            guia.setNombre(objeto.getString("Nombre"));
+            guia.setNombre("Guia "+objeto.getString("Nombre"));
             guia.setTelefono(objeto.getString("Telefono"));
             guia.setDuracion(objeto.getString("Duracion"));
             guia.setCorreo(objeto.getString("Correo"));

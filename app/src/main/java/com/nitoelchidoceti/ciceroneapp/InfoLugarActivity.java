@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeComentarios;
+import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeViewPager;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoComentario;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
@@ -50,6 +52,8 @@ public class InfoLugarActivity extends AppCompatActivity {
     EditText comentario;
     String calificacion;
     ImageView fotoPerfil;
+    ArrayList<String> imagenes = new ArrayList<>();
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +109,46 @@ public class InfoLugarActivity extends AppCompatActivity {
             fotoPerfil.setBackground(null);
             Glide.with(this).load(pojoLugar.getFotografia()).into(fotoPerfil);
         }
+        viewPager = findViewById(R.id.viewPagerLugar);
+        obtenerImagenes();
+        setSupportActionBar(toolbar);
+    }
 
-            setSupportActionBar(toolbar);
+    private void obtenerImagenes( ) {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/consultaMultimedia.php?esGuia=false&id=" + pojoLugar.getPK_ID();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            llenarImagenes(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ImageView imageView = findViewById(R.id.viewPagerLugar);
+                imageView.setImageResource(R.drawable.img_catedral_premium);
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(InfoLugarActivity.this);
+        queue.add(jsonArrayRequest);
+    }
+
+    private void llenarImagenes(JSONArray response) throws JSONException {
+        imagenes.clear();
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject objeto;
+                objeto = response.getJSONObject(i);
+                imagenes.add(objeto.getString("Imagen"));
+            }
+        AdapterDeViewPager adapterDeViewPager = new AdapterDeViewPager(this,imagenes);
+        viewPager.setAdapter(adapterDeViewPager);
     }
 
     /**

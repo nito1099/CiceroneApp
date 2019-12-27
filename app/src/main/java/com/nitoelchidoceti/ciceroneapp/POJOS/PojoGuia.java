@@ -11,6 +11,25 @@ public class PojoGuia implements Serializable {
     private Double[] costos;
     private ArrayList<String> idiomas;
     private ArrayList<String> titulos;
+    private ArrayList<String> imagenes;
+
+    public PojoGuia() {
+        Id = 0;
+        nombre = "";
+        duracion = "";
+        nombreDelSitio = "";
+        descripcion ="";
+        FK_Sitio="";
+        horario="";
+        telefono="";
+        fotografia="null";
+        correo="";
+        idiomas = new ArrayList<>();
+        titulos = new ArrayList<>();
+        costos = new Double[3];
+        imagenes = new ArrayList<>();
+    }
+
     public String getTelefono() {
         return telefono;
     }
@@ -53,21 +72,6 @@ public class PojoGuia implements Serializable {
 
     public void setTitulos(ArrayList<String> titulos) {
         this.titulos = titulos;
-    }
-
-    public PojoGuia() {
-        Id = 0;
-        nombre = "";
-        duracion = "";
-        nombreDelSitio = "";
-        descripcion ="";
-        FK_Sitio="";
-        horario="";
-        telefono="";
-        correo="";
-        idiomas = new ArrayList<>();
-        titulos = new ArrayList<>();
-        costos = new Double[3];
     }
 
     public int getId() {
@@ -129,5 +133,13 @@ public class PojoGuia implements Serializable {
 
     public void setFK_Sitio(String FK_Sitio) {
         this.FK_Sitio = FK_Sitio;
+    }
+
+    public ArrayList<String> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(ArrayList<String> imagenes) {
+        this.imagenes = imagenes;
     }
 }
