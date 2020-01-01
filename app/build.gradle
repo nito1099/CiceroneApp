@@ -45,6 +45,8 @@ dependencies {
     implementation 'androidx.cardview:cardview'
     //diseño bonito para chat
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
+    //PAYPAL
+    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
 }
 apply plugin: 'com.google.gms.google-services'
 

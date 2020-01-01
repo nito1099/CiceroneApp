@@ -1,16 +1,19 @@
 package com.nitoelchidoceti.ciceroneapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,11 +33,17 @@ import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeViewPager;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoComentario;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class InfoLugarActivity extends AppCompatActivity {
@@ -54,16 +63,67 @@ public class InfoLugarActivity extends AppCompatActivity {
     ImageView fotoPerfil;
     ArrayList<String> imagenes = new ArrayList<>();
     ViewPager viewPager;
+    Button btnPagarTour;
+
+    private static final int PAYPAL_REQUEST_CODE = 7171;
+    private static PayPalConfiguration config = new PayPalConfiguration().environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .clientId(Global.PAYPAL_CLIENT_ID);
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_lugar);
         inicializacion();
+        iniciarServicioPaypal();
+
+        btnPagarTour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                procesarPago();
+            }
+        });
+
         consultaComentarios();
         llenarInformacion();
         comprobarFav();
         calcularCalificacion();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == PAYPAL_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if (confirmation != null) {
+                    Toast.makeText(this, "Se ha realizado el pago correctamente", Toast.LENGTH_SHORT).show();
+                }
+            }else if (resultCode == Activity.RESULT_CANCELED)
+                Toast.makeText(this, "Compra cancelada", Toast.LENGTH_SHORT).show();
+
+
+        }else if(requestCode == PaymentActivity.RESULT_EXTRAS_INVALID)
+            Toast.makeText(this, "Compra invalida", Toast.LENGTH_SHORT).show();
+    }
+
+    private void iniciarServicioPaypal() {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        startActivity(intent);
+    }
+
+    private void procesarPago() {
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(75)), "MXN", "Tour guiado del " +
+                pojoLugar.getNombre(), PayPalPayment.PAYMENT_INTENT_SALE);
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+        startActivityForResult(intent, PAYPAL_REQUEST_CODE);
     }
 
     /**
@@ -82,6 +142,7 @@ public class InfoLugarActivity extends AppCompatActivity {
         threeSelected = false;
         fourSelected = false;
         fiveSelected = false;
+        btnPagarTour = findViewById(R.id.btnPagarTour);
         oneStar=findViewById(R.id.UnaEstrella);
         twoStar=findViewById(R.id.DosEstrellas);
         threeStar=findViewById(R.id.TresEstrellas);

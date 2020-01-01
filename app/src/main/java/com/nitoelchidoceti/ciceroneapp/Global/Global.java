@@ -18,7 +18,7 @@ public final class  Global {
     public ArrayList<PojoLugar> getLugares() {
         return lugares;
     }
-
+    public static final String PAYPAL_CLIENT_ID = "Acqi8-a9YQjjslSknmR3m5CsjZeMrcvmY_NmJU4CEXyTP5SCTVP_iherM7V092HGCapC_UVhdlTJbn16";
     public void setLugares(ArrayList<PojoLugar> lugares) {
         this.lugares = lugares;
     }
