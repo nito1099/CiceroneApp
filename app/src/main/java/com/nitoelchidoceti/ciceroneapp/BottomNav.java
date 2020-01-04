@@ -53,8 +53,13 @@ public class BottomNav extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         guias=new ArrayList<>();
         lugaresDeAqui=new ArrayList<>();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new HomeFragment()).commit();
+        if (getIntent().getSerializableExtra("guia")!= null){//si la actividad anterior fue infolugar act
+            launchGuidesFragment();
+            bottomNav.setSelectedItemId(R.id.nav_guides);
+        }else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new HomeFragment()).commit();
+        }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         txtBirthday = findViewById(R.id.txt_birthday_account);
@@ -290,7 +295,6 @@ public class BottomNav extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     Fragment selectedFragment = null;
-
                     switch (menuItem.getItemId()){
                         case R.id.nav_home:
                             selectedFragment = new HomeFragment();
@@ -316,6 +320,10 @@ public class BottomNav extends AppCompatActivity {
                 }
             };
 
+    public void launchGuidesFragment(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new GuidesFragment()).commit();
+    }
     public void launchLoginFromAccount(final View view) {
         txtNombre = findViewById(R.id.txt_nombre_account);
         txtEmail = findViewById(R.id.txt_email_account);

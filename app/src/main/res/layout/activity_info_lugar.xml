@@ -254,6 +254,7 @@
                             android:textSize="10dp" />
 
                         <Button
+                            android:id="@+id/btnNecesitasGuia"
                             android:layout_width="130dp"
                             android:layout_height="45dp"
                             android:layout_alignParentEnd="true"

@@ -72,8 +72,7 @@ public class ReservacionActivity extends AppCompatActivity {
                             agregarReservaciones(response);
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(ReservacionActivity.this, "response: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 }, new Response.ErrorListener() {

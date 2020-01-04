@@ -113,8 +113,6 @@ public class InboxActivity extends AppCompatActivity {
             if (idsGuias.get(pos).equals(String.valueOf(guia.getId()))) {
                 intent.putExtra("Guia",guia);
                 startActivity(intent);
-            }else {
-                Toast.makeText(this, "No se encontro el pojo", Toast.LENGTH_SHORT).show();
             }
         }
     }

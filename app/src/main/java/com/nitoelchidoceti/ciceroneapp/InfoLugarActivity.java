@@ -2,6 +2,7 @@ package com.nitoelchidoceti.ciceroneapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,7 +64,7 @@ public class InfoLugarActivity extends AppCompatActivity {
     ImageView fotoPerfil;
     ArrayList<String> imagenes = new ArrayList<>();
     ViewPager viewPager;
-    Button btnPagarTour;
+    Button btnPagarTour, btnNecestiaGuia;
 
     private static final int PAYPAL_REQUEST_CODE = 7171;
     private static PayPalConfiguration config = new PayPalConfiguration().environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
@@ -80,12 +81,25 @@ public class InfoLugarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_lugar);
         inicializacion();
-        iniciarServicioPaypal();
+        comprobarTourPagado();
 
         btnPagarTour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                procesarPago();
+                if(btnPagarTour.getText().equals("TOUR PAGADO")){
+                    Toast.makeText(InfoLugarActivity.this, "Usted ya ha pagado el tour, gracias ! :) ", Toast.LENGTH_SHORT).show();
+                }else {
+                    existeTour();
+                }
+            }
+        });
+
+        btnNecestiaGuia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(InfoLugarActivity.this,BottomNav.class);
+                intent.putExtra("guia",pojoLugar.getPK_ID());
+                startActivity(intent);
             }
         });
 
@@ -96,12 +110,81 @@ public class InfoLugarActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        comprobarTourPagado();
+    }
+
+    private void comprobarTourPagado() {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
+                "Cicerone/PHP/comprobarTourPagado.php?sitio="+pojoLugar.getPK_ID()+"&turista="+Global.getObject().getId();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jsonObject = response.getJSONObject(0);
+                            if (jsonObject.getString("success").equals("false")){
+                                btnPagarTour.setText("TOUR PAGADO");
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(InfoLugarActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Toast.makeText(InfoLugarActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jsonArrayRequest);
+    }
+
+    private void existeTour() {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/" +
+                "PHP/comprobarTour.php?lugar="+pojoLugar.getPK_ID();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jsonObject = response.getJSONObject(0);
+                            if (jsonObject.getString("success").equals("true")){
+                                iniciarServicioPaypal();
+                                procesarPago();
+                            }else {
+                                Toast.makeText(InfoLugarActivity.this, "Lo sentimos pero aun no tenemos tour para este sitio :(", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(InfoLugarActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Toast.makeText(InfoLugarActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jsonArrayRequest);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == PAYPAL_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if (confirmation != null) {
-                    Toast.makeText(this, "Se ha realizado el pago correctamente", Toast.LENGTH_SHORT).show();
+                    tourPagado();
                 }
             }else if (resultCode == Activity.RESULT_CANCELED)
                 Toast.makeText(this, "Compra cancelada", Toast.LENGTH_SHORT).show();
@@ -111,6 +194,39 @@ public class InfoLugarActivity extends AppCompatActivity {
             Toast.makeText(this, "Compra invalida", Toast.LENGTH_SHORT).show();
     }
 
+    private void tourPagado() {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
+                "Cicerone/PHP/tourPagado.php?sitio="+pojoLugar.getPK_ID()+"&turista="+Global.getObject().getId();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jsonObject = response.getJSONObject(0);
+                            if (jsonObject.getString("success").equals("true")){
+                                Toast.makeText(InfoLugarActivity.this, "Se ha realizado el pago correctamente", Toast.LENGTH_SHORT).show();
+                                btnPagarTour.setText("TOUR PAGADO");
+                            }else {
+                                Toast.makeText(InfoLugarActivity.this, "No se pudo realizar el pago correctamente", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(InfoLugarActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Toast.makeText(InfoLugarActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jsonArrayRequest);
+    }
+
     private void iniciarServicioPaypal() {
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
@@ -118,7 +234,7 @@ public class InfoLugarActivity extends AppCompatActivity {
     }
 
     private void procesarPago() {
-        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(75)), "MXN", "Tour guiado del " +
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(30)), "MXN", "Tour guiado del " +
                 pojoLugar.getNombre(), PayPalPayment.PAYMENT_INTENT_SALE);
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
@@ -137,6 +253,7 @@ public class InfoLugarActivity extends AppCompatActivity {
         escribirComentario = findViewById(R.id.inTxtEscComentario);
         escribirComentario.setCounterMaxLength(255);
         escribirComentario.setNextFocusDownId(R.id.btnPublicarComentario);
+        btnNecestiaGuia = findViewById(R.id.btnNecesitasGuia);
         oneSelected = false;
         twoSelected = false;
         threeSelected = false;

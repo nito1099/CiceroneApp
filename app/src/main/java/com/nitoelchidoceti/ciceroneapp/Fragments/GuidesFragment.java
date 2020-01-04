@@ -28,6 +28,7 @@ import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeBusquedaGuias;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.InfoGuiaActivity;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoGuia;
+import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
 import com.nitoelchidoceti.ciceroneapp.R;
 
 import org.json.JSONArray;
@@ -91,8 +92,25 @@ public class GuidesFragment extends Fragment implements SearchView.OnQueryTextLi
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
 
-                if (guiascompletos!=null){
-                    adapter.setFilter(Global.getObject().getGuias());
+                if (guiascompletos!=null){//tratando de filtrar los guias por sitio
+                    if (getActivity().getIntent().getSerializableExtra("guia") != null){
+                        ArrayList <PojoGuia> guiasDeLugar = new ArrayList<>();
+                        for (PojoGuia guia : Global.getObject().getGuias()){
+                            if (getActivity().getIntent().getExtras().getString("guia").
+                                    equals(guia.getFK_Sitio())){//si el id del intent es igual al del fk sitio dle guia
+                                guiasDeLugar.add(guia);
+                            }
+                            if (guiasDeLugar.size()==0){
+                                adapter.setFilter(Global.getObject().getGuias());
+                                Toast.makeText(getContext(), "Lo sentimos, aun no hay guias para ese lugar :(", Toast.LENGTH_SHORT).show();
+                            }else {
+                                adapter.setFilter(guiasDeLugar);
+                            }
+
+                        }
+                    }else{
+                        adapter.setFilter(Global.getObject().getGuias());
+                    }
                 }
                 return true;
             }
