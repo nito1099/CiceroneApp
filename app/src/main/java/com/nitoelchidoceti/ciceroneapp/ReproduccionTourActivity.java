@@ -2,6 +2,7 @@ package com.nitoelchidoceti.ciceroneapp;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -10,14 +11,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.util.concurrent.TimeUnit;
 
-public class ReproduccionTourActivity extends AppCompatActivity {
+public class ReproduccionTourActivity extends AppCompatActivity implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener {
 
     private TextView nombreAudio, duracionMaxima, duracionActual, tituloLugar;
     private ImageButton skipPrevious, playPause, skipNext, tourEnTexto;
@@ -40,22 +40,21 @@ public class ReproduccionTourActivity extends AppCompatActivity {
         playPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reproducirCancion();
+                reproducirAudio();
             }
         });
 
         skipNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(estaEnPlay==true){
+                if(mediaPlayer.isPlaying()){
                     playPause.setBackgroundResource(R.drawable.ic_play_audio);
                     mediaPlayer.pause();
-                    estaEnPlay = !estaEnPlay;
                 }
                 index++;
                 if ( index>2)index=0;
                 configuraNuevaCancion();
-                reproducirCancion();
+                reproducirAudio();
             }
         });
 
@@ -70,7 +69,7 @@ public class ReproduccionTourActivity extends AppCompatActivity {
                 index--;
                 if (index<0)index=2;
                 configuraNuevaCancion();
-                reproducirCancion();
+                reproducirAudio();
             }
         });
 
@@ -82,14 +81,14 @@ public class ReproduccionTourActivity extends AppCompatActivity {
         });
     }
 
-    private void reproducirCancion() {
-        if (estaEnPlay == false) {
+    private void reproducirAudio() {
+        if (!mediaPlayer.isPlaying()) {
             playPause.setBackgroundResource(R.drawable.ic_pause_audio);
             mediaPlayer.start();
             endTime = mediaPlayer.getDuration();
             startTime = mediaPlayer.getCurrentPosition();
-            estaEnPlay = !estaEnPlay;
             myHandler.postDelayed(UpdateSongTime, 100);
+            seekBar.setMax((int) endTime);
         } else {
             mediaPlayer.pause();
             estaEnPlay = !estaEnPlay;
@@ -98,23 +97,45 @@ public class ReproduccionTourActivity extends AppCompatActivity {
     }
 
     private void configuraNuevaCancion() {
-        mediaPlayer.stop();
-        mediaPlayer = MediaPlayer.create(getApplication(), canciones[index]);//se reasigna el nuevo audio
-        endTime = mediaPlayer.getDuration();
-        startTime = mediaPlayer.getCurrentPosition();
-        nombreAudio.setText(can[index]);
-        duracionMaxima.setText(String.format("%d:%d",
-                TimeUnit.MILLISECONDS.toMinutes((long) endTime),
-                TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
-        );
-        duracionActual.setText(String.format("%d:%d",
-                TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-                        startTime)))
-        );
-        seekBar.setMax((int) endTime);
-        seekBar.setProgress((int) startTime);
+
+        AsyncTask<String, String, String> mp3Play = new AsyncTask<String, String, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+                try {
+                    mediaPlayer.setDataSource(strings[0]);
+                    mediaPlayer.prepare();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return "";
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+
+                endTime = mediaPlayer.getDuration();
+                startTime = mediaPlayer.getCurrentPosition();
+                nombreAudio.setText(can[index]);
+                duracionMaxima.setText(String.format("%d:%d",
+                        TimeUnit.MILLISECONDS.toMinutes((long) endTime),
+                        TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
+                );
+                duracionActual.setText(String.format("%d:%d",
+                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                        TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                startTime)))
+                );
+                seekBar.setMax((int) endTime);
+                seekBar.setProgress((int) startTime);
+
+            }
+
+        };
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+        mp3Play.execute("https://d4d9m2sj5hrhd.cloudfront.net/PalacioDeGobierno/Audio10_Sala9_El porfiriato en GDL y la muerte de Ramon Corona.mp3");//url del audio
     }
 
     private Runnable UpdateSongTime = new Runnable() {
@@ -149,22 +170,11 @@ public class ReproduccionTourActivity extends AppCompatActivity {
         tituloLugar = findViewById(R.id.txtTituloLugarTour);
         tourEnTexto = findViewById(R.id.imgbtnTourATexto);
         seekBar = findViewById(R.id.seekBar);
-        mediaPlayer = MediaPlayer.create(this,canciones[index]);//agrega el audio a reproducir
         nombreAudio.setText(can[index]);//asigna el nombre de la cancion
-        Toast.makeText(this, "Dato:"+ getIntent().getSerializableExtra("tour"), Toast.LENGTH_LONG).show();
-        endTime = mediaPlayer.getDuration();
-        startTime = mediaPlayer.getCurrentPosition();
-        seekBar.setMax((int) endTime);
-        duracionMaxima.setText(String.format("%d:%d",
-                TimeUnit.MILLISECONDS.toMinutes((long) endTime),
-                TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
-        );
-        duracionActual.setText(String.format("%d:%d",
-                TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-                        startTime)))
-        );
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnBufferingUpdateListener(this);
+        mediaPlayer.setOnCompletionListener(this);
+        configuraNuevaCancion();
         //toolbar
         Toolbar toolbar = findViewById(R.id.toolbarQR);
         setSupportActionBar(toolbar);
@@ -211,5 +221,15 @@ public class ReproduccionTourActivity extends AppCompatActivity {
     private void launchReporProblem() {
         Intent IlaunchReportProblem = new Intent(ReproduccionTourActivity.this, ReportProblemActivity.class);
         startActivity(IlaunchReportProblem);
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        seekBar.setSecondaryProgress(percent);
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {//cuando termine de reproducirse
+        playPause.setBackgroundResource(R.drawable.ic_play_audio);
     }
 }
