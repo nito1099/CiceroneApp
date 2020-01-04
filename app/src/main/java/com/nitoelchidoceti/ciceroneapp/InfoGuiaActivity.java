@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,6 +31,8 @@ import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeViewPager;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoComentario;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoGuia;
+import com.nitoelchidoceti.ciceroneapp.POJOS.PojoLugar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,11 +55,27 @@ public class InfoGuiaActivity extends AppCompatActivity {
     ImageView fotoPerfil;
     ArrayList<String> imagenes;
     ViewPager viewPager;
+    Button btnVerInfLugar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_guia);
         inicializacion();
+        btnVerInfLugar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PojoLugar lugarDelGuia = new PojoLugar();
+                Intent intent = new Intent(InfoGuiaActivity.this,InfoLugarActivity.class);
+                for (PojoLugar lugar: Global.getObject().getLugares()){
+
+                    if (String.valueOf(lugar.getPK_ID()).equals(pojoGuia.getFK_Sitio())){
+                        lugarDelGuia=lugar;
+                    }
+                }
+                intent.putExtra("Lugar",lugarDelGuia);
+                startActivity(intent);
+            }
+        });
         consultaComentarios();//VERSION BETA*****
         llenarInformacion();
         calcularCalificacion();
@@ -69,6 +88,7 @@ public class InfoGuiaActivity extends AppCompatActivity {
     private void inicializacion() {
         Toolbar toolbar = findViewById(R.id.toolbar_inf_guia);
         setSupportActionBar(toolbar);
+        btnVerInfLugar = findViewById(R.id.btnInfDelLugar);
         escribirComentarioGuia = findViewById(R.id.inTxtEscComentarioGuia);
         escribirComentarioGuia.setCounterMaxLength(255);
         escribirComentarioGuia.setNextFocusDownId(R.id.btnPublicarComentarioGuia);
