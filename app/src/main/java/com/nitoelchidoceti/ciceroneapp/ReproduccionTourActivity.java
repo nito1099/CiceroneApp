@@ -1,5 +1,6 @@
 package com.nitoelchidoceti.ciceroneapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -7,9 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +41,8 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
     private ImageButton skipPrevious, playPause, skipNext, tourEnTexto;
     private ImageView imgAudio;
     private androidx.appcompat.widget.AppCompatSeekBar seekBar;
-    private double startTime = 0;
-    private double endTime = 0;
+    private int startTime = 0;
+    private int endTime = 0;
     private Handler myHandler = new Handler();
 
     int index = 0;//indica que numero de cancion se esta reproducciendo
@@ -92,6 +95,36 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
                 mediaPlayer.stop();
             }
         });
+
+        /*
+        * if (mediaPlayer.isPlaying()){
+                    SeekBar seekBar2 = (SeekBar) v;
+                    int playPosition = (startTime/100)*seekBar2.getProgress();
+                    mediaPlayer.seekTo(playPosition);
+        * */
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                startTime = progress;
+                duracionActual.setText(String.format("%d:%d",
+                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                        toMinutes((long) startTime))));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                reproducirAudio();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.seekTo(seekBar.getProgress());
+                reproducirAudio();
+            }
+        });
+
         if (audios.size()!=0){
             tituloLugar.setText(audios.get(index).getSitio());
             nombreAudio.setText(audios.get(index).getNombre());//asigna el nombre de la cancion
@@ -101,7 +134,18 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
     }
 
     private void configuraNuevaCancion() {
+
+        final ProgressDialog progressDialog = new ProgressDialog(ReproduccionTourActivity.this);
         AsyncTask<String, String, String> mp3Play = new AsyncTask<String, String, String>() {
+            @Override
+            protected void onPreExecute() {
+
+                progressDialog.setTitle("Cargando...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                super.onPreExecute();
+            }
+
             @Override
             protected String doInBackground(String... strings) {
                 try {
@@ -114,11 +158,16 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
             }
 
             @Override
+            protected void onProgressUpdate(String... values) {
+                super.onProgressUpdate(values);
+            }
+
+            @Override
             protected void onPostExecute(String s) {
                 Glide.with(ReproduccionTourActivity.this).load(audios.get(index).getFotografia()).into(imgAudio);
+                nombreAudio.setText(audios.get(index).getNombre());
                 endTime = mediaPlayer.getDuration();
                 startTime = mediaPlayer.getCurrentPosition();
-                nombreAudio.setText(audios.get(index).getNombre());
                 duracionMaxima.setText(String.format("%d:%d",
                         TimeUnit.MILLISECONDS.toMinutes((long) endTime),
                         TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
@@ -131,12 +180,25 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
                 );
                 seekBar.setMax((int) endTime);
                 seekBar.setProgress((int) startTime);
+                progressDialog.dismiss();
             }
         };
+
+        Boolean estabaReproduciendo = false;
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
+            mp3Play.cancel(true);
+            estabaReproduciendo=true;
         }
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnBufferingUpdateListener(this);
+        mediaPlayer.setOnCompletionListener(this);
         mp3Play.execute(audios.get(index).getUrl());//url del audio
+        if (estabaReproduciendo==true){
+            reproducirAudio();
+        }else {
+            seekBar.setProgress(0);
+        }
     }
 
     private void reproducirAudio() {
@@ -164,7 +226,7 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
                                         toMinutes((long) startTime)))
                 );
-                seekBar.setProgress((int) startTime);
+                seekBar.setProgress(startTime);
             } else {
                 playPause.setBackgroundResource(R.drawable.ic_play_audio);
 
@@ -188,6 +250,7 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnBufferingUpdateListener(this);
         mediaPlayer.setOnCompletionListener(this);
+
         final String id = (String) getIntent().getSerializableExtra("tour");
         consultaTour(id);
         //toolbar
