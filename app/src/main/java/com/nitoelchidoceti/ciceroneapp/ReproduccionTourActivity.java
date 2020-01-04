@@ -52,8 +52,9 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reproduccion_tour);
+        final String id = (String) getIntent().getSerializableExtra("tour");
+        consultaTour(id);
         configuracionActivity();
-
         playPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,13 +125,6 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
                 reproducirAudio();
             }
         });
-
-        if (audios.size()!=0){
-            tituloLugar.setText(audios.get(index).getSitio());
-            nombreAudio.setText(audios.get(index).getNombre());//asigna el nombre de la cancion
-            Glide.with(this).load(audios.get(index).getFotografia()).into(imgAudio);
-
-        }
     }
 
     private void configuraNuevaCancion() {
@@ -140,7 +134,8 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
             @Override
             protected void onPreExecute() {
 
-                progressDialog.setTitle("Cargando...");
+                progressDialog.setTitle("Cargando audio...");
+                progressDialog.setMessage("Por favor espere");
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 super.onPreExecute();
@@ -232,7 +227,6 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
 
             }
             myHandler.postDelayed(this,100);
-
         }
     };
     private void configuracionActivity() {
@@ -250,9 +244,6 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnBufferingUpdateListener(this);
         mediaPlayer.setOnCompletionListener(this);
-
-        final String id = (String) getIntent().getSerializableExtra("tour");
-        consultaTour(id);
         //toolbar
         Toolbar toolbar = findViewById(R.id.toolbarQR);
         setSupportActionBar(toolbar);
@@ -268,14 +259,7 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
-                            for (int i = 0; i <response.length(); i++){
-                                JSONObject dato = response.getJSONObject(i);
-                                audio audio = new audio(dato.getString("Nombre"),
-                                        dato.getString("UrlAudio"),
-                                        dato.getString("Sitio"),
-                                        dato.getString("Fotografia"));
-                                audios.add(audio);
-                            }
+                            agregarAudios(response);
                         } catch (JSONException e) {
                             Toast.makeText(ReproduccionTourActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -289,6 +273,21 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
         });
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(jsonArrayRequest);
+    }
+
+    private void agregarAudios(JSONArray response) throws JSONException {
+        for (int i = 0; i <response.length(); i++){
+            JSONObject dato = response.getJSONObject(i);
+            audio audio = new audio(dato.getString("Nombre"),
+                    dato.getString("UrlAudio"),
+                    dato.getString("Sitio"),
+                    dato.getString("Fotografia"));
+            audios.add(audio);
+        }
+        configuraNuevaCancion();
+        tituloLugar.setText(audios.get(index).getSitio());
+        nombreAudio.setText(audios.get(index).getNombre());//asigna el nombre de la cancion
+        Glide.with(this).load(audios.get(index).getFotografia()).into(imgAudio);
     }
 
     @Override
