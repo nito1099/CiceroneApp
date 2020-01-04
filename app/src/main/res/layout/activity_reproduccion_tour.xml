@@ -10,12 +10,6 @@
     android:elevation="3dp"
     >
 
-    <RelativeLayout
-        android:id="@+id/progressiveBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </RelativeLayout>
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarQR"
         android:layout_width="match_parent"
@@ -65,7 +59,9 @@
             android:layout_marginBottom="30dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/tour_image"
-            android:cropToPadding="true"/>
+            android:cropToPadding="true"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
 
         <LinearLayout
             android:layout_width="345dp"

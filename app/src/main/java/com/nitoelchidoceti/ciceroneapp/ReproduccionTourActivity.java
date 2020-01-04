@@ -11,10 +11,25 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class ReproduccionTourActivity extends AppCompatActivity implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener {
@@ -26,11 +41,10 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
     private double startTime = 0;
     private double endTime = 0;
     private Handler myHandler = new Handler();
-    int canciones[] = {R.raw.audio1_introduccion, R.raw.audio2_sala1, R.raw.audio3_sala2};
+
     int index = 0;//indica que numero de cancion se esta reproducciendo
     private MediaPlayer mediaPlayer;
-    private  boolean estaEnPlay;
-    String can[] = {"audio1_introduccion.mp3", "audio2_Sala1dddddddddddddddddddddddddddddddddd.mp3", "audio3_sala2.mp3"};
+    private ArrayList <audio>  audios = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +66,7 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
                     mediaPlayer.pause();
                 }
                 index++;
-                if ( index>2)index=0;
+                if ( index>audios.size()-1)index=0;
                 configuraNuevaCancion();
                 reproducirAudio();
             }
@@ -61,13 +75,12 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
         skipPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (estaEnPlay == true) {
+                if (mediaPlayer.isPlaying()) {
                     playPause.setBackgroundResource(R.drawable.ic_play_audio);
                     mediaPlayer.pause();
-                    estaEnPlay = !estaEnPlay;
                 }
                 index--;
-                if (index<0)index=2;
+                if (index<0)index=audios.size()-1;
                 configuraNuevaCancion();
                 reproducirAudio();
             }
@@ -79,25 +92,15 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
                 mediaPlayer.stop();
             }
         });
-    }
+        if (audios.size()!=0){
+            tituloLugar.setText(audios.get(index).getSitio());
+            nombreAudio.setText(audios.get(index).getNombre());//asigna el nombre de la cancion
+            Glide.with(this).load(audios.get(index).getFotografia()).into(imgAudio);
 
-    private void reproducirAudio() {
-        if (!mediaPlayer.isPlaying()) {
-            playPause.setBackgroundResource(R.drawable.ic_pause_audio);
-            mediaPlayer.start();
-            endTime = mediaPlayer.getDuration();
-            startTime = mediaPlayer.getCurrentPosition();
-            myHandler.postDelayed(UpdateSongTime, 100);
-            seekBar.setMax((int) endTime);
-        } else {
-            mediaPlayer.pause();
-            estaEnPlay = !estaEnPlay;
-            playPause.setBackgroundResource(R.drawable.ic_play_audio);
         }
     }
 
     private void configuraNuevaCancion() {
-
         AsyncTask<String, String, String> mp3Play = new AsyncTask<String, String, String>() {
             @Override
             protected String doInBackground(String... strings) {
@@ -112,10 +115,10 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
 
             @Override
             protected void onPostExecute(String s) {
-
+                Glide.with(ReproduccionTourActivity.this).load(audios.get(index).getFotografia()).into(imgAudio);
                 endTime = mediaPlayer.getDuration();
                 startTime = mediaPlayer.getCurrentPosition();
-                nombreAudio.setText(can[index]);
+                nombreAudio.setText(audios.get(index).getNombre());
                 duracionMaxima.setText(String.format("%d:%d",
                         TimeUnit.MILLISECONDS.toMinutes((long) endTime),
                         TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
@@ -128,15 +131,27 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
                 );
                 seekBar.setMax((int) endTime);
                 seekBar.setProgress((int) startTime);
-
             }
-
         };
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
-        mp3Play.execute("https://d4d9m2sj5hrhd.cloudfront.net/PalacioDeGobierno/Audio10_Sala9_El porfiriato en GDL y la muerte de Ramon Corona.mp3");//url del audio
+        mp3Play.execute(audios.get(index).getUrl());//url del audio
     }
+
+    private void reproducirAudio() {
+        if (!mediaPlayer.isPlaying()) {
+            playPause.setBackgroundResource(R.drawable.ic_pause_audio);
+            mediaPlayer.start();
+            endTime = mediaPlayer.getDuration();
+            startTime = mediaPlayer.getCurrentPosition();
+            myHandler.postDelayed(UpdateSongTime, 100);
+            seekBar.setMax((int) endTime);
+        } else {
+            mediaPlayer.pause();
+        }
+    }
+
 
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -152,7 +167,7 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
                 seekBar.setProgress((int) startTime);
             } else {
                 playPause.setBackgroundResource(R.drawable.ic_play_audio);
-                estaEnPlay = !estaEnPlay;
+
             }
             myHandler.postDelayed(this,100);
 
@@ -170,14 +185,47 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
         tituloLugar = findViewById(R.id.txtTituloLugarTour);
         tourEnTexto = findViewById(R.id.imgbtnTourATexto);
         seekBar = findViewById(R.id.seekBar);
-        nombreAudio.setText(can[index]);//asigna el nombre de la cancion
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnBufferingUpdateListener(this);
         mediaPlayer.setOnCompletionListener(this);
-        configuraNuevaCancion();
+        final String id = (String) getIntent().getSerializableExtra("tour");
+        consultaTour(id);
         //toolbar
         Toolbar toolbar = findViewById(R.id.toolbarQR);
         setSupportActionBar(toolbar);
+    }
+
+    private void consultaTour(String id) {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/tourGuiado.php?qrcode="+id;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for (int i = 0; i <response.length(); i++){
+                                JSONObject dato = response.getJSONObject(i);
+                                audio audio = new audio(dato.getString("Nombre"),
+                                        dato.getString("UrlAudio"),
+                                        dato.getString("Sitio"),
+                                        dato.getString("Fotografia"));
+                                audios.add(audio);
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(ReproduccionTourActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Toast.makeText(ReproduccionTourActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jsonArrayRequest);
     }
 
     @Override
@@ -231,5 +279,51 @@ public class ReproduccionTourActivity extends AppCompatActivity implements Media
     @Override
     public void onCompletion(MediaPlayer mp) {//cuando termine de reproducirse
         playPause.setBackgroundResource(R.drawable.ic_play_audio);
+    }
+
+    private class audio {
+        private String nombre, url,sitio,fotografia;
+
+        public audio() {
+        }
+
+        public audio(String nombre, String url, String sitio,String fotografia) {
+            this.nombre = nombre;
+            this.url = url;
+            this.sitio = sitio;
+            this.fotografia = fotografia;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getSitio() {
+            return sitio;
+        }
+
+        public void setSitio(String sitio) {
+            this.sitio = sitio;
+        }
+
+        public String getFotografia() {
+            return fotografia;
+        }
+
+        public void setFotografia(String fotografia) {
+            this.fotografia = fotografia;
+        }
     }
 }

@@ -17,12 +17,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 
 import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
@@ -31,6 +44,7 @@ public class QrCodeActivity extends AppCompatActivity {
     private SurfaceView surfaceView;
     private TextView textView;
     private QREader qrEader;
+    private ArrayList<qrCode> qrCodes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +54,7 @@ public class QrCodeActivity extends AppCompatActivity {
         textView = findViewById(R.id.txtEscanea2);
         Toolbar toolbar = findViewById(R.id.toolbarQR);
         setSupportActionBar(toolbar);
+        getQrCodes();
         //Request Permission
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.CAMERA)
@@ -61,6 +76,35 @@ public class QrCodeActivity extends AppCompatActivity {
                 }).check();
     }
 
+    private void getQrCodes() {
+            final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/qrCodes.php";
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                    Request.Method.GET,
+                    url,
+                    null,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            try {
+                                for (int i = 0; i <response.length(); i++){
+                                    JSONObject qr = response.getJSONObject(i);
+                                    qrCode qrCode = new qrCode(qr.getString("Nombre"),qr.getString("ID"));
+                                    qrCodes.add(qrCode);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(jsonArrayRequest);
+    }
+
     private void setUpCamera() {
         surfaceView = findViewById(R.id.cameraPreview);
         setUpQR();
@@ -75,10 +119,14 @@ public class QrCodeActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (data.equals("mirasifuncionaestamadre")) {
-                            qrEader.stop();
-                            launchReproduccionTour(data);
+
                         }
-                        textView.setText(data);
+                        for (qrCode dato : qrCodes){
+                            if (dato.getNombre().equals(data)){
+                                qrEader.stop();
+                                launchReproduccionTour(dato.getID());
+                            }
+                        }
                     }
                 });
 
@@ -193,6 +241,35 @@ public class QrCodeActivity extends AppCompatActivity {
             return false;
         }else{
             return true;
+        }
+    }
+
+    class qrCode implements Serializable {
+        private String Nombre;
+        private String ID;
+
+        public qrCode() {
+        }
+
+        public qrCode(String nombre, String ID) {
+            Nombre = nombre;
+            this.ID = ID;
+        }
+
+        public String getNombre() {
+            return Nombre;
+        }
+
+        public void setNombre(String nombre) {
+            Nombre = nombre;
+        }
+
+        public String getID() {
+            return ID;
+        }
+
+        public void setID(String ID) {
+            this.ID = ID;
         }
     }
 }
