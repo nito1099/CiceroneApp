@@ -2,10 +2,12 @@ package com.nitoelchidoceti.ciceroneapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +31,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.nitoelchidoceti.ciceroneapp.Global.Global;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +48,8 @@ public class QrCodeActivity extends AppCompatActivity {
     private TextView textView;
     private QREader qrEader;
     private ArrayList<qrCode> qrCodes = new ArrayList<>();
+    ProgressDialog progressDialog ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +58,11 @@ public class QrCodeActivity extends AppCompatActivity {
         verifyCameraPermissions(this);
         textView = findViewById(R.id.txtEscanea2);
         Toolbar toolbar = findViewById(R.id.toolbarQR);
+        progressDialog = new ProgressDialog(QrCodeActivity.this);
+        setSupportActionBar(toolbar);
         setSupportActionBar(toolbar);
         getQrCodes();
+        getQrCodesDeActivacion();
         //Request Permission
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.CAMERA)
@@ -76,6 +84,37 @@ public class QrCodeActivity extends AppCompatActivity {
                 }).check();
     }
 
+    private void getQrCodesDeActivacion() {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/qrActivationCodes.php";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for (int i = 0; i <response.length(); i++){
+                                JSONObject qr = response.getJSONObject(i);
+                                qrCode qrCode = new qrCode(qr.getString("Nombre"),
+                                        qr.getString("ID"));
+                                qrCode.setFK_Sitio(qr.getString("FK_Sitio"));
+                                qrCodes.add(qrCode);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jsonArrayRequest);
+    }
+
     private void getQrCodes() {
             final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/qrCodes.php";
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -88,7 +127,8 @@ public class QrCodeActivity extends AppCompatActivity {
                             try {
                                 for (int i = 0; i <response.length(); i++){
                                     JSONObject qr = response.getJSONObject(i);
-                                    qrCode qrCode = new qrCode(qr.getString("Nombre"),qr.getString("ID"));
+                                    qrCode qrCode = new qrCode(qr.getString("Nombre"),
+                                            qr.getString("ID"));
                                     qrCodes.add(qrCode);
                                 }
                             } catch (JSONException e) {
@@ -118,13 +158,20 @@ public class QrCodeActivity extends AppCompatActivity {
                 textView.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (data.equals("mirasifuncionaestamadre")) {
-
-                        }
                         for (qrCode dato : qrCodes){
                             if (dato.getNombre().equals(data)){
-                                qrEader.stop();
-                                launchReproduccionTour(dato.getID());
+                                    if (dato.FK_Sitio== null){
+                                        qrEader.stop();//FALTA COMPROBAR SI EL TURISTA PAGO EL TOUR ***************************
+                                        launchReproduccionTour(dato.getID());
+                                    }else {
+                                        qrEader.stop();
+                                        progressDialog.setTitle("Actualizando Pago");
+                                        progressDialog.setMessage("Por favor espere...");
+                                        progressDialog.setCancelable(false);
+                                        progressDialog.show();
+                                        comprobarTourPagado(dato);//comprueba si ya pago el tour que quiere activar
+                                        qrEader.start();
+                                    }
                             }
                         }
                     }
@@ -136,6 +183,78 @@ public class QrCodeActivity extends AppCompatActivity {
                 .height(surfaceView.getHeight())
                 .width(surfaceView.getWidth())
                 .build();
+    }
+
+    private void comprobarTourPagado(final qrCode code) {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
+                "Cicerone/PHP/comprobarTourPagado.php?sitio="+code.FK_Sitio+"&turista="+Global.getObject().getId();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jsonObject = response.getJSONObject(0);
+                            if (jsonObject.getString("success").equals("false")){
+                                Toast.makeText(QrCodeActivity.this, "Usted ya ha pagado por el Tour, gracias!", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+
+                            }else {
+                                actualizarQuePago(code);//si no ha pagado actualiza el pago
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(QrCodeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Toast.makeText(QrCodeActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jsonArrayRequest);
+    }
+
+    private void actualizarQuePago(qrCode dato) {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
+                "Cicerone/PHP/tourPagado.php?sitio="+dato.FK_Sitio+"&turista="+ Global.getObject().getId();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jsonObject = response.getJSONObject(0);
+                            if (jsonObject.getString("success").equals("true")){
+                                Toast.makeText(QrCodeActivity.this, "Se ha realizado el pago correctamente", Toast.LENGTH_SHORT).show();
+                                //reiniciarActivity();
+                                qrCodes.clear();
+                                getQrCodes();
+                                getQrCodesDeActivacion();
+                                progressDialog.dismiss();
+                            }else {
+                                Toast.makeText(QrCodeActivity.this, "No se pudo realizar el pago :(", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(QrCodeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Toast.makeText(QrCodeActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jsonArrayRequest);
     }
 
     private void launchReproduccionTour(String dato) {
@@ -171,31 +290,7 @@ public class QrCodeActivity extends AppCompatActivity {
                 }).check();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.CAMERA)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                        if (qrEader != null) {
-                            qrEader.releaseAndCleanup();
-                        }
-                    }
 
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(QrCodeActivity.this, "Debes Habilitar los permisos de camara", Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
-                    }
-                }).check();
-    }
 
     //TOOLBAR
     @Override
@@ -247,6 +342,7 @@ public class QrCodeActivity extends AppCompatActivity {
     class qrCode implements Serializable {
         private String Nombre;
         private String ID;
+        private String FK_Sitio;
 
         public qrCode() {
         }
@@ -254,6 +350,7 @@ public class QrCodeActivity extends AppCompatActivity {
         public qrCode(String nombre, String ID) {
             Nombre = nombre;
             this.ID = ID;
+
         }
 
         public String getNombre() {
@@ -270,6 +367,14 @@ public class QrCodeActivity extends AppCompatActivity {
 
         public void setID(String ID) {
             this.ID = ID;
+        }
+
+        public String getFK_Sitio() {
+            return FK_Sitio;
+        }
+
+        public void setFK_Sitio(String FK_Sitio) {
+            this.FK_Sitio = FK_Sitio;
         }
     }
 }
