@@ -47,6 +47,10 @@ dependencies {
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
     //PAYPAL
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
+    //Enviar Correo
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
 }
 apply plugin: 'com.google.gms.google-services'
 

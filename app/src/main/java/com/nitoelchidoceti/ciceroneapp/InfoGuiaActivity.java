@@ -76,7 +76,7 @@ public class InfoGuiaActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        consultaComentarios();//VERSION BETA*****
+        consultaComentarios();
         llenarInformacion();
         calcularCalificacion();
     }
