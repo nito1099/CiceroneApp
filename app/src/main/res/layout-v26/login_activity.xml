@@ -42,11 +42,11 @@
                         <ImageView
                             android:id="@+id/imglogin"
                             android:layout_width="match_parent"
-                            android:layout_height="2in"
-                            android:contentDescription="#"
+                            android:layout_height="wrap_content"
                             android:src="@drawable/img_login2"
                             android:layout_alignParentStart="true"
                             android:layout_centerInParent="true"
+                            android:adjustViewBounds="true"
                             />
 
                     </RelativeLayout>
@@ -149,33 +149,21 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp">
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
                                 android:fontFamily="@font/source_sans_pro"
                                 android:text="@string/olvidaste_tu_contraseña"
                                 android:textColor="@color/orange"
                                 android:textStyle="italic"
                                 android:onClick="launch_get_email"
-                                android:layout_alignParentStart="true"
-                                android:layout_marginLeft="20dp"
+
                                 />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/source_sans_pro"
-                                android:textStyle="italic"
-                                android:text="@string/es_parte_de_cicerone"
-                                android:textColor="@color/orange"
-                                android:layout_gravity="center"
-                                android:layout_centerInParent="true"
-                                />
-
-                            <TextView
+                        <TextView
                                 android:layout_gravity="center"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -184,12 +172,9 @@
                                 android:text="@string/registrate"
                                 android:textColor="@color/orange"
                                 android:onClick="launchRegistryActivity"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginRight="20dp"
                                 android:layout_centerVertical="true"
+                                android:layout_marginLeft="200dp"
                                 />
-
-
 
                     </RelativeLayout>
 
