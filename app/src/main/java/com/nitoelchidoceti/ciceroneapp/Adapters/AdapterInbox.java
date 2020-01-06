@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +27,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
     private List<MensajeRecibir> mensajes = new ArrayList<>();
     private Context context;
     private AdapterInbox.OnItemClickListener listener;
-    private String fotoPerfil;
+
 
     public interface OnItemClickListener {
         void OnItemClick(int position);
@@ -35,12 +36,10 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
     public AdapterInbox(Context context, AdapterInbox.OnItemClickListener listener) {
         this.context = context;
         this.listener = listener;
-
     }
 
-    public void addMensaje(MensajeRecibir mensaje,String fotoPerfil) {
+    public void addMensaje(MensajeRecibir mensaje) {
         mensajes.add(mensaje);
-        this.fotoPerfil = fotoPerfil;
         notifyItemInserted(mensajes.size());
     }
 
@@ -62,7 +61,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
     public void onBindViewHolder(@NonNull HolderMensajes holder, int position) {
         holder.getNombre().setText(mensajes.get(position).getNombreDestinatario());
         holder.getMensaje().setText(mensajes.get(position).getMensaje());
-        Glide.with(context).load(fotoPerfil).into(holder.getFotoPerfil());
+        //Glide.with(context).load(fotoPerfil.get(position)).into(holder.getFotoPerfil());
         Long codigoHora = mensajes.get(position).getHora();
         Date date = new Date(codigoHora);
         PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());

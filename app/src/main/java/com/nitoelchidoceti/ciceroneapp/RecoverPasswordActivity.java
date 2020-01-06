@@ -22,6 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.ExecutionException;
+
 public class RecoverPasswordActivity extends AppCompatActivity {
     private TextInputLayout verificationCode;
     private Button btnVerificationCode;
@@ -66,6 +68,10 @@ public class RecoverPasswordActivity extends AppCompatActivity {
 
                         } catch (JSONException e) {
                             Toast.makeText(RecoverPasswordActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -79,13 +85,13 @@ public class RecoverPasswordActivity extends AppCompatActivity {
         queue.add(jsonArrayRequest);
     }
 
-    private void sendEmail(String contraseña) {
+    private void sendEmail(String contraseña) throws ExecutionException, InterruptedException {
         JavaMailAPI javaMailAPI = new JavaMailAPI(RecoverPasswordActivity.this ,
                 email,
                 "Recuperacion de contraseña de Cicerone",
                 "La contraseña de tu cuenta cicerone es:\n"+
                         contraseña);
-        javaMailAPI.execute();
+        javaMailAPI.execute().get();
         launchLogin2();
     }
 

@@ -36,13 +36,14 @@ public class GetMailForgotPassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_mail_forgot_password);
+
         sendMail = findViewById(R.id.btnRegister);
         etxtEmail = findViewById(R.id.etxtCorreo_RecPass);
         textInputLayoutEmail = findViewById(R.id.txt_Correo);
         sendMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 emailInput = textInputLayoutEmail.getEditText().getText().toString().trim();
+                emailInput = textInputLayoutEmail.getEditText().getText().toString().trim();
                 if (emailInput.isEmpty()){
                     textInputLayoutEmail.setError("Este campo no puede esta vacío");
                 }else {
