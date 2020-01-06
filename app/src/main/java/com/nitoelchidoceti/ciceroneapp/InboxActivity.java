@@ -58,7 +58,7 @@ public class InboxActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {//recorro todas las conversaciones
-                    String []idGuia = ds.getKey().split("_");
+                    final String []idGuia = ds.getKey().split("_");
                     idsGuias.add(idGuia[3]);
                     if (ds.getKey().indexOf("Turista_" + Global.getObject().getId()) != -1) {//filtro las conversaciones del turista
                         Query lastQuery = databaseReference.child(ds.getKey()).orderByChild(ds.getKey()).limitToLast(1);//obtengo el ultimo mensaje enviado de cada conversacion
@@ -67,7 +67,12 @@ public class InboxActivity extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                                     mensaje = child.getValue(MensajeRecibir.class);
-                                    adapterInbox.addMensaje(mensaje);
+                                    for (PojoGuia guia : Global.getObject().getGuias()){
+                                        if (idGuia[3].equals(String.valueOf(guia.getId()))){
+                                            adapterInbox.addMensaje(mensaje,guia.getFotografia());
+                                        }
+                                    }
+
                                 }
                             }
 

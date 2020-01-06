@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeRecibir;
 import com.nitoelchidoceti.ciceroneapp.R;
 
@@ -24,6 +26,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
     private List<MensajeRecibir> mensajes = new ArrayList<>();
     private Context context;
     private AdapterInbox.OnItemClickListener listener;
+    private String fotoPerfil;
 
     public interface OnItemClickListener {
         void OnItemClick(int position);
@@ -32,10 +35,12 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
     public AdapterInbox(Context context, AdapterInbox.OnItemClickListener listener) {
         this.context = context;
         this.listener = listener;
+
     }
 
-    public void addMensaje(MensajeRecibir mensaje) {
+    public void addMensaje(MensajeRecibir mensaje,String fotoPerfil) {
         mensajes.add(mensaje);
+        this.fotoPerfil = fotoPerfil;
         notifyItemInserted(mensajes.size());
     }
 
@@ -57,7 +62,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
     public void onBindViewHolder(@NonNull HolderMensajes holder, int position) {
         holder.getNombre().setText(mensajes.get(position).getNombreDestinatario());
         holder.getMensaje().setText(mensajes.get(position).getMensaje());
-        //Glide.with(context).load(mensajes.get(position).getUrlFoto()).into(holder.imgMensaje);
+        Glide.with(context).load(fotoPerfil).into(holder.getFotoPerfil());
         Long codigoHora = mensajes.get(position).getHora();
         Date date = new Date(codigoHora);
         PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
@@ -72,6 +77,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
 
     public class HolderMensajes extends RecyclerView.ViewHolder {
         private TextView nombre, hora, mensaje;
+        private ImageView fotoPerfil;
         //public ImageView imgMensaje;
 
 
@@ -80,6 +86,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
             nombre = itemView.findViewById(R.id.txtNombreInbox);
             hora = itemView.findViewById(R.id.txtFechaInbox);
             mensaje = itemView.findViewById(R.id.txtMsgInbox);
+            fotoPerfil = itemView.findViewById(R.id.imgPerfil);
             //imgMensaje= itemView.findViewById(R.id.imagenChat);
         }
 
@@ -114,6 +121,14 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
 
         public void setMensaje(TextView mensaje) {
             this.mensaje = mensaje;
+        }
+
+        public ImageView getFotoPerfil() {
+            return fotoPerfil;
+        }
+
+        public void setFotoPerfil(ImageView fotoPerfil) {
+            this.fotoPerfil = fotoPerfil;
         }
     }
 }

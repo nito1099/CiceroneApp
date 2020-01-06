@@ -270,20 +270,6 @@ public class BottomNav extends AppCompatActivity {
         Global.getObject().setLugares(lugaresDeAqui);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_actionbar,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        if(id == R.id.qr_code){
-            launchQr();
-        }
-        return true;
-    }
 
     private void launchQr() {//CODIGO QR ACTIVITY
         Intent launchQRActivity = new Intent(BottomNav.this,QrCodeActivity.class);
