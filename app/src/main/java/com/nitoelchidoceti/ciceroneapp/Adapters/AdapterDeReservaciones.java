@@ -13,9 +13,9 @@ import com.nitoelchidoceti.ciceroneapp.R;
 import java.util.ArrayList;
 
 public class AdapterDeReservaciones extends RecyclerView.Adapter<AdapterDeReservaciones.FichaHolder> {
-    public ArrayList<PojoReservacion> datos;
+    public ArrayList<String> datos;
 
-    public AdapterDeReservaciones(ArrayList<PojoReservacion> datos) {
+    public AdapterDeReservaciones(ArrayList<String> datos) {
         this.datos = datos;
     }
 
@@ -45,9 +45,9 @@ public class AdapterDeReservaciones extends RecyclerView.Adapter<AdapterDeReserv
             reservacion = itemView.findViewById(R.id.txtReservacion);
         }
 
-        public void asignarDatos(PojoReservacion pojoReservacion) {
-
-            reservacion.setText("Fecha: "+pojoReservacion.getFecha()+"  Hora: "+pojoReservacion.getHora());
+        public void asignarDatos(String reservacion) {
+            this.reservacion.setText("Fecha: "+reservacion);
+            //max 23
         }
     }
 }

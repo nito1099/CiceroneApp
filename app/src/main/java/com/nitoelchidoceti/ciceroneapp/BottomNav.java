@@ -60,7 +60,7 @@ public class BottomNav extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
         }
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbarBottom);
         setSupportActionBar(toolbar);
         txtBirthday = findViewById(R.id.txt_birthday_account);
         llenarpojo();//lugares
@@ -395,5 +395,22 @@ public class BottomNav extends AppCompatActivity {
         Intent intent = new Intent(BottomNav.this,FavoritesActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_actionbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.qr_code) {
+            launchQr();
+        }
+        return true;
+    }
+
+
 
 }

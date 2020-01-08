@@ -60,7 +60,6 @@ public class QrCodeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbarQR);
         progressDialog = new ProgressDialog(QrCodeActivity.this);
         setSupportActionBar(toolbar);
-        setSupportActionBar(toolbar);
         getQrCodes();
         getQrCodesDeActivacion();
         //Request Permission
@@ -233,11 +232,7 @@ public class QrCodeActivity extends AppCompatActivity {
                             JSONObject jsonObject = response.getJSONObject(0);
                             if (jsonObject.getString("success").equals("true")){
                                 Toast.makeText(QrCodeActivity.this, "Se ha realizado el pago correctamente", Toast.LENGTH_SHORT).show();
-                                //reiniciarActivity();
-                                qrCodes.clear();
-                                getQrCodes();
-                                getQrCodesDeActivacion();
-                                progressDialog.dismiss();
+                                reiniciarActivity();
                             }else {
                                 Toast.makeText(QrCodeActivity.this, "No se pudo realizar el pago :(", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
@@ -255,6 +250,12 @@ public class QrCodeActivity extends AppCompatActivity {
         });
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(jsonArrayRequest);
+    }
+
+    private void reiniciarActivity() {
+        progressDialog.dismiss();
+        finish();
+        startActivity(new Intent(this,QrCodeActivity.class));
     }
 
     private void launchReproduccionTour(String dato) {

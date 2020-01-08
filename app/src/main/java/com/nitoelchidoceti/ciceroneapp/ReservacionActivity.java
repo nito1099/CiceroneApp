@@ -36,6 +36,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,7 +46,7 @@ public class ReservacionActivity extends AppCompatActivity {
 
     EditText etxtDate, etxtHora;
     PojoGuia pojoGuia;
-    ArrayList<PojoReservacion> reservaciones,reservacionesFiltradas;
+    ArrayList<String> reservaciones,reservacionesFiltradas;
     AdapterDeReservaciones adapterDeReservaciones;
     RecyclerView recycleReservaciones;
     @Override
@@ -59,8 +61,11 @@ public class ReservacionActivity extends AppCompatActivity {
 
     private void consultarReservaciones() {
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = sdf.format(new Date());
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
-                "Cicerone/PHP/consultaReservaciones.php?guia=" + pojoGuia.getId();
+                "Cicerone/PHP/consultaReservaciones.php?guia=" + pojoGuia.getId()+
+                "&fecha="+dateString;
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
                 url,
@@ -90,11 +95,10 @@ public class ReservacionActivity extends AppCompatActivity {
             reservaciones.clear();
         }
         for (int i = 0; i < response.length(); i++) {
-            PojoReservacion reservacion = new PojoReservacion();
+            String reservacion;
             JSONObject objeto;
             objeto = response.getJSONObject(i);
-            reservacion.setFecha(objeto.getString("Fecha"));
-            reservacion.setHora(objeto.getString("Hora"));
+            reservacion=objeto.getString("Fecha");
             reservaciones.add(reservacion);
         }
         adapterDeReservaciones = new AdapterDeReservaciones(reservaciones);
@@ -117,7 +121,9 @@ public class ReservacionActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         month = month + 1;
-                        String date = year + "-" + month + "-" + day;
+                        String mes  = (month < 10) ? ("0" + month) : String.valueOf(month);
+                        String dia  = (day< 10) ? ("0" + day) : String.valueOf(day);
+                        String date = year + "-" + mes + "-" + dia;
                         etxtDate.setText(date);
                     }
                 }, year, month, day);
@@ -138,9 +144,9 @@ public class ReservacionActivity extends AppCompatActivity {
                     reservacionesFiltradas.clear();
                 }
 
-                for (PojoReservacion reservacion: reservaciones){
+                for (String reservacion: reservaciones){
 
-                    if (reservacion.getFecha().contentEquals(s)){
+                    if (reservacion.contains(s)){
                         reservacionesFiltradas.add(reservacion);
                     }
                 }
@@ -163,7 +169,7 @@ public class ReservacionActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         String horaFormateada = (hourOfDay < 10) ? ("0" + hourOfDay) : String.valueOf(hourOfDay);
                         //String minutoFormateado = (minute < 10) ? ("0" + minute) : String.valueOf(minute);
-                        etxtHora.setText(horaFormateada + ":" + "00" + " ");
+                        etxtHora.setText(horaFormateada + ":" + "00");
                     }
                 }, hora, minuto, true);
                 timePickerDialog.show();
@@ -190,8 +196,8 @@ public class ReservacionActivity extends AppCompatActivity {
             Toast.makeText(this, "Por favor no deje campos vacios", Toast.LENGTH_SHORT).show();
         }else {
             final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/reservarTour.php?fecha=" +
-                    etxtDate.getText() + "&hora=" +
-                    etxtHora.getText() + ":00" +
+                    etxtDate.getText() + " "+
+                    etxtHora.getText()+
                     "&turista=" + Global.getObject().getId() +
                     "&guia=" + pojoGuia.getId();
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -204,7 +210,7 @@ public class ReservacionActivity extends AppCompatActivity {
                             try {
                                 JSONObject jsonObject;
                                 jsonObject = response.getJSONObject(0);
-                                if (jsonObject.getString("success").equals(false)) {
+                                if (jsonObject.getString("success").equals("false")) {
                                     Toast.makeText(ReservacionActivity.this, "Ya hay una reservacion a esa hora.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(ReservacionActivity.this, "Se ha reservado correctamente.", Toast.LENGTH_SHORT).show();
