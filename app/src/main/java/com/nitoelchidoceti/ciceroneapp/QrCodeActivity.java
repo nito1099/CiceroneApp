@@ -160,15 +160,16 @@ public class QrCodeActivity extends AppCompatActivity {
                         for (qrCode dato : qrCodes){
                             if (dato.getNombre().equals(data)){
                                     if (dato.FK_Sitio== null){
-                                        qrEader.stop();//FALTA COMPROBAR SI EL TURISTA PAGO EL TOUR ***************************
-                                        launchReproduccionTour(dato.getID());
+                                        qrEader.stop();
+                                        comprobarTourPagado(dato,true);
+                                        qrEader.start();
                                     }else {
                                         qrEader.stop();
                                         progressDialog.setTitle("Actualizando Pago");
                                         progressDialog.setMessage("Por favor espere...");
                                         progressDialog.setCancelable(false);
                                         progressDialog.show();
-                                        comprobarTourPagado(dato);//comprueba si ya pago el tour que quiere activar
+                                        comprobarTourPagado(dato,false);//comprueba si ya pago el tour que quiere activar
                                         qrEader.start();
                                     }
                             }
@@ -184,7 +185,7 @@ public class QrCodeActivity extends AppCompatActivity {
                 .build();
     }
 
-    private void comprobarTourPagado(final qrCode code) {
+    private void comprobarTourPagado(final qrCode code, final Boolean palTour) {
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
                 "Cicerone/PHP/comprobarTourPagado.php?sitio="+code.FK_Sitio+"&turista="+Global.getObject().getId();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -196,13 +197,22 @@ public class QrCodeActivity extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
                         try {
                             JSONObject jsonObject = response.getJSONObject(0);
-                            if (jsonObject.getString("success").equals("false")){
-                                Toast.makeText(QrCodeActivity.this, "Usted ya ha pagado por el Tour, gracias!", Toast.LENGTH_SHORT).show();
-                                progressDialog.dismiss();
+                            if (palTour){//para acceder al tour
+                                if (jsonObject.getString("success").equals("false")){
+                                    launchReproduccionTour(code.getID());
+                                }else {
+                                    Toast.makeText(QrCodeActivity.this, "Lo invitamos a primero pagar nuestro tour :)", Toast.LENGTH_SHORT).show();
+                                }
+                            }else {//para pagar
+                                if (jsonObject.getString("success").equals("false")){
+                                    Toast.makeText(QrCodeActivity.this, "Usted ya ha pagado por el Tour, gracias!", Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
 
-                            }else {
-                                actualizarQuePago(code);//si no ha pagado actualiza el pago
+                                }else {
+                                    actualizarQuePago(code);//si no ha pagado actualiza el pago
+                                }
                             }
+
                         } catch (JSONException e) {
                             Toast.makeText(QrCodeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
