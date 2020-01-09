@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapa"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
 
-</FrameLayout>
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapa"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnGetLocation"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_location"
+        android:backgroundTint="#B3B3B3"
+        app:borderWidth="0dp"
+        app:fabCustomSize="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="30dp"
+        android:elevation="3dp"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
