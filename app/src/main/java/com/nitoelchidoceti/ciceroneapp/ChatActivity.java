@@ -125,7 +125,7 @@ public class ChatActivity extends AppCompatActivity {
                                 Global.getObject().getNombre(),"2",
                                 downloadUri.toString(),
                                 "turista"+Global.getObject().getId(),
-                                pojoGuia.getNombre(),ServerValue.TIMESTAMP);
+                                pojoGuia.getNombre(),pojoGuia.getFotografia(),ServerValue.TIMESTAMP);
                         databaseReference.push().setValue(mensaje);
                     }else {
                         Toast.makeText(ChatActivity.this, "No se ha podido subir la imagen correctamente.", Toast.LENGTH_SHORT).show();
@@ -142,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (etxtMensaje.getText().length()!=0){
                     databaseReference.push().setValue(new MensajeEnviar(etxtMensaje.getText().toString()
                             , Global.getObject().getNombre(), "1",
-                            "turista"+Global.getObject().getId(),pojoGuia.getNombre(),ServerValue.TIMESTAMP));
+                            "turista"+Global.getObject().getId(),pojoGuia.getNombre(),pojoGuia.getFotografia(),ServerValue.TIMESTAMP));
                     etxtMensaje.setText("");
                 }
             }

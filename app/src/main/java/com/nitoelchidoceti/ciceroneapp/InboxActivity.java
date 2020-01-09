@@ -65,13 +65,14 @@ public class InboxActivity extends AppCompatActivity {
                         lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                                     mensaje = child.getValue(MensajeRecibir.class);
-                                    adapterInbox.addMensaje(mensaje);
-
+                                    if (mensaje.getFotoPerfilDestinatario()!=null){
+                                        adapterInbox.addMensaje(mensaje);
+                                    }
                                 }
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
                                 Toast.makeText(InboxActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
@@ -136,7 +137,6 @@ public class InboxActivity extends AppCompatActivity {
 
     private void launchQr() {//CODIGO QR ACTIVITY
         Intent launchQRActivity = new Intent(InboxActivity.this, QrCodeActivity.class);
-
         startActivity(launchQRActivity);
     }
 }

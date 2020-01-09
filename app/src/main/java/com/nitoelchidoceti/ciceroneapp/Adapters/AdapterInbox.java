@@ -27,7 +27,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
     private List<MensajeRecibir> mensajes = new ArrayList<>();
     private Context context;
     private AdapterInbox.OnItemClickListener listener;
-
+    private ArrayList<String> urlsFoto = new ArrayList<>();
 
     public interface OnItemClickListener {
         void OnItemClick(int position);
@@ -40,12 +40,20 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
 
     public void addMensaje(MensajeRecibir mensaje) {
         mensajes.add(mensaje);
+        urlsFoto.add(mensaje.getFotoPerfilDestinatario());
+        notifyItemInserted(mensajes.size());
+    }
+
+    public void addMensaje(MensajeRecibir mensaje,String urlFoto) {
+        mensajes.add(mensaje);
+        urlsFoto.add(urlFoto);
         notifyItemInserted(mensajes.size());
     }
 
     public void clearList(){
         int size = mensajes.size();
         mensajes.clear();
+        urlsFoto.clear();
         notifyItemRangeRemoved(0,size);
     }
 
@@ -61,7 +69,9 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
     public void onBindViewHolder(@NonNull HolderMensajes holder, int position) {
         holder.getNombre().setText(mensajes.get(position).getNombreDestinatario());
         holder.getMensaje().setText(mensajes.get(position).getMensaje());
-        //Glide.with(context).load(fotoPerfil.get(position)).into(holder.getFotoPerfil());
+        if (mensajes.get(position).getFotoPerfilDestinatario()!=null){
+            Glide.with(context).load(mensajes.get(position).getFotoPerfilDestinatario()).into(holder.getFotoPerfil());
+        }
         Long codigoHora = mensajes.get(position).getHora();
         Date date = new Date(codigoHora);
         PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
@@ -77,7 +87,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
     public class HolderMensajes extends RecyclerView.ViewHolder {
         private TextView nombre, hora, mensaje;
         private ImageView fotoPerfil;
-        //public ImageView imgMensaje;
+        private ImageView imgMensaje;
 
 
         public HolderMensajes(@NonNull View itemView) {
@@ -86,7 +96,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
             hora = itemView.findViewById(R.id.txtFechaInbox);
             mensaje = itemView.findViewById(R.id.txtMsgInbox);
             fotoPerfil = itemView.findViewById(R.id.imgPerfil);
-            //imgMensaje= itemView.findViewById(R.id.imagenChat);
+            imgMensaje= itemView.findViewById(R.id.imagenChat);
         }
 
         public void onClickFake(final int posicion, final OnItemClickListener listener){
@@ -128,6 +138,14 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
 
         public void setFotoPerfil(ImageView fotoPerfil) {
             this.fotoPerfil = fotoPerfil;
+        }
+
+        public ImageView getImgMensaje() {
+            return imgMensaje;
+        }
+
+        public void setImgMensaje(ImageView imgMensaje) {
+            this.imgMensaje = imgMensaje;
         }
     }
 }
