@@ -178,6 +178,10 @@ public class InfoGuiaActivity extends AppCompatActivity {
                             JSONObject jsonObject;
                             jsonObject = response.getJSONObject(0);
                             calificacionGuia.setText(jsonObject.getString("Calificacion"));
+                            String s = jsonObject.getString("Calificacion").substring(1,3);
+                            Boolean mediaEstrella = esMediaEstrella(s);
+
+                            starsCal(jsonObject.getString("Calificacion").substring(0,1),mediaEstrella);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -190,6 +194,74 @@ public class InfoGuiaActivity extends AppCompatActivity {
         });
         RequestQueue queue = Volley.newRequestQueue(InfoGuiaActivity.this);
         queue.add(jsonArrayRequest);
+    }
+
+    private void starsCal(String numero,Boolean mediaEstrella) {
+        switch (numero) {
+            case "1":
+                oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                if (mediaEstrella==true){
+                    twoStar.setBackgroundResource(R.drawable.ic_half_star);
+                }else {
+                    twoStar.setBackgroundResource(R.drawable.ic__empty_star);
+                }
+
+                threeStar.setBackgroundResource(R.drawable.ic__empty_star);
+                fourStar.setBackgroundResource(R.drawable.ic__empty_star);
+                fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+                break;
+            case "2":
+                oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                if (mediaEstrella==true){
+                    threeStar.setBackgroundResource(R.drawable.ic_half_star);
+                }else {
+                    threeStar.setBackgroundResource(R.drawable.ic__empty_star);
+                }
+                fourStar.setBackgroundResource(R.drawable.ic__empty_star);
+                fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+                break;
+            case "3":
+                oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                threeStar.setBackgroundResource(R.drawable.ic_one_star);
+                if (mediaEstrella==true){
+                    fourStar.setBackgroundResource(R.drawable.ic_half_star);
+                }else {
+                    fourStar.setBackgroundResource(R.drawable.ic__empty_star);
+                }
+                fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+                break;
+            case "4":
+                oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                threeStar.setBackgroundResource(R.drawable.ic_one_star);
+                fourStar.setBackgroundResource(R.drawable.ic_one_star);
+                if (mediaEstrella==true){
+                    fiveStar.setBackgroundResource(R.drawable.ic_half_star);
+                }else {
+                    fiveStar.setBackgroundResource(R.drawable.ic__empty_star);
+                }
+                break;
+            case "5":
+                oneStar.setBackgroundResource(R.drawable.ic_one_star);
+                twoStar.setBackgroundResource(R.drawable.ic_one_star);
+                threeStar.setBackgroundResource(R.drawable.ic_one_star);
+                fourStar.setBackgroundResource(R.drawable.ic_one_star);
+                fiveStar.setBackgroundResource(R.drawable.ic_one_star);
+                break;
+        }
+    }
+    private Boolean esMediaEstrella(String s) {
+        switch (s){
+            case ".3":
+            case ".4":
+            case ".7":
+            case ".6":
+            case ".5":
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -331,6 +403,57 @@ public class InfoGuiaActivity extends AppCompatActivity {
     }
 
     /**
+     * Se agrega el review a la DB
+     *
+     * @param view
+     */
+    public void agregarReviewGuia(View view) {
+        if (chicoMalo()==false){
+            if (calificacion != null || comentario.getText() == null) {
+                String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/" +
+                        "agregarReviewSitio.php?nombre=" + Global.getObject().getId() + "&sitio=" + pojoGuia.getId() +
+                        "&calificacion=" + calificacion + "&comentario=" + comentario.getText()+"&esSitio=false";
+                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                        Request.Method.GET,
+                        url,
+                        null,
+                        new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                JSONObject jsonObject;
+                                try {
+                                    jsonObject = response.getJSONObject(0);
+                                    if (jsonObject.getString("success").equals("true")) {
+                                        Toast.makeText(InfoGuiaActivity.this, "Se ha " +
+                                                "publicado su comentario correctamente", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(InfoGuiaActivity.this, "Ya ha agregado " +
+                                                "un comentario previamente.", Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+                RequestQueue requestQueue = Volley.newRequestQueue(InfoGuiaActivity.this);
+                requestQueue.add(jsonArrayRequest);
+            } else {
+                Toast.makeText(InfoGuiaActivity.this, "Porfavor no deje campos vacios.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(this, "Su comentario cuenta con palabras malsonantes.", Toast.LENGTH_SHORT).show();
+            comentario.setText("");
+        }
+
+    }
+
+    /**
      * Dependiendo del numero de estrella de calificacion presionado cambia la vista
      * de la calificacion del lugar y registra que ya se ha asignado una calificacion
      *
@@ -385,57 +508,6 @@ public class InfoGuiaActivity extends AppCompatActivity {
                 calificacion = "5";
                 break;
         }
-    }
-
-    /**
-     * Se agrega el review a la DB
-     *
-     * @param view
-     */
-    public void agregarReviewGuia(View view) {
-        if (chicoMalo()==false){
-            if (calificacion != null || comentario.getText() == null) {
-                String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/Cicerone/PHP/" +
-                        "agregarReviewSitio.php?nombre=" + Global.getObject().getId() + "&sitio=" + pojoGuia.getId() +
-                        "&calificacion=" + calificacion + "&comentario=" + comentario.getText()+"&esSitio=false";
-                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                        Request.Method.GET,
-                        url,
-                        null,
-                        new Response.Listener<JSONArray>() {
-                            @Override
-                            public void onResponse(JSONArray response) {
-                                JSONObject jsonObject;
-                                try {
-                                    jsonObject = response.getJSONObject(0);
-                                    if (jsonObject.getString("success").equals("true")) {
-                                        Toast.makeText(InfoGuiaActivity.this, "Se ha " +
-                                                "publicado su comentario correctamente", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(InfoGuiaActivity.this, "Ya ha agregado " +
-                                                "un comentario previamente.", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                });
-                RequestQueue requestQueue = Volley.newRequestQueue(InfoGuiaActivity.this);
-                requestQueue.add(jsonArrayRequest);
-            } else {
-                Toast.makeText(InfoGuiaActivity.this, "Porfavor no deje campos vacios.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        }else {
-            Toast.makeText(this, "Su comentario cuenta con palabras malsonantes.", Toast.LENGTH_SHORT).show();
-            comentario.setText("");
-        }
-
     }
 
     private boolean chicoMalo() {
