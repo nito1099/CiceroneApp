@@ -1,5 +1,6 @@
 package com.nitoelchidoceti.ciceroneapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,6 +21,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nitoelchidoceti.ciceroneapp.Fragments.AccountFragment;
@@ -359,11 +365,32 @@ public class BottomNav extends AppCompatActivity {
             RequestQueue peticion = Volley.newRequestQueue(view.getContext());
             peticion.add(pet);
         }else{
-            Intent launchLoginFromAccount = new Intent(this,LoginActivity.class);
-            launchLoginFromAccount.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(launchLoginFromAccount);
+            if (AccessToken.getCurrentAccessToken() == null) {
+                Intent launchLoginFromAccount = new Intent(this,LoginActivity.class);
+                launchLoginFromAccount.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(launchLoginFromAccount);
+                // already logged out
+            }else {
+                disconnectFromFacebook(view.getContext());
+            }
         }
 
+    }
+
+    public void disconnectFromFacebook(final Context context) {
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+                Intent launchLoginFromAccount = new Intent(context,LoginActivity.class);
+                launchLoginFromAccount.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(launchLoginFromAccount);
+
+            }
+        }).executeAsync();
     }
 
 

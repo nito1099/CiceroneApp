@@ -24,7 +24,9 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
+import com.google.android.gms.common.internal.GmsLogger;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.LoginActivity;
@@ -37,13 +39,16 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AccountFragment extends Fragment {
 
 
 
     private EditText txtNombre,txtEmail,txtPlace,txtCell,txtBirthday;
     Context contexto;
-    public FloatingActionButton btnEditarInfCuenta;
+    private FloatingActionButton btnEditarInfCuenta;
+    private CircleImageView imageView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,8 +61,12 @@ public class AccountFragment extends Fragment {
         txtCell=myView.findViewById(R.id.txt_telefono_account);
         txtBirthday=myView.findViewById(R.id.txt_birthday_account);
         btnEditarInfCuenta = myView.findViewById(R.id.btn_edit_account);
-
+        imageView= myView.findViewById(R.id.img_circle_view);
         contexto=myView.getContext();
+        if (Global.getObject().getImagen() != null){
+            Glide.with(contexto).load(Global.getObject().getImagen()).into(imageView);
+        }
+
         infDeTurista(myView,contexto);
 
         Calendar calendario = Calendar.getInstance();
