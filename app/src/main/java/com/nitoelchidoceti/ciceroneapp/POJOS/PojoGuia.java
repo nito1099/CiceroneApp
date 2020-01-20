@@ -7,7 +7,7 @@ public class PojoGuia implements Serializable {
 
     private int Id;
     private String nombre,
-            descripcion, telefono, correo,horario, duracion,nombreDelSitio,FK_Sitio, fotografia;
+            descripcion, telefono, correo,horario, duracion,nombreDelSitio,FK_Sitio, fotografia, token;
     private Double[] costos;
     private ArrayList<String> idiomas;
     private ArrayList<String> titulos;
@@ -24,6 +24,7 @@ public class PojoGuia implements Serializable {
         telefono="";
         fotografia="null";
         correo="";
+        token="";
         idiomas = new ArrayList<>();
         titulos = new ArrayList<>();
         costos = new Double[3];
@@ -141,5 +142,13 @@ public class PojoGuia implements Serializable {
 
     public void setImagenes(ArrayList<String> imagenes) {
         this.imagenes = imagenes;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

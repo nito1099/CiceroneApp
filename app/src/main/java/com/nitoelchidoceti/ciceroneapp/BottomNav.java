@@ -140,6 +140,7 @@ public class BottomNav extends AppCompatActivity {
             guia.setFotografia(objeto.getString("Fotografia"));
             guia.setNombreDelSitio(objeto.getString("Sitio"));
             guia.setHorario("De " + objeto.getString("Horario_Inicio") + " a " + objeto.getString("Horario_Final"));
+            guia.setToken(objeto.getString("Token"));
             guia.setFK_Sitio(objeto.getString("FK_Sitio"));
             //FALTA LA FOTOGRAFÍA********
             Double[] aux = new Double[3];

@@ -19,12 +19,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeComentarios;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeReservaciones;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
@@ -41,6 +44,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReservacionActivity extends AppCompatActivity {
 
@@ -49,6 +54,7 @@ public class ReservacionActivity extends AppCompatActivity {
     ArrayList<String> reservaciones,reservacionesFiltradas;
     AdapterDeReservaciones adapterDeReservaciones;
     RecyclerView recycleReservaciones;
+    private final static String Url = "https://fcm.googleapis.com/fcm/send";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,6 +186,7 @@ public class ReservacionActivity extends AppCompatActivity {
     private void inicializaciones() {
         Intent intent = getIntent();
         pojoGuia = (PojoGuia) intent.getSerializableExtra("Guia");
+        Toast.makeText(this, pojoGuia.getToken(), Toast.LENGTH_SHORT).show();
         etxtDate = findViewById(R.id.etxt_fecha_reservacion);
         etxtHora = findViewById(R.id.etxt_hora_reservacion);
         reservacionesFiltradas=new ArrayList<>();
@@ -213,6 +220,7 @@ public class ReservacionActivity extends AppCompatActivity {
                                 if (jsonObject.getString("success").equals("false")) {
                                     Toast.makeText(ReservacionActivity.this, "Ya hay una reservacion a esa hora.", Toast.LENGTH_SHORT).show();
                                 } else {
+                                    mandarNotificacion();
                                     Toast.makeText(ReservacionActivity.this, "Se ha reservado correctamente.", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
@@ -229,6 +237,41 @@ public class ReservacionActivity extends AppCompatActivity {
             queue.add(jsonArrayRequest);
         }
 
+    }
+
+    private void mandarNotificacion() throws JSONException {
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        FirebaseMessaging.getInstance().subscribeToTopic("reservations");
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("to" , pojoGuia.getToken());
+        JSONObject notificationObj = new JSONObject();
+        notificationObj.put( "title", "Tienes una nueva reservación!");
+        notificationObj.put("body", "El " + etxtDate.getText() + " a las: " + etxtHora.getText()+ " hrs" );
+        mainObj.put("notification", notificationObj);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, Url,
+                mainObj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(ReservacionActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        })
+        {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String,String> header = new HashMap<>();
+                header.put("content-type", "application/json");
+                header.put("authorization","key=AIzaSyBhgDb3RGS8SPavXMQDQ95z59vOTQ0wjrg");
+                return  header;
+            }
+        };
+        requestQueue.add(request);
     }
 
     //toolbar

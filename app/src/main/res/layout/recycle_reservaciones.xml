@@ -12,7 +12,6 @@
         android:fontFamily="@font/source_sans_pro"
         android:textColor="#444444"
         android:textSize="16sp"
-        android:text="Prueba"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
         android:maxLength="23"/>

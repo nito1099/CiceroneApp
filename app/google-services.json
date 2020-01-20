@@ -15,6 +15,43 @@
       },
       "oauth_client": [
         {
+          "client_id": "41684525003-lc9u5tmj3ca4cn9bkqmk9r5b9ulngoag.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nitoelchidoceti.ciceroneapp",
+            "certificate_hash": "fc82f2875ff054f70cc3c72e30663f06eaa6e933"
+          }
+        },
+        {
+          "client_id": "41684525003-bicuk17g4k6o94qrk7lm019ntjgp12na.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnvCv8ymTYe2PghMwDnoVsPtneQFN0-uo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "41684525003-bicuk17g4k6o94qrk7lm019ntjgp12na.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:41684525003:android:339f866000f574838be04e",
+        "android_client_info": {
+          "package_name": "com.nitoelchidoceti.ciceroneguias"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "41684525003-bicuk17g4k6o94qrk7lm019ntjgp12na.apps.googleusercontent.com",
           "client_type": 3
         }

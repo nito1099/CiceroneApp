@@ -2,6 +2,7 @@ package com.nitoelchidoceti.ciceroneapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,7 +26,10 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 
 import org.json.JSONArray;
@@ -57,7 +61,12 @@ public class LoginActivity extends AppCompatActivity {
         txtName = findViewById(R.id.etxt_contraseña_login);
         txtEmail = findViewById(R.id.etxt_correo_login);
         txtPass = findViewById(R.id.etxt_contraseña_login);
-
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                Log.d("NOTICIAS","Token: "+ instanceIdResult.getToken());
+            }
+        });
         callbackManager =  CallbackManager.Factory.create();
 
         checkLoginStatus();
