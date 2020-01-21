@@ -24,12 +24,15 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.internal.GmsLogger;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 
 import org.json.JSONArray;
@@ -66,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
+                FirebaseMessaging.getInstance().subscribeToTopic("news");
                 Log.d("NOTICIAS","Token: "+ instanceIdResult.getToken());
             }
         });
@@ -109,20 +113,17 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private void loadUserProfile(AccessToken newAccessToken){
+    private void loadUserProfile(final AccessToken newAccessToken){
         GraphRequest request = GraphRequest.newMeRequest(newAccessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) { //OBTENIENDO LOS STRINGS PREVIAMENTE DEFINIDOS
                 try {
-                    String first_name = object.getString("first_name");
-                    String last_name = object.getString("last_name");
-                    String email = object.getString("email");
+                    //String first_name = object.getString("first_name");
+                    //String last_name = object.getString("last_name");
+                    final String email = object.getString("email");
                     String id = object.getString("id");
-                    Global.getObject().setImagen("https://graph.facebook.com/"+id+"/picture?type=normal");
+                    Global.getObject().setImagen("https://graph.facebook.com/"+id+"/picture?type=large");
                     comprobarCorreo(email);
-
-
-
                 } catch (JSONException e) {
                     Toast.makeText(LoginActivity.this, e.getMessage(), LENGTH_SHORT).show();
                 }
@@ -133,6 +134,8 @@ public class LoginActivity extends AppCompatActivity {
         request.setParameters(paraemters);
         request.executeAsync();
     }
+
+
 
     private void comprobarCorreo(String correOngas) {
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
@@ -150,12 +153,11 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LoginActivity.this,BottomNav.class);
                                 ID=jsonObject.getString("id");
                                 Global.getObject().setId(ID);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                finish();
                                 startActivity(intent);
                             }else {
                                 Toast.makeText(LoginActivity.this,
                                         "Su correo no esta registrado en Cicerone", Toast.LENGTH_LONG).show();
-
                             }
                         } catch (JSONException e) {
                             Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -193,11 +195,11 @@ public class LoginActivity extends AppCompatActivity {
                             if (loginTurista.getString("success").equals("false")){
                                 Toast.makeText(vista.getContext(),"Verifique sus credenciales.",LENGTH_SHORT).show();
                             }else{
-                                Intent intent = new Intent(vista.getContext(),BottomNav.class);
                                 ID=loginTurista.getString("id");
                                 Global.getObject().setId(ID);
                                 Global.getObject().setNombre(loginTurista.getString("Nombre"));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                Intent intent = new Intent(vista.getContext(),BottomNav.class);
+                                finish();
                                 startActivity(intent);
                             }
 

@@ -122,7 +122,7 @@ public class RegistryActivity extends AppCompatActivity {
                         Intent intent = new Intent(RegistryActivity.this,BottomNav.class);
                         ID=success.getString("id");
                         Global.getObject().setId(ID);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        finish();
                         startActivity(intent);
                     }
                 }catch (Exception e){

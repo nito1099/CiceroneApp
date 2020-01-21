@@ -367,7 +367,7 @@ public class BottomNav extends AppCompatActivity {
         }else{
             if (AccessToken.getCurrentAccessToken() == null) {
                 Intent launchLoginFromAccount = new Intent(this,LoginActivity.class);
-                launchLoginFromAccount.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                finish();
                 startActivity(launchLoginFromAccount);
                 // already logged out
             }else {
@@ -386,7 +386,7 @@ public class BottomNav extends AppCompatActivity {
 
                 LoginManager.getInstance().logOut();
                 Intent launchLoginFromAccount = new Intent(context,LoginActivity.class);
-                launchLoginFromAccount.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                finish();
                 startActivity(launchLoginFromAccount);
 
             }

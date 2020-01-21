@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class AccountFragment extends Fragment {
     Context contexto;
     private FloatingActionButton btnEditarInfCuenta;
     private CircleImageView imageView;
+    private ImageView imgPortada;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -62,6 +64,7 @@ public class AccountFragment extends Fragment {
         txtBirthday=myView.findViewById(R.id.txt_birthday_account);
         btnEditarInfCuenta = myView.findViewById(R.id.btn_edit_account);
         imageView= myView.findViewById(R.id.img_circle_view);
+        imgPortada = myView.findViewById(R.id.imageView);
         contexto=myView.getContext();
         if (Global.getObject().getImagen() != null){
             Glide.with(contexto).load(Global.getObject().getImagen()).into(imageView);

@@ -242,7 +242,6 @@ public class ReservacionActivity extends AppCompatActivity {
     private void mandarNotificacion() throws JSONException {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        FirebaseMessaging.getInstance().subscribeToTopic("reservations");
         JSONObject mainObj = new JSONObject();
         mainObj.put("to" , pojoGuia.getToken());
         JSONObject notificationObj = new JSONObject();
