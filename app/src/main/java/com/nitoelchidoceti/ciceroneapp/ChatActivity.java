@@ -121,11 +121,12 @@ public class ChatActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Uri downloadUri = task.getResult();
                         PojoMensaje mensaje = new MensajeEnviar(
-                                "",
+                                "Imagen:",
                                 Global.getObject().getNombre(),"2",
                                 downloadUri.toString(),
                                 "turista"+Global.getObject().getId(),
                                 pojoGuia.getNombre(),pojoGuia.getFotografia(),ServerValue.TIMESTAMP);
+                        Toast.makeText(ChatActivity.this, Global.getObject().getNombre(), Toast.LENGTH_SHORT).show();
                         databaseReference.push().setValue(mensaje);
                     }else {
                         Toast.makeText(ChatActivity.this, "No se ha podido subir la imagen correctamente.", Toast.LENGTH_SHORT).show();

@@ -150,9 +150,10 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonObject = response.getJSONObject(0);
                             if (jsonObject.getString("success").equals("true")){
-                                Intent intent = new Intent(LoginActivity.this,BottomNav.class);
                                 ID=jsonObject.getString("id");
+                                Global.getObject().setNombre(jsonObject.getString("Nombre"));
                                 Global.getObject().setId(ID);
+                                Intent intent = new Intent(LoginActivity.this,BottomNav.class);
                                 finish();
                                 startActivity(intent);
                             }else {
