@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.internal.GmsLogger;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,7 +49,12 @@ import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeRecibir;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoGuia;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoMensaje;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -57,6 +69,8 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseStorage storage;
     private StorageReference storageReference;
+    private final static String Url = "https://fcm.googleapis.com/fcm/send";
+
 
 
     private static final int PHOTO_SEND = 1;
@@ -128,12 +142,16 @@ public class ChatActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Uri downloadUri = task.getResult();
                         PojoMensaje mensaje = new MensajeEnviar(
-                                "Imagen:",
+                                "Imagen",
                                 Global.getObject().getNombre(),"2",
                                 downloadUri.toString(),
                                 "turista"+Global.getObject().getId(),
                                 pojoGuia.getNombre(),pojoGuia.getFotografia(),ServerValue.TIMESTAMP);
-                        Toast.makeText(ChatActivity.this, Global.getObject().getNombre(), Toast.LENGTH_SHORT).show();
+                        try {
+                            mandarNotificacion(mensaje.getMensaje());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         databaseReference.push().setValue(mensaje);
                         progressDialog.dismiss();
                     }else {
@@ -152,10 +170,50 @@ public class ChatActivity extends AppCompatActivity {
                     databaseReference.push().setValue(new MensajeEnviar(etxtMensaje.getText().toString()
                             , Global.getObject().getNombre(), "1",
                             "turista"+Global.getObject().getId(),pojoGuia.getNombre(),pojoGuia.getFotografia(),ServerValue.TIMESTAMP));
+                    try {
+                        mandarNotificacion(etxtMensaje.getText().toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     etxtMensaje.setText("");
                 }
             }
         });
+    }
+
+    private void mandarNotificacion(String mensaje) throws JSONException {
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("to", pojoGuia.getToken());
+        Log.d("NOTICIAS","notificacion token:"+pojoGuia.getToken()+"\n");
+        JSONObject notificationObj = new JSONObject();
+        notificationObj.put("title", "Nuevo mensaje de " + Global.getObject().getNombre());
+        notificationObj.put("body", mensaje);
+        mainObj.put("notification", notificationObj);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, Url,
+                mainObj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(ChatActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> header = new HashMap<>();
+                header.put("content-type", "application/json");
+                header.put("authorization", "key=AIzaSyBhgDb3RGS8SPavXMQDQ95z59vOTQ0wjrg");
+                return header;
+            }
+        };
+        requestQueue.add(request);
+        etxtMensaje.setText("");
     }
 
     private void recycleConfiguration() {

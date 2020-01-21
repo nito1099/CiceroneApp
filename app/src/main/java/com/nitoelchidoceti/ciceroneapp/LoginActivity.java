@@ -66,13 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         txtName = findViewById(R.id.etxt_contraseña_login);
         txtEmail = findViewById(R.id.etxt_correo_login);
         txtPass = findViewById(R.id.etxt_contraseña_login);
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                FirebaseMessaging.getInstance().subscribeToTopic("news");
-                Log.d("NOTICIAS","Token: "+ instanceIdResult.getToken());
-            }
-        });
         callbackManager =  CallbackManager.Factory.create();
         loginButtonFb.setPermissions(Arrays.asList("email","public_profile"));
         checkLoginStatus();
@@ -91,6 +84,46 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void actualizarToken(final String id) {
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                Log.d("NOTICIAS","Token: "+ instanceIdResult.getToken());
+                consultaActualizarToken(id,instanceIdResult.getToken());
+            }
+        });
+    }
+
+    /**
+     * actualiza el token de firebase de notificaciones a la db de amazon
+     * @param ID
+     * @param token
+     */
+    private void consultaActualizarToken(String ID,String token) {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
+                "Cicerone/PHP/actualizarToken.php?id="+ID+"&token="+token;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Intent intent = new Intent(LoginActivity.this,BottomNav.class);
+                        finish();
+                        startActivity(intent);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(LoginActivity.this, " Error: " + error.getMessage(), LENGTH_SHORT).show();
+                    }
+                });
+        RequestQueue ejecuta = Volley.newRequestQueue(LoginActivity.this);
+        ejecuta.add(jsonArrayRequest);
     }
 
 
@@ -153,9 +186,8 @@ public class LoginActivity extends AppCompatActivity {
                                 ID=jsonObject.getString("id");
                                 Global.getObject().setNombre(jsonObject.getString("Nombre"));
                                 Global.getObject().setId(ID);
-                                Intent intent = new Intent(LoginActivity.this,BottomNav.class);
-                                finish();
-                                startActivity(intent);
+                                actualizarToken(ID);
+
                             }else {
                                 Toast.makeText(LoginActivity.this,
                                         "Su correo no esta registrado en Cicerone", Toast.LENGTH_LONG).show();
@@ -199,9 +231,7 @@ public class LoginActivity extends AppCompatActivity {
                                 ID=loginTurista.getString("id");
                                 Global.getObject().setId(ID);
                                 Global.getObject().setNombre(loginTurista.getString("Nombre"));
-                                Intent intent = new Intent(vista.getContext(),BottomNav.class);
-                                finish();
-                                startActivity(intent);
+                                actualizarToken(ID);
                             }
 
                         } catch (JSONException e) {

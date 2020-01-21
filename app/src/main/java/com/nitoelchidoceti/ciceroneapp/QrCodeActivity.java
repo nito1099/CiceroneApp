@@ -3,12 +3,10 @@ package com.nitoelchidoceti.ciceroneapp;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -59,10 +57,15 @@ public class QrCodeActivity extends AppCompatActivity {
         textView = findViewById(R.id.txtEscanea2);
         Toolbar toolbar = findViewById(R.id.toolbarQR);
         progressDialog = new ProgressDialog(QrCodeActivity.this);
+        surfaceView = findViewById(R.id.cameraPreview);
         setSupportActionBar(toolbar);
+
+        peticionDePermisos();
         getQrCodes();
-        getQrCodesDeActivacion();
         //Request Permission
+    }
+
+    private void peticionDePermisos() {
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.CAMERA)
                 .withListener(new PermissionListener() {
@@ -92,12 +95,12 @@ public class QrCodeActivity extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+
                         try {
                             for (int i = 0; i <response.length(); i++){
                                 JSONObject qr = response.getJSONObject(i);
                                 qrCode qrCode = new qrCode(qr.getString("Nombre"),
-                                        qr.getString("ID"));
-                                qrCode.setFK_Sitio(qr.getString("FK_Sitio"));
+                                        qr.getString("ID"),qr.getString("FK_Sitio"),true);
                                 qrCodes.add(qrCode);
                             }
                         } catch (JSONException e) {
@@ -107,7 +110,7 @@ public class QrCodeActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(QrCodeActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -123,13 +126,17 @@ public class QrCodeActivity extends AppCompatActivity {
                     new Response.Listener<JSONArray>() {
                         @Override
                         public void onResponse(JSONArray response) {
+
+                            getQrCodesDeActivacion();
+
                             try {
                                 for (int i = 0; i <response.length(); i++){
                                     JSONObject qr = response.getJSONObject(i);
                                     qrCode qrCode = new qrCode(qr.getString("Nombre"),
-                                            qr.getString("ID"));
+                                            qr.getString("ID"),qr.getString("FK_Sitio"), false);
                                     qrCodes.add(qrCode);
                                 }
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -137,7 +144,7 @@ public class QrCodeActivity extends AppCompatActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    Toast.makeText(QrCodeActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
             RequestQueue queue = Volley.newRequestQueue(this);
@@ -145,7 +152,6 @@ public class QrCodeActivity extends AppCompatActivity {
     }
 
     private void setUpCamera() {
-        surfaceView = findViewById(R.id.cameraPreview);
         setUpQR();
         qrEader.start();
     }
@@ -158,12 +164,12 @@ public class QrCodeActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         for (qrCode dato : qrCodes){
-                            if (dato.getNombre().equals(data)){
-                                    if (dato.FK_Sitio== null){
+                            if (dato.getNombre().equals(data)){//qr de acceso al tour
+                                    if (!dato.deActivacion){
                                         qrEader.stop();
                                         comprobarTourPagado(dato,true);
                                         qrEader.start();
-                                    }else {
+                                    }else {//QR de activacion
                                         qrEader.stop();
                                         progressDialog.setTitle("Actualizando Pago");
                                         progressDialog.setMessage("Por favor espere...");
@@ -197,7 +203,11 @@ public class QrCodeActivity extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
                         try {
                             JSONObject jsonObject = response.getJSONObject(0);
+                            Log.d("NOTICIAS","resultado de la consulta: "+jsonObject.getString("success")+"\n");
+                            Log.d("NOTICIAS","fk_sitio del codigo qr: "+code.FK_Sitio+"\n");
+                            Log.d("NOTICIAS","ID turista: "+Global.getObject().getId()+"\n");
                             if (palTour){//para acceder al tour
+
                                 if (jsonObject.getString("success").equals("false")){
                                     launchReproduccionTour(code.getID());
                                 }else {
@@ -207,7 +217,6 @@ public class QrCodeActivity extends AppCompatActivity {
                                 if (jsonObject.getString("success").equals("false")){
                                     Toast.makeText(QrCodeActivity.this, "Usted ya ha pagado por el Tour, gracias!", Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
-
                                 }else {
                                     actualizarQuePago(code);//si no ha pagado actualiza el pago
                                 }
@@ -354,14 +363,16 @@ public class QrCodeActivity extends AppCompatActivity {
         private String Nombre;
         private String ID;
         private String FK_Sitio;
+        private Boolean deActivacion;
 
         public qrCode() {
         }
 
-        public qrCode(String nombre, String ID) {
+        public qrCode(String nombre, String ID, String FK_Sitio, Boolean deActivacion) {
             Nombre = nombre;
+            this.FK_Sitio = FK_Sitio;
             this.ID = ID;
-
+            this.deActivacion = deActivacion;
         }
 
         public String getNombre() {
