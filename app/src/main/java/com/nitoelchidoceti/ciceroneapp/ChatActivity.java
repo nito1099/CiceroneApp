@@ -1,6 +1,7 @@
 package com.nitoelchidoceti.ciceroneapp;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -103,6 +104,12 @@ public class ChatActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //cuando la imagen se selecciona correctamente y cuando el resultado se reciba bien
         if (requestCode == PHOTO_SEND && resultCode == RESULT_OK) {
+            final ProgressDialog progressDialog = new ProgressDialog(ChatActivity.this);
+
+            progressDialog.setTitle("Subiendo Imagen...");
+            progressDialog.setMessage("Por favor espere.");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             Uri uri = data.getData();//subir la img a la db
             storageReference = storage.getReference("imagenes_chat");
             final StorageReference imagenReferencia = storageReference.child(uri.getLastPathSegment());//key de nuestra foto
@@ -128,6 +135,7 @@ public class ChatActivity extends AppCompatActivity {
                                 pojoGuia.getNombre(),pojoGuia.getFotografia(),ServerValue.TIMESTAMP);
                         Toast.makeText(ChatActivity.this, Global.getObject().getNombre(), Toast.LENGTH_SHORT).show();
                         databaseReference.push().setValue(mensaje);
+                        progressDialog.dismiss();
                     }else {
                         Toast.makeText(ChatActivity.this, "No se ha podido subir la imagen correctamente.", Toast.LENGTH_SHORT).show();
                     }
