@@ -13,6 +13,7 @@ import android.view.SurfaceView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -23,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.zxing.qrcode.encoder.QRCode;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -49,6 +51,7 @@ public class QrCodeActivity extends AppCompatActivity {
     ProgressDialog progressDialog ;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +62,9 @@ public class QrCodeActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(QrCodeActivity.this);
         surfaceView = findViewById(R.id.cameraPreview);
         setSupportActionBar(toolbar);
-        peticionDePermisos();
         getQrCodes();
+        peticionDePermisos();
+
     }
 
     private void peticionDePermisos() {
@@ -74,11 +78,12 @@ public class QrCodeActivity extends AppCompatActivity {
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(QrCodeActivity.this, "Debes Habilitar los permisos de camara", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
 
                     @Override
                     public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        token.continuePermissionRequest();
 
                     }
                 }).check();
@@ -338,6 +343,34 @@ public class QrCodeActivity extends AppCompatActivity {
         Intent IlaunchReportProblem = new Intent(QrCodeActivity.this,ReportProblemActivity.class);
         startActivity(IlaunchReportProblem);
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    finish();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    finish();
+                    Toast.makeText(QrCodeActivity.this,
+                            "Es necesario activar el permiso de camara", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+
     public static boolean verifyCameraPermissions(Activity activity) {
         String[] PERMISSIONS_STORAGE = {
                 Manifest.permission.CAMERA
@@ -371,6 +404,7 @@ public class QrCodeActivity extends AppCompatActivity {
             this.ID = ID;
             this.deActivacion = deActivacion;
         }
+
 
         public String getNombre() {
             return Nombre;

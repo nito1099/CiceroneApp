@@ -27,13 +27,13 @@ public class MessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         String from = remoteMessage.getFrom();
-        Log.d(TAG, "Mensaje recibido de : " + from);
+        Log.d(TAG, "TURISTA Mensaje recibido de : " + from);
         if (remoteMessage.getNotification() != null){
-            Log.d(TAG, "Notificación: " + remoteMessage.getNotification().getBody());
+            Log.d(TAG, "TURISTA Notificación: " + remoteMessage.getNotification().getBody());
             mostrarNotificacion(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
         }
         if (remoteMessage.getData().size() > 0){
-            Log.d(TAG,"Data: " + remoteMessage.getData());
+            Log.d(TAG,"TURISTA Data: " + remoteMessage.getData());
         }
     }
 
@@ -77,6 +77,6 @@ public class MessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
-        Log.d(TAG, "Token: " + s);
+        Log.d(TAG, "TURISTA Token: " + s);
     }
 }

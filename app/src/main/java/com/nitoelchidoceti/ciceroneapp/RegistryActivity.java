@@ -3,6 +3,7 @@ package com.nitoelchidoceti.ciceroneapp;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -20,6 +21,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoRegistro;
 
@@ -135,7 +140,7 @@ public class RegistryActivity extends AppCompatActivity {
         if (comprobarCamposVacios()){//si no hay campos vacios
             return;
         }
-        PojoRegistro pojo = new PojoRegistro();
+        final PojoRegistro pojo = new PojoRegistro();
         pojo.setNombre(nombre.getText().toString());
         pojo.setCorreo(correo.getText().toString());
         pojo.setContraseña(contraseña.getText().toString());
@@ -162,6 +167,7 @@ public class RegistryActivity extends AppCompatActivity {
                         String ID;
                         ID=success.getString("id");
                         Global.getObject().setId(ID);
+                        Global.getObject().setNombre(pojo.getNombre());
                         agregarCupon(ID);
 
                     }
@@ -182,8 +188,46 @@ public class RegistryActivity extends AppCompatActivity {
     }
 
 
+    private void actualizarToken(final String id) {
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                Log.d("NOTICIAS","Token: "+ instanceIdResult.getToken());
+                consultaActualizarToken(id,instanceIdResult.getToken());
+            }
+        });
+    }
 
-    private void agregarCupon(String id) {
+    /**
+     * actualiza el token de firebase de notificaciones a la db de amazon
+     * @param ID
+     * @param token
+     */
+    private void consultaActualizarToken(String ID,String token) {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
+                "Cicerone/PHP/actualizarToken.php?id="+ID+"&token="+token;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Intent intent = new Intent(RegistryActivity.this, BottomNav.class);
+                        finish();
+                        startActivity(intent);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(RegistryActivity.this, " Error: " + error.getMessage(), LENGTH_SHORT).show();
+                    }
+                });
+        RequestQueue ejecuta = Volley.newRequestQueue(RegistryActivity.this);
+        ejecuta.add(jsonArrayRequest);
+    }
+    private void agregarCupon(final String id) {
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
                 "Cicerone/PHP/agregarCupon.php?id="+id;
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
@@ -195,9 +239,8 @@ public class RegistryActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonObject = response.getJSONObject(0);
                             if (jsonObject.getString("success").equals("true")) {
-                                Intent intent = new Intent(RegistryActivity.this, BottomNav.class);
-                                finish();
-                                startActivity(intent);
+                                actualizarToken(id);
+
                             } else {
                                 Toast.makeText(RegistryActivity.this,
                                         "No se pudo agregar el cupon correctamente",

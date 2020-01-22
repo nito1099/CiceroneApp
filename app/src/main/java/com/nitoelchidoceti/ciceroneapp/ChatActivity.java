@@ -42,6 +42,12 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterMensajes;
 import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeEnviar;
@@ -79,7 +85,32 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         verifyStoragePermissions(this);
-        instancias();
+        peticionDePermisos();
+    }
+
+    private void peticionDePermisos() {
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        instancias();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(ChatActivity.this,
+                                "Es necesario habilitar el permiso para poder enviar imagenes",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+
+                    }
+                }).check();
     }
 
     private void instancias() {
@@ -101,16 +132,22 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private void onClickEnviarImagen() {
-        btnEnviarImagen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);//pedir obtener todos archivos
-                intent.setType("image/jpeg");//configurar para que solo sean fotos
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);//lo agregas al intent para enviar
-                //evaluar el resultado del intent (si se realizo correctamente)
-                startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), PHOTO_SEND);//1 = imagen
-            }
-        });
+
+
+            btnEnviarImagen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ActivityCompat.checkSelfPermission(ChatActivity.this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);//pedir obtener todos archivos
+                        intent.setType("image/jpeg");//configurar para que solo sean fotos
+                        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);//lo agregas al intent para enviar
+                        //evaluar el resultado del intent (si se realizo correctamente)
+                        startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), PHOTO_SEND);//1 = imagen
+                    }
+                }
+            });
+
     }
 
     @Override
@@ -186,7 +223,7 @@ public class ChatActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject mainObj = new JSONObject();
         mainObj.put("to", pojoGuia.getToken());
-        Log.d("NOTICIAS","notificacion token:"+pojoGuia.getToken()+"\n");
+        Log.d("NOTICIAS","TURISTA notificacion token:"+pojoGuia.getToken()+"\n");
         JSONObject notificationObj = new JSONObject();
         notificationObj.put("title", "Nuevo mensaje de " + Global.getObject().getNombre());
         notificationObj.put("body", mensaje);
@@ -280,6 +317,7 @@ public class ChatActivity extends AppCompatActivity {
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
+            Toast.makeText(activity, "Es necesario habilitar el permiso", Toast.LENGTH_SHORT).show();
             return false;
         }else{
             return true;

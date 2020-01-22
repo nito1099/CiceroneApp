@@ -3,6 +3,7 @@ package com.nitoelchidoceti.ciceroneapp.Fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -30,8 +31,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.listener.single.PermissionListener;
+import com.nitoelchidoceti.ciceroneapp.QrCodeActivity;
 import com.nitoelchidoceti.ciceroneapp.R;
 
+import java.util.List;
 import java.util.Objects;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -58,42 +69,59 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        verifyLocationPermissions(getActivity());
+        peticionDePermisos();
+    }
 
-        if (!verifyLocationPermissions(getActivity())) {
-            Toast.makeText(context, "Por favor habilite los permisos", Toast.LENGTH_SHORT).show();
-        } else {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
-            task = fusedLocationProviderClient.getLastLocation();
-            task.addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        currentLocation = location;
+    private void peticionDePermisos() {
+        Dexter.withActivity(getActivity())
+                .withPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        continua();
                     }
-                }
 
-            });
-            getLocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (currentLocation != null) {
-                        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
-                    }else {
-                        Toast.makeText(context, "No se pudo obtener su ubicación", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
                     }
+                } ).check();
+    }
+
+    private void continua() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+        task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    currentLocation = location;
                 }
-            });
-            mapView = mView.findViewById(R.id.mapa);
-        }
+            }
+
+        });
+        getLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentLocation != null) {
+                    LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+                }else {
+                    Toast.makeText(context, "No se pudo obtener su ubicación", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mapView = mView.findViewById(R.id.mapa);
+
         if (mapView != null ) {
             mapView.onCreate(null);
             mapView.onResume();
             mapView.getMapAsync(this);
         }
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
