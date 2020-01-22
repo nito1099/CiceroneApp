@@ -59,10 +59,8 @@ public class QrCodeActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(QrCodeActivity.this);
         surfaceView = findViewById(R.id.cameraPreview);
         setSupportActionBar(toolbar);
-
         peticionDePermisos();
         getQrCodes();
-        //Request Permission
     }
 
     private void peticionDePermisos() {
@@ -128,7 +126,6 @@ public class QrCodeActivity extends AppCompatActivity {
                         public void onResponse(JSONArray response) {
 
                             getQrCodesDeActivacion();
-
                             try {
                                 for (int i = 0; i <response.length(); i++){
                                     JSONObject qr = response.getJSONObject(i);

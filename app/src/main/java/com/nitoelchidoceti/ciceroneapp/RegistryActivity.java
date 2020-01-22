@@ -71,6 +71,7 @@ public class RegistryActivity extends AppCompatActivity {
         contraseña.setText("clave");
         telefono.setText("3336266817");
         ciudad.setText("Zapopan");
+        correo.setText("alanlomeli@gmail.com");
 
         etxtDate.setOnClickListener(new View.OnClickListener() {//ONCLICK DE FECHA DE NACIMIENTO
             @Override
@@ -90,6 +91,34 @@ public class RegistryActivity extends AppCompatActivity {
         });
     }
 
+    private boolean comprobarCamposVacios() {
+        if (etxtDate.getText().toString().isEmpty()){
+            etxtDate.setError("Este campo es obligatorio");
+            return true;
+        }
+        if (nombre.getText().toString().isEmpty()){
+            nombre.setError("Este campo es obligatorio");
+            return true;
+        }
+        if (correo.getText().toString().isEmpty()){
+            correo.setError("Este campo es obligatorio");
+            return true;
+        }
+        if (contraseña.getText().toString().isEmpty()){
+            contraseña.setError("Este campo es obligatorio");
+            return true;
+        }
+        if (telefono.getText().toString().isEmpty()){
+            telefono.setError("Este campo es obligatorio");
+            return true;
+        }
+        if (ciudad.getText().toString().isEmpty()){
+            ciudad.setError("Este campo es obligatorio");
+            return true;
+        }
+        return false;
+    }
+
     public void launchLogin(View view) {
         Intent log = new Intent(this, LoginActivity.class);
         startActivity(log);
@@ -103,6 +132,9 @@ public class RegistryActivity extends AppCompatActivity {
 
     public void insertarNuevoTurista(View view) {
 
+        if (comprobarCamposVacios()){//si no hay campos vacios
+            return;
+        }
         PojoRegistro pojo = new PojoRegistro();
         pojo.setNombre(nombre.getText().toString());
         pojo.setCorreo(correo.getText().toString());
@@ -148,6 +180,8 @@ public class RegistryActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(RegistryActivity.this);
         queue.add(jsonRequest);
     }
+
+
 
     private void agregarCupon(String id) {
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
