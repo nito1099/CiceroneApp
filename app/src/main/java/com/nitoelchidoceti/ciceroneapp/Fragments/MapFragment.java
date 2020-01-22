@@ -61,6 +61,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_map,container,false);
+        mapView = mView.findViewById(R.id.mapa);
+        mapView.setVisibility(View.GONE);
         context = mView.getContext();
         getLocation = mView.findViewById(R.id.btnGetLocation);
         return mView;
@@ -69,7 +71,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        verifyLocationPermissions(getActivity());
+        //verifyLocationPermissions(getActivity());
         peticionDePermisos();
     }
 
@@ -80,7 +82,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        continua();
+                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED&&
+                                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                            continua();
+                        }
                     }
 
                     @Override
@@ -91,6 +96,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void continua() {
+        mapView.setVisibility(View.VISIBLE);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -114,7 +120,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
-        mapView = mView.findViewById(R.id.mapa);
 
         if (mapView != null ) {
             mapView.onCreate(null);
@@ -160,6 +165,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
+            Toast.makeText(activity, "Es necesario activar los permisos de ubicacion", Toast.LENGTH_SHORT).show();
             return false;
         }else{
             return true;
