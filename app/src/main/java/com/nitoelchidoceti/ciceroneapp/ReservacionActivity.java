@@ -186,7 +186,6 @@ public class ReservacionActivity extends AppCompatActivity {
     private void inicializaciones() {
         Intent intent = getIntent();
         pojoGuia = (PojoGuia) intent.getSerializableExtra("Guia");
-        Toast.makeText(this, pojoGuia.getToken(), Toast.LENGTH_SHORT).show();
         etxtDate = findViewById(R.id.etxt_fecha_reservacion);
         etxtHora = findViewById(R.id.etxt_hora_reservacion);
         reservacionesFiltradas=new ArrayList<>();
@@ -230,7 +229,7 @@ public class ReservacionActivity extends AppCompatActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
+                    Toast.makeText(ReservacionActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
             RequestQueue queue = Volley.newRequestQueue(ReservacionActivity.this);

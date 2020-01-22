@@ -217,11 +217,6 @@
                     android:textColor="@color/orange"
                     android:textStyle="italic" />
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
-
-
-
-
 </LinearLayout>

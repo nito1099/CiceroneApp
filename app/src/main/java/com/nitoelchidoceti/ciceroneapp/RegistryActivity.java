@@ -24,9 +24,12 @@ import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoRegistro;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 
 public class RegistryActivity extends AppCompatActivity {
@@ -62,6 +65,12 @@ public class RegistryActivity extends AppCompatActivity {
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        etxtDate.setText("2019/03/23");
+        nombre.setText("Alan Lomeli");
+        contraseña.setText("clave");
+        telefono.setText("3336266817");
+        ciudad.setText("Zapopan");
 
         etxtDate.setOnClickListener(new View.OnClickListener() {//ONCLICK DE FECHA DE NACIMIENTO
             @Override
@@ -119,11 +128,10 @@ public class RegistryActivity extends AppCompatActivity {
                                 "ese correo.",Toast.LENGTH_SHORT).show();
                     }else{
                         String ID;
-                        Intent intent = new Intent(RegistryActivity.this,BottomNav.class);
                         ID=success.getString("id");
                         Global.getObject().setId(ID);
-                        finish();
-                        startActivity(intent);
+                        agregarCupon(ID);
+
                     }
                 }catch (Exception e){
                     Toast.makeText(RegistryActivity.this,"Error al obtene" +
@@ -139,5 +147,40 @@ public class RegistryActivity extends AppCompatActivity {
         });
         RequestQueue queue = Volley.newRequestQueue(RegistryActivity.this);
         queue.add(jsonRequest);
+    }
+
+    private void agregarCupon(String id) {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
+                "Cicerone/PHP/agregarCupon.php?id="+id;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jsonObject = response.getJSONObject(0);
+                            if (jsonObject.getString("success").equals("true")) {
+                                Intent intent = new Intent(RegistryActivity.this, BottomNav.class);
+                                finish();
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(RegistryActivity.this,
+                                        "No se pudo agregar el cupon correctamente",
+                                        LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(RegistryActivity.this, " Error: " + error.getMessage(), LENGTH_SHORT).show();
+                    }
+                });
+        RequestQueue ejecuta = Volley.newRequestQueue(RegistryActivity.this);
+        ejecuta.add(jsonArrayRequest);
     }
 }

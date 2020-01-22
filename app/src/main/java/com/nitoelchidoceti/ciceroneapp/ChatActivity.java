@@ -121,7 +121,7 @@ public class ChatActivity extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(ChatActivity.this);
 
             progressDialog.setTitle("Subiendo Imagen...");
-            progressDialog.setMessage("Por favor espere.");
+            progressDialog.setMessage("Por favor espere");
             progressDialog.setCancelable(false);
             progressDialog.show();
             Uri uri = data.getData();//subir la img a la db

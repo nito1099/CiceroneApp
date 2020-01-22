@@ -76,9 +76,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             getLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LatLng latLng = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
+                    if (currentLocation != null) {
+                        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+                    }else {
+                        Toast.makeText(context, "No se pudo obtener su ubicación", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
             mapView = mView.findViewById(R.id.mapa);
