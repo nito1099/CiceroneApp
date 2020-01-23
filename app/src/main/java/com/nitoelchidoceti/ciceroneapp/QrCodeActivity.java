@@ -2,7 +2,9 @@ package com.nitoelchidoceti.ciceroneapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -41,6 +43,8 @@ import java.util.ArrayList;
 
 import github.nisrulz.qreader.QRDataListener;
 import github.nisrulz.qreader.QREader;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class QrCodeActivity extends AppCompatActivity {
     private SurfaceView surfaceView;
@@ -119,7 +123,7 @@ public class QrCodeActivity extends AppCompatActivity {
         queue.add(jsonArrayRequest);
     }
 
-    private void canjearCupon(final qrCode qrCode) {
+    private void canjearCupon(final qrCode qrCode, final Boolean palTour) {
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
                 "Cicerone/PHP/canjearCupon.php?id="+Global.getObject().getId();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -133,10 +137,16 @@ public class QrCodeActivity extends AppCompatActivity {
                         try {
                                 JSONObject jsonObject = response.getJSONObject(0);
                                 if (jsonObject.getString("success").equals("true")){//si cuenta con cupon
-                                    launchReproduccionTour(qrCode.getID());
-                                }else {
-                                    comprobarTourPagado(qrCode,true);
-                                    qrEader.start();
+                                    if (palTour){//si el codigo es para entrar al tour
+                                        anuncioDeCupon(qrCode.getID());
+                                    }else {//si el codigo es de autorizacion
+                                        Toast.makeText(QrCodeActivity.this,
+                                                "Usted cuenta con un cupón para este sito, no " +
+                                                        "es necesario que pague", Toast.LENGTH_SHORT).show();
+                                        agregarCupon(Global.getObject().getId());
+                                    }
+                                }else {//si no cuenta con el cupon
+                                    comprobarTourPagado(qrCode,palTour);
                                 }
 
                         } catch (JSONException e) {
@@ -151,6 +161,41 @@ public class QrCodeActivity extends AppCompatActivity {
         });
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(jsonArrayRequest);
+    }
+
+    private void agregarCupon(final String id) {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
+                "Cicerone/PHP/actualizarCupon.php?id="+id;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(QrCodeActivity.this, " Error: " + error.getMessage(), LENGTH_SHORT).show();
+                    }
+                });
+        RequestQueue ejecuta = Volley.newRequestQueue(QrCodeActivity.this);
+        ejecuta.add(jsonArrayRequest);
+    }
+
+    private void anuncioDeCupon(final String id) {
+        new AlertDialog.Builder(QrCodeActivity.this)
+                .setTitle("Cupon de bienvenida canjeado")
+                .setMessage("El cupón de bienvenida se ha canjeado correctamente," +
+                        " esperemos que disfrutes el tour (:")
+                .setNeutralButton("Perfecto", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        launchReproduccionTour(id);
+                    }
+                })
+                .show();
     }
 
     private void getQrCodes() {
@@ -199,22 +244,29 @@ public class QrCodeActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         for (qrCode dato : qrCodes){
-                            if (dato.getNombre().equals(data)){//qr de acceso al tour
+                            if (dato.getNombre().equals(data)){//si escanea uno de nuestros qr codes
+
                                     if (!dato.deActivacion){
                                         qrEader.stop();
+
                                         if (dato.getID().equals("1")){//si el qr es del sitio del cupon
-                                            canjearCupon(dato);
+                                            canjearCupon(dato,true);
                                         }else {
-                                            comprobarTourPagado(dato,false);//comprueba si ya pago el tour que quiere activar
-                                            qrEader.start();
+                                            comprobarTourPagado(dato,true);//comprueba si ya pago el tour que quiere activar
                                         }
+                                        qrEader.start();
                                     }else {//QR de activacion
                                         qrEader.stop();
-                                        progressDialog.setTitle("Actualizando Pago");
-                                        progressDialog.setMessage("Por favor espere...");
-                                        progressDialog.setCancelable(false);
-                                        progressDialog.show();
-                                        comprobarTourPagado(dato,false);//comprueba si ya pago el tour que quiere activar
+
+                                        if (dato.getID().equals("1")){
+                                            canjearCupon(dato,false);
+                                        }else {
+                                            progressDialog.setTitle("Actualizando Pago");
+                                            progressDialog.setMessage("Por favor espere...");
+                                            progressDialog.setCancelable(false);
+                                            progressDialog.show();
+                                            comprobarTourPagado(dato,false);//comprueba si ya pago el tour que quiere activar
+                                        }
                                         qrEader.start();
                                     }
                             }

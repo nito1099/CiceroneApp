@@ -230,10 +230,10 @@ public class RegistryActivity extends AppCompatActivity {
 
     private void anuncioDeCupon() {
         new AlertDialog.Builder(RegistryActivity.this)
-                .setTitle("Cupón de bienvenida agregado")
-                .setMessage("Se agregó un cupón para obtener un tour de voz del Palacio de Gobierno " +
-                        "totalmente gratuito!")
-                .setNeutralButton("Genial!", new DialogInterface.OnClickListener() {
+                .setTitle("Cupón de bienvenida agregado!")
+                .setMessage("Se agregó un cupón para obtener un tour de voz del museo Palacio de Gobierno " +
+                        "totalmente gratuito, solo tienes que escanear el código qr del lugar y listo!")
+                .setNeutralButton("Genial", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(RegistryActivity.this, BottomNav.class);
