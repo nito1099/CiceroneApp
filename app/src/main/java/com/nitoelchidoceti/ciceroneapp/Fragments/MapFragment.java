@@ -52,7 +52,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private View mView;
     Context context;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private static final int REQUEST_CODE = 101;
      private Location currentLocation;
     private Task<Location> task;
     FloatingActionButton getLocation;
@@ -71,7 +70,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //verifyLocationPermissions(getActivity());
         peticionDePermisos();
     }
 
@@ -148,27 +146,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
         }else {
             mapView.getMapAsync(this);
-        }
-    }
-
-    private static boolean verifyLocationPermissions(Activity activity) {
-        String[] PERMISSIONS_STORAGE = {
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-        };
-        int REQUEST_EXTERNAL_STORAGE = 1;
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION);
-        int permission2 = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permission != PackageManager.PERMISSION_GRANTED&&permission2!= PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-            Toast.makeText(activity, "Es necesario activar los permisos de ubicacion", Toast.LENGTH_SHORT).show();
-            return false;
-        }else{
-            return true;
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.nitoelchidoceti.ciceroneapp;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -213,9 +215,7 @@ public class RegistryActivity extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Intent intent = new Intent(RegistryActivity.this, BottomNav.class);
-                        finish();
-                        startActivity(intent);
+                        anuncioDeCupon();
                     }
                 },
                 new Response.ErrorListener() {
@@ -227,6 +227,24 @@ public class RegistryActivity extends AppCompatActivity {
         RequestQueue ejecuta = Volley.newRequestQueue(RegistryActivity.this);
         ejecuta.add(jsonArrayRequest);
     }
+
+    private void anuncioDeCupon() {
+        new AlertDialog.Builder(RegistryActivity.this)
+                .setTitle("Cupón de bienvenida agregado")
+                .setMessage("Se agregó un cupón para obtener un tour de voz del Palacio de Gobierno " +
+                        "totalmente gratuito!")
+                .setNeutralButton("Genial!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(RegistryActivity.this, BottomNav.class);
+                        finish();
+                        startActivity(intent);
+                    }
+                })
+                .setCancelable(false)
+        .show();
+    }
+
     private void agregarCupon(final String id) {
         final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
                 "Cicerone/PHP/agregarCupon.php?id="+id;
