@@ -296,12 +296,18 @@
                     android:layout_marginLeft="5dp"
                     />
 
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/viewPagerLugar"
+
+                <com.asura.library.views.PosterSlider
+                    android:id="@+id/poster_slider"
                     android:layout_width="350dp"
                     android:layout_height="525dp"
-                    android:layout_gravity="center"
+                    app:defaultIndicator="circle"
+                    app:imageSlideInterval="5000"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:loopSlides="false"
+                    android:layout_gravity="center_horizontal"
                     />
+
             </LinearLayout>
 
             <LinearLayout

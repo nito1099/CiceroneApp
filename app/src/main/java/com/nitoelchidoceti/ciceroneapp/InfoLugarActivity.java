@@ -2,6 +2,7 @@ package com.nitoelchidoceti.ciceroneapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.asura.library.posters.Poster;
+import com.asura.library.posters.RawVideo;
+import com.asura.library.posters.RemoteImage;
+import com.asura.library.posters.RemoteVideo;
+import com.asura.library.views.PosterSlider;
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.nitoelchidoceti.ciceroneapp.Adapters.AdapterDeComentarios;
@@ -45,6 +51,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 public class InfoLugarActivity extends AppCompatActivity {
 
@@ -286,7 +293,7 @@ public class InfoLugarActivity extends AppCompatActivity {
             fotoPerfil.setBackground(null);
             Glide.with(this).load(pojoLugar.getFotografia()).into(fotoPerfil);
         }
-        viewPager = findViewById(R.id.viewPagerLugar);
+        //viewPager = findViewById(R.id.viewPagerLugar);
         obtenerImagenes();
         setSupportActionBar(toolbar);
     }
@@ -301,7 +308,8 @@ public class InfoLugarActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
-                            llenarImagenes(response);
+                            llenarMultimedia(response);
+                            //llenarImagenes(response);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -309,13 +317,33 @@ public class InfoLugarActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                ImageView imageView = findViewById(R.id.viewPagerLugar);
-                imageView.setImageResource(R.drawable.img_catedral_premium);
+                //ImageView imageView = findViewById(R.id.viewPagerLugar);
+                //imageView.setImageResource(R.drawable.img_catedral_premium);
             }
         });
         RequestQueue queue = Volley.newRequestQueue(InfoLugarActivity.this);
         queue.add(jsonArrayRequest);
     }
+
+    private void llenarMultimedia(JSONArray response) throws JSONException {
+        PosterSlider posterSlider = findViewById(R.id.poster_slider);
+        List<Poster> posters=new ArrayList<>();
+        for (int i = 0; i < response.length(); i++) {
+            JSONObject objeto;
+            objeto = response.getJSONObject(i);
+
+            if (objeto.getString("Imagen").contains(".mp4")){
+                //add remote video using uri
+                posters.add(new RemoteVideo( Uri.parse(objeto.getString("Imagen"))));
+            }else {
+                //add poster using remote url
+                posters.add(new RemoteImage(objeto.getString("Imagen")));
+            }
+        }
+        posterSlider.onVideoStopped();
+        posterSlider.setPosters(posters);
+    }
+
 
     private void llenarImagenes(JSONArray response) throws JSONException {
         imagenes.clear();

@@ -52,6 +52,7 @@ public class QrCodeActivity extends AppCompatActivity {
     private QREader qrEader;
     private ArrayList<qrCode> qrCodes = new ArrayList<>();
     ProgressDialog progressDialog ;
+    private Boolean onlyOne=false;
 
 
 
@@ -298,7 +299,10 @@ public class QrCodeActivity extends AppCompatActivity {
                             if (palTour){//para acceder al tour
 
                                 if (jsonObject.getString("success").equals("false")){
-                                    launchReproduccionTour(code.getID());
+                                    if (!onlyOne){
+                                        onlyOne= true;
+                                        launchReproduccionTour(code.getID());
+                                    }
                                 }else {
                                     Toast.makeText(QrCodeActivity.this, "Lo invitamos a primero pagar nuestro tour :)", Toast.LENGTH_SHORT).show();
                                 }
@@ -342,18 +346,17 @@ public class QrCodeActivity extends AppCompatActivity {
                                 Toast.makeText(QrCodeActivity.this, "Se ha realizado el pago correctamente", Toast.LENGTH_SHORT).show();
                                 reiniciarActivity();
                             }else {
-                                Toast.makeText(QrCodeActivity.this, "No se pudo realizar el pago :(", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(QrCodeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(QrCodeActivity.this,"error en el cast "+ e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                Toast.makeText(QrCodeActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(QrCodeActivity.this, "error "+ error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -361,15 +364,15 @@ public class QrCodeActivity extends AppCompatActivity {
     }
 
     private void reiniciarActivity() {
-        progressDialog.dismiss();
         finish();
+        progressDialog.dismiss();
         startActivity(new Intent(this,QrCodeActivity.class));
     }
 
     private void launchReproduccionTour(String dato) {
         Intent intent = new Intent(QrCodeActivity.this,ReproduccionTourActivity.class);
+        finish();
         intent.putExtra("tour",dato);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
