@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.MensajeRecibir;
 import com.nitoelchidoceti.ciceroneapp.R;
 
@@ -71,6 +72,11 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.HolderMensaj
         holder.getMensaje().setText(mensajes.get(position).getMensaje());
         if (mensajes.get(position).getFotoPerfilDestinatario()!=null){
             Glide.with(context).load(mensajes.get(position).getFotoPerfilDestinatario()).into(holder.getFotoPerfil());
+        }
+        if(mensajes.get(position).getIdUsuario().equals("turista"+ Global.getObject().getId())){
+            holder.getNombre().setText(mensajes.get(position).getNombreDestinatario());
+        }else {
+            holder.getNombre().setText(mensajes.get(position).getNombre());
         }
         Long codigoHora = mensajes.get(position).getHora();
         Date date = new Date(codigoHora);

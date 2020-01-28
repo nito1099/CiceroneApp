@@ -1,7 +1,10 @@
 package com.nitoelchidoceti.ciceroneapp;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,11 +38,17 @@ import com.nitoelchidoceti.ciceroneapp.Global.Global;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoComentario;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoGuia;
 import com.nitoelchidoceti.ciceroneapp.POJOS.PojoReservacion;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +65,10 @@ public class ReservacionActivity extends AppCompatActivity {
     AdapterDeReservaciones adapterDeReservaciones;
     RecyclerView recycleReservaciones;
     private final static String Url = "https://fcm.googleapis.com/fcm/send";
+    private static final int PAYPAL_REQUEST_CODE = 7171;
+    private static PayPalConfiguration config = new PayPalConfiguration().environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .clientId(Global.PAYPAL_CLIENT_ID);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,7 +234,7 @@ public class ReservacionActivity extends AppCompatActivity {
                                     Toast.makeText(ReservacionActivity.this, "Ya hay una reservacion a esa hora.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     mandarNotificacion();
-                                    Toast.makeText(ReservacionActivity.this, "Se ha reservado correctamente.", Toast.LENGTH_SHORT).show();
+                                    preguntaPagarElTour();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -236,6 +250,93 @@ public class ReservacionActivity extends AppCompatActivity {
             queue.add(jsonArrayRequest);
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == PAYPAL_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if (confirmation != null) {
+
+                    tourPagado();
+                }
+            }else if (resultCode == Activity.RESULT_CANCELED)
+                Toast.makeText(this, "Compra cancelada", Toast.LENGTH_SHORT).show();
+
+
+        }else if(requestCode == PaymentActivity.RESULT_EXTRAS_INVALID)
+            Toast.makeText(this, "Compra invalida", Toast.LENGTH_SHORT).show();
+    }
+
+    private void tourPagado() {
+        final String url = "http://ec2-54-245-18-174.us-west-2.compute.amazonaws.com/" +
+                "Cicerone/PHP/tourPagadoGuia.php?fecha="+etxtDate.getText() + " "+
+                etxtHora.getText();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jsonObject = response.getJSONObject(0);
+                            if (jsonObject.getString("success").equals("true")){
+                                Toast.makeText(ReservacionActivity.this, "Se ha realizado el pago correctamente", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(ReservacionActivity.this, "No se pudo realizar el pago correctamente", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(ReservacionActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Toast.makeText(ReservacionActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jsonArrayRequest);
+    }
+
+    private void preguntaPagarElTour() {
+        new AlertDialog.Builder(ReservacionActivity.this)
+                .setTitle("Se ha reservado correctamente")
+                .setMessage("Desea realizar el pago del tour en este momento?")
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //INICIAR ACTIVIDAD DE PAYPAL
+                        iniciarServicioPaypal();
+                        procesarPago();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(ReservacionActivity.this, "Se ha reservado correctamente", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void iniciarServicioPaypal() {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        startActivity(intent);
+    }
+
+    private void procesarPago() {
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(60)), "MXN", "Tour guiado del Guia " +
+                pojoGuia.getNombre(), PayPalPayment.PAYMENT_INTENT_SALE);
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+        startActivityForResult(intent, PAYPAL_REQUEST_CODE);
     }
 
     private void mandarNotificacion() throws JSONException {
